@@ -6,6 +6,7 @@ public class PlayerMovement : MonoBehaviour
     Vector3 moveVel = Vector3.zero;
     public Vector3 rightAcceleration = Vector3.zero;
     public Vector3 maxVel = Vector3.zero;
+    public float jumpVel = 0.0f;
 	// Use this for initialization
 	void Start () 
     {
@@ -29,7 +30,7 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetKey(KeyCode.UpArrow))
         {
             //Vector3 vel = gameObject.rigidbody2D.velocity;
-            vel.y += 2*Time.deltaTime;
+            vel.y += jumpVel* Time.deltaTime;
         }
 
         if (vel.x >= maxVel.x)
