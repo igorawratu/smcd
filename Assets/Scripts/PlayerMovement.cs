@@ -13,6 +13,7 @@ public class PlayerMovement : MonoBehaviour
     bool canDoubleJump = false;
     bool jumpReleased = false;
     bool inTheAir = false;
+    bool calledFalling = false;
     public KeyCode playerKey;
     public Color playerColour;
 
@@ -20,7 +21,10 @@ public class PlayerMovement : MonoBehaviour
     public SpriteRenderer playerSprite;
 
     public float raycastLength = 3.0f;
+    public float raycastLengthRight = 3.0f;
     public LayerMask mask;
+    float gravityScale = 0.0f;
+    public float jumpGlideTime = 0.4f;
 
     public enum PowerUp
     {
@@ -45,6 +49,7 @@ public class PlayerMovement : MonoBehaviour
         jumpDelay = true;
         SpriteRenderer sr = gameObject.GetComponentInChildren<SpriteRenderer>();
         sr.color = playerColour;
+        gravityScale = gameObject.rigidbody2D.gravityScale;
 	}
 	
 	// Update is called once per frame
@@ -57,17 +62,33 @@ public class PlayerMovement : MonoBehaviour
         Vector2 down = -Vector2.up * raycastLength;
         Debug.DrawRay(transform.position, down, Color.green);
         RaycastHit2D hit = Physics2D.Raycast(position, down, raycastLength, ~mask.value);
-        
+
+        Vector2 right = -Vector2.right * raycastLength;
+        Debug.DrawRay(transform.position, right, Color.green);
+        RaycastHit2D hitFront = Physics2D.Raycast(position, right, raycastLength, ~mask.value);
+
+        bool infront = true;
+        if (hitFront.collider == null)
+        {
+            infront = false;
+        }
+
+        if (infront)
+            RandomShake.randomShake.PlaySinShake();
+
         bool onTheGround = true;
         if (hit.collider == null)
         {
             onTheGround = false;
         }
+
+
         if (onTheGround)
         {
             //print("There is something below the object!");
             canDoubleJump = true;
             jumpReleased = false;
+            calledFalling = false;
 
             if (inTheAir)
             {
@@ -77,19 +98,26 @@ public class PlayerMovement : MonoBehaviour
         }
         else if (inTheAir)
         {
+            //Debug.Log(vel.y);
             if (vel.y <= 0)
             {
-                animationBoard.Fall();
+                //Debug.Log("falling");
+                if (!calledFalling)
+                {
+                    animationBoard.Fall();
+                    calledFalling = true;
+                }
             }
         }
 
         if (Input.GetKey(KeyCode.Return))
         {
-            powerUp = PowerUp.doubleJump;
+            powerUp = PowerUp.glide;
         }
 
         vel = jumpLogic(vel, onTheGround);
         vel = doubleJumpLogic(vel, onTheGround);
+        vel = glideJumpLogic(vel, onTheGround);
 
         if (vel.x >= maxVel.x)
         {
@@ -142,11 +170,11 @@ public class PlayerMovement : MonoBehaviour
                 vel.y += jumpBoostVel * Time.deltaTime;
 
             jumpDelay = false;
-            if (powerUp == PowerUp.doubleJump)
+            if (powerUp == PowerUp.doubleJump ||
+                powerUp == PowerUp.glide)
                 Invoke("resetJumpTImer", jumpTimeDelay / 4);
-
-
-            Invoke("resetJumpTImer", jumpTimeDelay);
+            else
+                Invoke("resetJumpTImer", jumpTimeDelay);
             jumpReleased = false;
             inTheAir = true;
         }
@@ -180,6 +208,34 @@ public class PlayerMovement : MonoBehaviour
             inTheAir = true;
         }
         return vel;
+    }
+
+    Vector3 glideJumpLogic(Vector3 vel, bool onTheGround)
+    {
+        if (Input.GetKey(playerKey) &&
+            powerUp == PowerUp.glide &&
+            canDoubleJump &&
+            jumpDelay &&
+            jumpReleased)
+        {
+            Debug.Log("Glide!");
+            vel.y = 0;
+
+            canDoubleJump = false;
+            jumpDelay = false;
+
+            Invoke("resetGravity", jumpGlideTime);
+            gameObject.rigidbody2D.gravityScale = 0;
+            Invoke("resetJumpTImer", jumpTimeDelay);
+            jumpReleased = false;
+            inTheAir = true;
+        }
+        return vel;
+    }
+
+    void resetGravity()
+    {
+        gameObject.rigidbody2D.gravityScale = gravityScale;
     }
 
 	public void setJumpKey(KeyCode key)
