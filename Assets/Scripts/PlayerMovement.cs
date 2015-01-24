@@ -13,8 +13,11 @@ public class PlayerMovement : MonoBehaviour
     bool canDoubleJump = false;
     bool jumpReleased = false;
     bool inTheAir = false;
+    public KeyCode playerKey;
+    public Color playerColour;
 
     public AnimationBoard animationBoard;
+    public SpriteRenderer playerSprite;
 
     public float raycastLength = 3.0f;
     public LayerMask mask;
@@ -39,6 +42,8 @@ public class PlayerMovement : MonoBehaviour
         gameObject.rigidbody2D.velocity = vel;
         powerUp = PowerUp.none;
         jumpDelay = true;
+        SpriteRenderer sr = gameObject.GetComponentInChildren<SpriteRenderer>();
+        sr.color = playerColour;
 	}
 	
 	// Update is called once per frame
@@ -117,7 +122,7 @@ public class PlayerMovement : MonoBehaviour
 
     Vector3 jumpLogic(Vector3 vel, bool onTheGround)
     {
-        if (Input.GetKey(KeyCode.UpArrow) &&
+        if (Input.GetKey(playerKey) &&
             onTheGround &&
             jumpDelay)
         {
@@ -142,7 +147,7 @@ public class PlayerMovement : MonoBehaviour
 
     Vector3 doubleJumpLogic(Vector3 vel, bool onTheGround)
     {
-        if (!onTheGround && !Input.GetKey(KeyCode.UpArrow))
+        if (!onTheGround && !Input.GetKey(playerKey))
         {
             jumpReleased = true;
         }
