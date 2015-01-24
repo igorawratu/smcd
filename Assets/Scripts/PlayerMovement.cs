@@ -22,15 +22,16 @@ public class PlayerMovement : MonoBehaviour
     public float raycastLength = 3.0f;
     public LayerMask mask;
 
-    enum PowerUp
+    public enum PowerUp
     {
         none,
         speedUp,
         doubleJump,
         jumpBoost,
-        glide
+        glide,
+        smash
     };
-    PowerUp powerUp;
+    public PowerUp powerUp;
 
 
 	// Use this for initialization
@@ -116,6 +117,14 @@ public class PlayerMovement : MonoBehaviour
         else if (tag == "doubleJump")
         {
             powerUp = PowerUp.doubleJump;
+        }
+        else if (tag == "glide")
+        {
+            powerUp = PowerUp.glide;
+        }
+        else if (tag == "smash")
+        {
+            powerUp = PowerUp.smash;
         }
     }
 
