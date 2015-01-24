@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class PlatformGenerator : MonoBehaviour {
     public GameObject platform;
@@ -7,7 +8,9 @@ public class PlatformGenerator : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         mRng = new System.Random();
-        
+        mTimeLimit = 2;
+        mTimeSinceLastPlatform = 0;
+        mPlatforms = new List<GameObject>();
 	}
 	
 	// Update is called once per frame
@@ -16,32 +19,26 @@ public class PlatformGenerator : MonoBehaviour {
 	}
 
     void FixedUpdate(){
+        mTimeSinceLastPlatform += Time.deltaTime;
         if (mRng.Next(0, 100) < 10 && mTimeSinceLastPlatform > mTimeLimit)
         {
-            int itemType = mRng.Next(0, mItems.Count);
-            GameObject newItem = (GameObject)Instantiate(mItems[itemType]);
+            int itemType = mRng.Next(0, mPlatforms.Count);
+            GameObject newItem = (GameObject)Instantiate(platform);
 
-            if (mItems[itemType] == deadPlayer)
-            {
-                int chosenDeadPlayer = mRng.Next(0, mDeadPlayers.Count);
-                DeadPlayer deadScript = newItem.GetComponent<DeadPlayer>();
-                deadScript.setInfo(mDeadPlayers[chosenDeadPlayer].name, mDeadPlayers[chosenDeadPlayer].colour);
-            }
-
-            newItem.transform.position = new Vector2(Camera.main.transform.position.x + 30, 0.85f);
-            mItemsList.Add(newItem);
-            mTimeSinceLastObstacle = 0;
+            newItem.transform.position = new Vector2(Camera.main.transform.position.x + 30, 2.5f);
+            mPlatforms.Add(newItem);
+            mTimeSinceLastPlatform = 0;
 
             List<GameObject> tempItemList = new List<GameObject>();
             List<GameObject> destroyList = new List<GameObject>();
-            foreach (GameObject item in mItemsList)
+            foreach (GameObject item in mPlatforms)
             {
                 float difx = Camera.main.transform.position.x - item.transform.position.x;
                 if (difx < 20)
                     tempItemList.Add(item);
                 else destroyList.Add(item);
 
-                mItemsList = tempItemList;
+                mPlatforms = tempItemList;
             }
 
             foreach (GameObject item in destroyList)
@@ -51,6 +48,6 @@ public class PlatformGenerator : MonoBehaviour {
 
     private System.Random mRng;
     private float mTimeLimit;
-    private float mTimeSinceLastObstacle;
+    private float mTimeSinceLastPlatform;
     private List<GameObject> mPlatforms;
 }
