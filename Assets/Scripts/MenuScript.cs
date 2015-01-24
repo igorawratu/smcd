@@ -28,7 +28,7 @@ public class MenuScript : MonoBehaviour {
 	private Vector3 floorSize;
 	private Vector3 groundSize;
 
-	private List<float> spawnPoints;
+	private float initialSpawn = 0;
 
 	public GameObject headTextPrefab;
 
@@ -68,8 +68,6 @@ public class MenuScript : MonoBehaviour {
 			Vector3 pos = floorOffset + new Vector3(groundSize.x * i, -floorSize.y, 0.0f);
 			groundArr[i].transform.position = pos;
 		}
-
-		spawnPoints = new List<float>();
 	}
 	
 	// Update is called once per frame
@@ -84,7 +82,9 @@ public class MenuScript : MonoBehaviour {
 
 						//Spawn stuff here
 						GameObject canvas = GameObject.Find("Canvas");
-						float xSpawn = Random.Range(0, 700);
+						float xSpawn = Random.Range(25, 75);
+						initialSpawn += xSpawn;
+
 						//GameObject player = (GameObject)Instantiate(playerPrefab);
 						//player.GetComponent<PlayerMovement>().setJumpKey(KeyCode.Asterisk);
 						//player.GetComponent<PlayerMovement>().playerColour = CurrentPlayerKeys.Instance.playerColors[i];
@@ -95,7 +95,7 @@ public class MenuScript : MonoBehaviour {
 						aboveHead.transform.SetParent(canvas.transform);
 						Text aboveHeadText = aboveHead.GetComponent<Text>();
 						aboveHeadText.text = keyCodes[i].ToString();
-						aboveHeadText.rectTransform.position = new Vector3(xSpawn, 150, 0);
+						aboveHeadText.rectTransform.position = new Vector3(initialSpawn, 150, 0);
 
 						keysPressed[keyCodes[i]] = -100;
 					}
