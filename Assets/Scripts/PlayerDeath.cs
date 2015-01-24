@@ -3,6 +3,7 @@ using System.Collections;
 
 public class PlayerDeath : MonoBehaviour {
 
+    public GameObject bloodEffect;
 	// Use this for initialization
 	void Start () 
     {
@@ -19,6 +20,10 @@ public class PlayerDeath : MonoBehaviour {
         if (pos.x < cameraLeftPos.x)
         {
             gameObject.SetActive(false);
+            Instantiate(bloodEffect,
+                new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, bloodEffect.transform.position.z),
+                bloodEffect.transform.rotation);
+
         }
 	}
 }

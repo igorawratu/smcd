@@ -27,6 +27,9 @@ public class PlayerMovement : MonoBehaviour
     public float jumpGlideTime = 0.4f;
     GameObject obj = null;
 
+
+    public GameObject hitEffect;
+
     public enum PowerUp
     {
         none,
@@ -80,6 +83,9 @@ public class PlayerMovement : MonoBehaviour
             if (hitFront.collider.gameObject.tag == "obstacle" && obj != hitFront.collider.gameObject)
             {
                 RandomShake.randomShake.PlaySinShake();
+                Instantiate(hitEffect,
+                    new Vector3(hitFront.point.x, hitFront.point.y, hitEffect.transform.position.z),
+                    hitEffect.transform.rotation);
                 obj = hitFront.collider.gameObject;
             }
 
