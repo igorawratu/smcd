@@ -20,4 +20,8 @@ public class UpdateObstacle : MonoBehaviour {
 		}
 		
 	}
+
+    void OnTriggerEnter(){
+        
+    }
 }
