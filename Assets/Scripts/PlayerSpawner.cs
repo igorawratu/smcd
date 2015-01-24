@@ -15,13 +15,8 @@ public class PlayerSpawner : MonoBehaviour {
 			player.GetComponent<PlayerMovement>().setJumpKey(kc);
 
 			//Random player's spawn position near the middle
-<<<<<<< HEAD
 			offset = Random.Range(0, 2);
             player.transform.position = new Vector3(startPoint + offset, 0.59f, 0);
-=======
-			float offset = Random.Range(0, 2);
-			player.transform.position = new Vector3(-4 - offset, 1.65f, 0);
->>>>>>> Added players spawning at the bottom
 
 			//Assign player color
 			player.GetComponent<PlayerMovement>().playerColour = CurrentPlayerKeys.Instance.playerColors[i];
