@@ -39,7 +39,7 @@ public class DeadPlayer : MonoBehaviour {
             Debug.Log(onTheGround ? "true" : "false");
 
             if(onTheGround)
-                gameObject.rigidbody2D.velocity = new Vector2(gameObject.rigidbody2D.velocity.x, 25);
+                gameObject.rigidbody2D.velocity = new Vector2(gameObject.rigidbody2D.velocity.x, 10);
         }
     }
 
