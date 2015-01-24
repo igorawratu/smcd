@@ -4,6 +4,7 @@ MonoImporter:
   serializedVersion: 2
   defaultReferences:
   - prefab: {fileID: 159764, guid: 0c5fabfb7c9cc204db7aa45c480fc3d7, type: 2}
+  - deadPlayer: {fileID: 129026, guid: f065c9cc1c253e549bf17c6dfd4b8544, type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
