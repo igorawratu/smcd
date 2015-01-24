@@ -42,13 +42,27 @@ public class MenuScript : MonoBehaviour {
 		StartCoroutine(countDown());
 
 		//Create player colors
-		CurrentPlayerKeys.Instance.playerColors.Add(Color.blue);
-		CurrentPlayerKeys.Instance.playerColors.Add(Color.red);
-		CurrentPlayerKeys.Instance.playerColors.Add(Color.green);
+		CurrentPlayerKeys.Instance.playerColors.Add(new Color(0.33f, 0, 0));
+		CurrentPlayerKeys.Instance.playerColors.Add(new Color(0, 0.33f, 0));
+		CurrentPlayerKeys.Instance.playerColors.Add(new Color(0.2f, 0.2f, 0));
+		CurrentPlayerKeys.Instance.playerColors.Add(new Color(0.3f, 0, 0.1f));
+		CurrentPlayerKeys.Instance.playerColors.Add(new Color(0.33f, 0, 0.33f));
+		CurrentPlayerKeys.Instance.playerColors.Add(new Color(0.6f, 0.6f, 1));
+		CurrentPlayerKeys.Instance.playerColors.Add(new Color(1, 1, 0.6f));
 		CurrentPlayerKeys.Instance.playerColors.Add(Color.yellow);
+		CurrentPlayerKeys.Instance.playerColors.Add(Color.white);
+		CurrentPlayerKeys.Instance.playerColors.Add(Color.red);
+		CurrentPlayerKeys.Instance.playerColors.Add(new Color(1, 0.2f, 0.6f));
+		CurrentPlayerKeys.Instance.playerColors.Add(new Color(0, 0.33f, 0.33f));
+		CurrentPlayerKeys.Instance.playerColors.Add(new Color(1, 0.2f, 0.6f));
+		CurrentPlayerKeys.Instance.playerColors.Add(Color.blue);		
 		CurrentPlayerKeys.Instance.playerColors.Add(Color.cyan);
-		CurrentPlayerKeys.Instance.playerColors.Add(Color.magenta);
+		CurrentPlayerKeys.Instance.playerColors.Add(new Color(1, 0.2f, 0.6f));
+		CurrentPlayerKeys.Instance.playerColors.Add(new Color(0, 1, 0.5f));
 		CurrentPlayerKeys.Instance.playerColors.Add(Color.grey);
+		CurrentPlayerKeys.Instance.playerColors.Add(new Color(1, 0.5f, 0));
+		CurrentPlayerKeys.Instance.playerColors.Add(new Color(0.5f, 1, 0));
+
 
 		floorSize = floorPrefab.transform.renderer.bounds.max - floorPrefab.transform.renderer.bounds.min;
 		groundSize = groundPrefab.transform.renderer.bounds.max - groundPrefab.transform.renderer.bounds.min;
@@ -85,13 +99,12 @@ public class MenuScript : MonoBehaviour {
 						float xSpawn = Random.Range(25, 75);
 						initialSpawn += xSpawn;
 
-						//GameObject player = (GameObject)Instantiate(playerPrefab);
-						//player.GetComponent<PlayerMovement>().setJumpKey(KeyCode.Asterisk);
-						//player.GetComponent<PlayerMovement>().playerColour = CurrentPlayerKeys.Instance.playerColors[i];
-						//player.transform.position = new Vector3(xSpawn, player.transform.position.y, 0);
+						GameObject player = (GameObject)Instantiate(playerPrefab);
+						//set color here
+						player.transform.position = new Vector3(initialSpawn, player.transform.position.y, 0);
+
 						//Add text
 						GameObject aboveHead = (GameObject)Instantiate(headTextPrefab);
-
 						aboveHead.transform.SetParent(canvas.transform);
 						Text aboveHeadText = aboveHead.GetComponent<Text>();
 						aboveHeadText.text = keyCodes[i].ToString();
