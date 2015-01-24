@@ -65,7 +65,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (onTheGround)
         {
-            print("There is something below the object!");
+            //print("There is something below the object!");
             canDoubleJump = true;
             jumpReleased = false;
 
