@@ -55,13 +55,13 @@ public class PlayerMovement : MonoBehaviour
         Vector2 position = (Vector2)transform.position;
         Vector2 down = -Vector2.up * raycastLength;
         Debug.DrawRay(transform.position, down, Color.green);
-        //bool onTheGround = Physics.Raycast(transform.position, Vector3.down, raycastLength);
-        RaycastHit2D hit;
-        //Ray2D ray = new Ray2D(transform.position, down);
-        //rigidbody2D.
-
-        bool onTheGround = Physics2D.Raycast(position, down, raycastLength,~mask.value);
-
+        RaycastHit2D hit = Physics2D.Raycast(position, down, raycastLength, ~mask.value);
+        
+        bool onTheGround = true;
+        if (hit.collider == null)
+        {
+            onTheGround = false;
+        }
         if (onTheGround)
         {
             //print("There is something below the object!");
@@ -121,6 +121,10 @@ public class PlayerMovement : MonoBehaviour
 
     Vector3 jumpLogic(Vector3 vel, bool onTheGround)
     {
+        if (playerKey == KeyCode.A)
+        {
+            Debug.Log(onTheGround);
+        }
         if (Input.GetKey(playerKey) &&
             onTheGround &&
             jumpDelay)
@@ -146,12 +150,13 @@ public class PlayerMovement : MonoBehaviour
 
     Vector3 doubleJumpLogic(Vector3 vel, bool onTheGround)
     {
+
         if (!onTheGround && !Input.GetKey(playerKey))
         {
             jumpReleased = true;
+            Debug.Log(jumpReleased);
         }
-
-        if (Input.GetKey(KeyCode.UpArrow) &&
+        if (Input.GetKey(playerKey) &&
             powerUp == PowerUp.doubleJump &&
             canDoubleJump &&
             jumpDelay &&
