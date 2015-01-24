@@ -7,9 +7,26 @@ public class PlayerMovement : MonoBehaviour
     public Vector3 rightAcceleration = Vector3.zero;
     public Vector3 maxVel = Vector3.zero;
     public float jumpVel = 0.0f;
+    public float jumpBoostVel = 0.0f;
+    public float jumpTimeDelay = 0.4f;
+    bool jumpDelay = true;
+    bool canDoubleJump = false;
+    bool jumpReleased = false;
 
     public float raycastLength = 3.0f;
     public LayerMask mask;
+
+    enum PowerUp
+    {
+        none,
+        speedUp,
+        doubleJump,
+        jumpBoost,
+        glide
+    };
+    PowerUp powerUp;
+
+
 	// Use this for initialization
 	void Start () 
     {
@@ -17,6 +34,8 @@ public class PlayerMovement : MonoBehaviour
         Vector3 vel = gameObject.rigidbody2D.velocity;
         vel.x += 10;
         gameObject.rigidbody2D.velocity = vel;
+        powerUp = PowerUp.none;
+        jumpDelay = true;
 	}
 	
 	// Update is called once per frame
@@ -40,14 +59,18 @@ public class PlayerMovement : MonoBehaviour
         if (onTheGround)
         {
             print("There is something below the object!");
+            canDoubleJump = true;
+            jumpReleased = false;
         }
-        if (Input.GetKey(KeyCode.UpArrow) && onTheGround)
+
+        if (Input.GetKey(KeyCode.Return))
         {
-
-
-            vel.y += jumpVel * Time.deltaTime;
-
+            powerUp = PowerUp.doubleJump;
         }
+
+        vel = jumpLogic(vel, onTheGround);
+        vel = doubleJumpLogic(vel, onTheGround);
+
 
         if (vel.x >= maxVel.x)
         {
@@ -56,4 +79,76 @@ public class PlayerMovement : MonoBehaviour
 
         gameObject.rigidbody2D.velocity = vel;
 	}
+
+    void resetJumpTImer()
+    {
+        jumpDelay = true;
+    }
+
+    void ActivatePowerUp(string tag)
+    {
+        if(tag=="speedUp")
+        {
+            powerUp = PowerUp.speedUp;
+        }
+        else if (tag == "jumpBoost")
+        {
+            powerUp = PowerUp.jumpBoost;
+        }
+        else if (tag == "doubleJump")
+        {
+            powerUp = PowerUp.doubleJump;
+        }
+    }
+
+    Vector3 jumpLogic(Vector3 vel, bool onTheGround)
+    {
+        if (Input.GetKey(KeyCode.UpArrow) &&
+            onTheGround &&
+            jumpDelay)
+        {
+
+            vel.y += jumpVel * Time.deltaTime;
+
+            if (powerUp == PowerUp.jumpBoost)
+                vel.y += jumpBoostVel * Time.deltaTime;
+
+            jumpDelay = false;
+            if (powerUp == PowerUp.doubleJump)
+                Invoke("resetJumpTImer", jumpTimeDelay / 4);
+
+
+            Invoke("resetJumpTImer", jumpTimeDelay);
+            jumpReleased = false;
+        }
+        return vel;
+    }
+
+    Vector3 doubleJumpLogic(Vector3 vel, bool onTheGround)
+    {
+        if (!onTheGround && !Input.GetKey(KeyCode.UpArrow))
+        {
+            jumpReleased = true;
+        }
+
+        if (Input.GetKey(KeyCode.UpArrow) &&
+            powerUp == PowerUp.doubleJump &&
+            canDoubleJump &&
+            jumpDelay &&
+            jumpReleased)
+        {
+            vel.y = 0;
+            vel.y += jumpVel * Time.deltaTime;
+
+            if (powerUp == PowerUp.jumpBoost)
+                vel.y += jumpBoostVel * Time.deltaTime;
+
+            canDoubleJump = false;
+            jumpDelay = false;
+            Invoke("resetJumpTImer", jumpTimeDelay);
+            jumpReleased = false;
+        }
+        return vel;
+    }
+
 }
