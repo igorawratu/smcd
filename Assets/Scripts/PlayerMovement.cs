@@ -12,6 +12,9 @@ public class PlayerMovement : MonoBehaviour
     bool jumpDelay = true;
     bool canDoubleJump = false;
     bool jumpReleased = false;
+    bool inTheAir = false;
+
+    public AnimationBoard animationBoard;
 
     public float raycastLength = 3.0f;
     public LayerMask mask;
@@ -55,12 +58,24 @@ public class PlayerMovement : MonoBehaviour
 
         bool onTheGround = Physics2D.Raycast(position, down, raycastLength,~mask.value);
 
-
         if (onTheGround)
         {
             print("There is something below the object!");
             canDoubleJump = true;
             jumpReleased = false;
+
+            if (inTheAir)
+            {
+                animationBoard.Land();
+                inTheAir = false;
+            }
+        }
+        else if (inTheAir)
+        {
+            if (vel.y <= 0)
+            {
+                animationBoard.Fall();
+            }
         }
 
         if (Input.GetKey(KeyCode.Return))
@@ -70,7 +85,6 @@ public class PlayerMovement : MonoBehaviour
 
         vel = jumpLogic(vel, onTheGround);
         vel = doubleJumpLogic(vel, onTheGround);
-
 
         if (vel.x >= maxVel.x)
         {
@@ -109,6 +123,7 @@ public class PlayerMovement : MonoBehaviour
         {
 
             vel.y += jumpVel * Time.deltaTime;
+            animationBoard.Jump();
 
             if (powerUp == PowerUp.jumpBoost)
                 vel.y += jumpBoostVel * Time.deltaTime;
@@ -120,6 +135,7 @@ public class PlayerMovement : MonoBehaviour
 
             Invoke("resetJumpTImer", jumpTimeDelay);
             jumpReleased = false;
+            inTheAir = true;
         }
         return vel;
     }
@@ -147,6 +163,7 @@ public class PlayerMovement : MonoBehaviour
             jumpDelay = false;
             Invoke("resetJumpTImer", jumpTimeDelay);
             jumpReleased = false;
+            inTheAir = true;
         }
         return vel;
     }
