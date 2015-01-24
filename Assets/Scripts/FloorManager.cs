@@ -17,6 +17,7 @@ public class FloorManager : MonoBehaviour {
     private Vector3 skySize;
     public Vector3 floorOffset = new Vector3(-20, 0, 0);
     public Vector3 skyOffset = new Vector3(-20, 0, 0);
+    public Vector3 skySpeed = new Vector3(-0.2f, 0, 0);
 
 	// Use this for initialization
 	void Start () {
@@ -57,7 +58,7 @@ public class FloorManager : MonoBehaviour {
         sr.sprite = floorSprites[randomTile];
     }
 	// Update is called once per frame
-	void Update () {
+	void FixedUpdate () {
 		if (floorArr[0].transform.position.x < Camera.main.transform.position.x) {
 			if (!floorArr[0].transform.renderer.IsVisibleFrom(Camera.main)) {
 				//get position of last floor piece
@@ -78,6 +79,10 @@ public class FloorManager : MonoBehaviour {
 
         rotateArray(groundArr, groundSize);
         rotateArray(skyArr, skySize);
+        for (int i = 0; i < skyArr.Length; i++)
+        {
+            skyArr[i].transform.position = skyArr[i].transform.position + skySpeed * Time.deltaTime;
+        }
 
 	}
     void rotateArray(GameObject[] arr, Vector3 tileSize)
