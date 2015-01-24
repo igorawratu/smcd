@@ -121,10 +121,6 @@ public class PlayerMovement : MonoBehaviour
 
     Vector3 jumpLogic(Vector3 vel, bool onTheGround)
     {
-        if (playerKey == KeyCode.A)
-        {
-            Debug.Log(onTheGround);
-        }
         if (Input.GetKey(playerKey) &&
             onTheGround &&
             jumpDelay)
@@ -154,7 +150,7 @@ public class PlayerMovement : MonoBehaviour
         if (!onTheGround && !Input.GetKey(playerKey))
         {
             jumpReleased = true;
-            Debug.Log(jumpReleased);
+            //Debug.Log(jumpReleased);
         }
         if (Input.GetKey(playerKey) &&
             powerUp == PowerUp.doubleJump &&
