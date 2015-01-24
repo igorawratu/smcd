@@ -23,10 +23,15 @@ public class RandomShake : MonoBehaviour {
         StopAllCoroutines();
         StartCoroutine("SinShake");
     }
+    public void PlayShakeX()
+    {
+        StopAllCoroutines();
+        StartCoroutine("ShakeX");
+    }
     // -------------------------------------------------------------------------
     IEnumerator SinShake()
     {
-
+        Debug.Log("sinshake");
         float elapsed = 0.0f;
 
         Vector3 originalCamPos = gameObject.transform.position;
@@ -49,7 +54,32 @@ public class RandomShake : MonoBehaviour {
             yield return null;
         }
         gameObject.transform.position = originalCamPos + CameraLogic.camLogic.moveVel * elapsed;
+    }
+    // -------------------------------------------------------------------------
+    IEnumerator ShakeX()
+    {
+        float elapsed = 0.0f;
+
+        Vector3 originalCamPos = gameObject.transform.position;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+
+            float percentComplete = elapsed / duration;
+            float damper = 1.0f - Mathf.Clamp(4.0f * percentComplete - 3.0f, 0.0f, 1.0f);
+
+            // map noise to [-1, 1]
+            float x = Random.value * 2.0f - 1.0f;
+            x *= magnitude*5.0f * damper;
+
+            gameObject.transform.position = originalCamPos + CameraLogic.camLogic.moveVel * elapsed + new Vector3(x, 0.0f, originalCamPos.z);
+
+            yield return null;
+        }
+        gameObject.transform.position = originalCamPos + CameraLogic.camLogic.moveVel * elapsed;
     }	
+
 	// -------------------------------------------------------------------------
 	IEnumerator Shake() {
 		

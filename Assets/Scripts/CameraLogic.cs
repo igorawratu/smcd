@@ -19,6 +19,7 @@ public class CameraLogic : MonoBehaviour
 	// Update is called once per frame
 	void FixedUpdate () 
     {
+        moveVel.x = VariableSpeed.current;
         Vector3 currentPos =  gameObject.transform.position;
         currentPos += moveVel * Time.deltaTime;
         currentPos.z = -10;

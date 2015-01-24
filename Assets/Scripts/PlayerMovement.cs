@@ -25,6 +25,11 @@ public class PlayerMovement : MonoBehaviour
     public LayerMask mask;
     float gravityScale = 0.0f;
     public float jumpGlideTime = 0.4f;
+    GameObject obj = null;
+
+
+    public GameObject hitEffect;
+    public GameObject rockEffect;
 
     public enum PowerUp
     {
@@ -63,9 +68,9 @@ public class PlayerMovement : MonoBehaviour
         Debug.DrawRay(transform.position, down, Color.green);
         RaycastHit2D hit = Physics2D.Raycast(position, down, raycastLength, ~mask.value);
 
-        Vector2 right = -Vector2.right * raycastLength;
+        Vector2 right = Vector2.right * raycastLengthRight;
         Debug.DrawRay(transform.position, right, Color.green);
-        RaycastHit2D hitFront = Physics2D.Raycast(position, right, raycastLength, ~mask.value);
+        RaycastHit2D hitFront = Physics2D.Raycast(position, right, raycastLengthRight, ~mask.value);
 
         bool infront = true;
         if (hitFront.collider == null)
@@ -74,7 +79,39 @@ public class PlayerMovement : MonoBehaviour
         }
 
         if (infront)
-            RandomShake.randomShake.PlaySinShake();
+        {
+            Debug.Log(hitFront.collider.gameObject.tag);
+            if (hitFront.collider.gameObject.tag == "obstacle" && obj != hitFront.collider.gameObject)
+            {
+                RandomShake.randomShake.PlaySinShake();
+                Instantiate(hitEffect,
+                    new Vector3(hitFront.point.x, hitFront.point.y, hitEffect.transform.position.z),
+                    hitEffect.transform.rotation);
+                obj = hitFront.collider.gameObject;
+            }
+
+            if (powerUp == PowerUp.smash)
+            {
+                Debug.Log("obstacle1");
+                if (hitFront.collider.gameObject.tag == "obstacle")
+                {
+                    Debug.Log("obstacle2");
+                    GameObject itemGenerator = GameObject.Find("ItemGenerator");
+                    GenerateItems igScript = itemGenerator.GetComponent<GenerateItems>();
+                    igScript.smashRock(hitFront.collider.gameObject);
+
+                    Instantiate(rockEffect,
+                        new Vector3(hitFront.point.x, hitFront.point.y, hitEffect.transform.position.z),
+                        rockEffect.transform.rotation);
+                    obj = hitFront.collider.gameObject;
+
+
+                    animationBoard.Hit();
+                    powerUp = PowerUp.none;
+                }
+            }
+        }
+
 
         bool onTheGround = true;
         if (hit.collider == null)
@@ -112,18 +149,23 @@ public class PlayerMovement : MonoBehaviour
 
         if (Input.GetKey(KeyCode.Return))
         {
-            powerUp = PowerUp.glide;
+            powerUp = PowerUp.smash;
         }
 
         vel = jumpLogic(vel, onTheGround);
         vel = doubleJumpLogic(vel, onTheGround);
         vel = glideJumpLogic(vel, onTheGround);
 
-        if (vel.x >= maxVel.x)
+        //if (vel.x >=   maxVel.x)
+        //{
+        //    vel.x = maxVel.x;
+        //}
+        if (vel.x >= VariableSpeed.current)
         {
-            vel.x = maxVel.x;
+            vel.x = VariableSpeed.current;
         }
 
+        
         gameObject.rigidbody2D.velocity = vel;
 	}
 
@@ -180,7 +222,7 @@ public class PlayerMovement : MonoBehaviour
         }
         return vel;
     }
-
+    
     Vector3 doubleJumpLogic(Vector3 vel, bool onTheGround)
     {
 

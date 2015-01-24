@@ -3,6 +3,7 @@ using System.Collections;
 
 public class PlayerDeath : MonoBehaviour {
 
+    public GameObject bloodEffect;
 	// Use this for initialization
 	void Start () 
     {
@@ -23,6 +24,11 @@ public class PlayerDeath : MonoBehaviour {
             script.removePlayer(gameObject.name);
 
             gameObject.SetActive(false);
+            Instantiate(bloodEffect,
+                new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, bloodEffect.transform.position.z),
+                bloodEffect.transform.rotation);
+            RandomShake.randomShake.PlayShakeX();
+
         }
 	}
 }
