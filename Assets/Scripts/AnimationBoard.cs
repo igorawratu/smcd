@@ -16,7 +16,7 @@ public class AnimationBoard : MonoBehaviour
 
     public void Jump()
     {
-        Debug.Log("jump");
+        //Debug.Log("jump");
         animator.SetBool(grounded, false);
     }
     public void Fall()
