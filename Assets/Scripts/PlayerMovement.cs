@@ -25,6 +25,7 @@ public class PlayerMovement : MonoBehaviour
     public LayerMask mask;
     float gravityScale = 0.0f;
     public float jumpGlideTime = 0.4f;
+    GameObject obj = null;
 
     public enum PowerUp
     {
@@ -63,9 +64,9 @@ public class PlayerMovement : MonoBehaviour
         Debug.DrawRay(transform.position, down, Color.green);
         RaycastHit2D hit = Physics2D.Raycast(position, down, raycastLength, ~mask.value);
 
-        Vector2 right = -Vector2.right * raycastLength;
+        Vector2 right = Vector2.right * raycastLengthRight;
         Debug.DrawRay(transform.position, right, Color.green);
-        RaycastHit2D hitFront = Physics2D.Raycast(position, right, raycastLength, ~mask.value);
+        RaycastHit2D hitFront = Physics2D.Raycast(position, right, raycastLengthRight, ~mask.value);
 
         bool infront = true;
         if (hitFront.collider == null)
@@ -74,7 +75,28 @@ public class PlayerMovement : MonoBehaviour
         }
 
         if (infront)
-            RandomShake.randomShake.PlaySinShake();
+        {
+            Debug.Log(hitFront.collider.gameObject.tag);
+            if (hitFront.collider.gameObject.tag == "obstacle" && obj != hitFront.collider.gameObject)
+            {
+                RandomShake.randomShake.PlaySinShake();
+                obj = hitFront.collider.gameObject;
+            }
+
+            if (powerUp == PowerUp.smash)
+            {
+                Debug.Log("obstacle1");
+                if (hitFront.collider.gameObject.tag == "obstacle")
+                {
+                    Debug.Log("obstacle2");
+                    GameObject itemGenerator = GameObject.Find("ItemGenerator");
+                    GenerateItems igScript = itemGenerator.GetComponent<GenerateItems>();
+                    igScript.smashRock(hitFront.collider.gameObject);
+                    powerUp = PowerUp.none;
+                }
+            }
+        }
+
 
         bool onTheGround = true;
         if (hit.collider == null)
@@ -112,7 +134,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (Input.GetKey(KeyCode.Return))
         {
-            powerUp = PowerUp.glide;
+            powerUp = PowerUp.smash;
         }
 
         vel = jumpLogic(vel, onTheGround);
@@ -180,7 +202,7 @@ public class PlayerMovement : MonoBehaviour
         }
         return vel;
     }
-
+    
     Vector3 doubleJumpLogic(Vector3 vel, bool onTheGround)
     {
 

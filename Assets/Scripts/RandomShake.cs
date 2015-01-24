@@ -26,7 +26,7 @@ public class RandomShake : MonoBehaviour {
     // -------------------------------------------------------------------------
     IEnumerator SinShake()
     {
-
+        Debug.Log("sinshake");
         float elapsed = 0.0f;
 
         Vector3 originalCamPos = gameObject.transform.position;
