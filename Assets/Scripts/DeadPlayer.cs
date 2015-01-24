@@ -3,6 +3,7 @@ using System.Collections;
 
 public class DeadPlayer : MonoBehaviour {
     private string mPKey;
+    public LayerMask mask;
 
 	// Use this for initialization
     void Awake()
@@ -30,7 +31,15 @@ public class DeadPlayer : MonoBehaviour {
         }
 
         if (Input.GetKey(mPKey)){
-            gameObject.rigidbody2D.velocity = new Vector2(gameObject.rigidbody2D.velocity.x, 5);
+            Vector2 position = (Vector2)gameObject.transform.position;
+            float raycastLength = 0.8f;
+            Vector2 down = -Vector2.up * raycastLength;
+            
+            bool onTheGround = Physics2D.Raycast(position, down, raycastLength, ~mask.value);
+            Debug.Log(onTheGround ? "true" : "false");
+
+            if(onTheGround)
+                gameObject.rigidbody2D.velocity = new Vector2(gameObject.rigidbody2D.velocity.x, 25);
         }
     }
 

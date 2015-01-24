@@ -14,6 +14,8 @@ public class GenerateItems : MonoBehaviour {
 
 	public GameObject prefab;
     public GameObject deadPlayer;
+    public GameObject rockbig;
+    public GameObject rocksmall;
 
 	// Use this for initialization
 	void Start () {
@@ -23,11 +25,12 @@ public class GenerateItems : MonoBehaviour {
         mTimeSinceLastObstacle = 0;
         mItemsList = new List<GameObject>();
         mTimeLowerBound = 0.5f;
-        mItems.Add(prefab);
         mDeadPlayers = new List<DeadPlayerInfo>();
-        mDeadPlayers.Add(new DeadPlayerInfo("s", new Color(0, 255, 0)));
+        mItems.Add(rockbig);
+        mItems.Add(rocksmall);
         mItems.Add(deadPlayer);
         mItems.Add(deadPlayer);
+        mDeadPlayers.Add(new DeadPlayerInfo("q", new Color(255, 255, 255)));
 	}
 	
 	// Update is called once per frame
@@ -58,7 +61,7 @@ public class GenerateItems : MonoBehaviour {
                 deadScript.setInfo(mDeadPlayers[chosenDeadPlayer].name, mDeadPlayers[chosenDeadPlayer].colour);
             }
 
-            newItem.transform.position = new Vector2(Camera.main.transform.position.x + 3, 5);
+            newItem.transform.position = new Vector2(Camera.main.transform.position.x + 30, 5);
             mItemsList.Add(newItem);
             mTimeSinceLastObstacle = 0;
 

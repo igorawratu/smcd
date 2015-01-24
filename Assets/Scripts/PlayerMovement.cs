@@ -104,7 +104,7 @@ public class PlayerMovement : MonoBehaviour
         jumpDelay = true;
     }
 
-    void ActivatePowerUp(string tag)
+    public void ActivatePowerUp(string tag)
     {
         if(tag=="speedUp")
         {
