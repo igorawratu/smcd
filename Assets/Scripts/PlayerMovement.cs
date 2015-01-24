@@ -173,4 +173,8 @@ public class PlayerMovement : MonoBehaviour
         return vel;
     }
 
+	public void setJumpKey(KeyCode key)
+	{
+		playerKey = key;
+	}
 }
