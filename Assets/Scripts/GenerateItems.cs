@@ -64,7 +64,7 @@ public class GenerateItems : MonoBehaviour {
                 deadScript.setInfo(mDeadPlayers[chosenDeadPlayer].name, mDeadPlayers[chosenDeadPlayer].colour);
             }
 
-            newItem.transform.position = new Vector2(Camera.main.transform.position.x + 20, 1.1f);
+            newItem.transform.position = new Vector2(Camera.main.transform.position.x + 20, mItems[itemType].transform.position.y);
             mItemsList.Add(newItem);
             mTimeSinceLastObstacle = 0;
 
@@ -93,6 +93,11 @@ public class GenerateItems : MonoBehaviour {
         mDeadPlayers.Add(new DeadPlayerInfo(_tag, _col));
         mItems.Add(deadPlayer);
         //mItems.Add(deadPlayer);
+    }
+
+    public void smashRock(GameObject _obj){
+        mItemsList.Remove(_obj);
+        GameObject.Destroy(_obj);
     }
 
     private List<GameObject> mItems;
