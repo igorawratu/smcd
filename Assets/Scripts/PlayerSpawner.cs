@@ -21,6 +21,21 @@ public class PlayerSpawner : MonoBehaviour {
 			//Assign player color
 			player.GetComponent<PlayerMovement>().playerColour = CurrentPlayerKeys.Instance.playerColors[i];
 		}
+
+        if (CurrentPlayerKeys.Instance.playerKeys.Count==0)
+        {
+            KeyCode kc = KeyCode.UpArrow;
+            GameObject player = (GameObject)Instantiate(playerPrefab);
+            player.name = kc.ToString();
+            player.GetComponent<PlayerMovement>().setJumpKey(kc);
+
+            //Random player's spawn position near the middle
+            offset = Random.Range(0, 2);
+            player.transform.position = new Vector3(startPoint + offset, 0.59f, 0);
+
+            //Assign player color
+            player.GetComponent<PlayerMovement>().playerColour = Color.white;
+        }
 	}
 	
 	// Update is called once per frame

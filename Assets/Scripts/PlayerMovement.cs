@@ -29,6 +29,7 @@ public class PlayerMovement : MonoBehaviour
 
 
     public GameObject hitEffect;
+    public GameObject rockEffect;
 
     public enum PowerUp
     {
@@ -98,6 +99,13 @@ public class PlayerMovement : MonoBehaviour
                     GameObject itemGenerator = GameObject.Find("ItemGenerator");
                     GenerateItems igScript = itemGenerator.GetComponent<GenerateItems>();
                     igScript.smashRock(hitFront.collider.gameObject);
+
+                    Instantiate(rockEffect,
+                        new Vector3(hitFront.point.x, hitFront.point.y, hitEffect.transform.position.z),
+                        rockEffect.transform.rotation);
+                    obj = hitFront.collider.gameObject;
+
+
                     animationBoard.Hit();
                     powerUp = PowerUp.none;
                 }
@@ -148,11 +156,16 @@ public class PlayerMovement : MonoBehaviour
         vel = doubleJumpLogic(vel, onTheGround);
         vel = glideJumpLogic(vel, onTheGround);
 
-        if (vel.x >= maxVel.x)
+        //if (vel.x >=   maxVel.x)
+        //{
+        //    vel.x = maxVel.x;
+        //}
+        if (vel.x >= VariableSpeed.current)
         {
-            vel.x = maxVel.x;
+            vel.x = VariableSpeed.current;
         }
 
+        
         gameObject.rigidbody2D.velocity = vel;
 	}
 
