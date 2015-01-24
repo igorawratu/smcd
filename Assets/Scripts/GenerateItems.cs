@@ -28,6 +28,9 @@ public class GenerateItems : MonoBehaviour {
         mDeadPlayers = new List<DeadPlayerInfo>();
         mItems.Add(rockbig);
         mItems.Add(rocksmall);
+        mItems.Add(deadPlayer);
+        mItems.Add(deadPlayer);
+        mDeadPlayers.Add(new DeadPlayerInfo("q", new Color(255, 255, 255)));
 	}
 	
 	// Update is called once per frame
