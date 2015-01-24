@@ -6,4 +6,6 @@ public class CurrentPlayerKeys : Singleton<CurrentPlayerKeys> {
 	
 	public List<KeyCode> playerKeys = new List<KeyCode>();
 	public List<Color> playerColors = new List<Color>();
+    public Dictionary<string, int> playerScores = new Dictionary<string, int>();
+    public string lastWinner = "";
 }
