@@ -68,6 +68,6 @@ public class MenuScript : MonoBehaviour {
 			yield return new WaitForSeconds(1);
 		}
 
-
+		Application.LoadLevel("TestScene");
 	}
 }
