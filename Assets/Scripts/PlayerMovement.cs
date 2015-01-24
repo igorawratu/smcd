@@ -98,6 +98,7 @@ public class PlayerMovement : MonoBehaviour
                     GameObject itemGenerator = GameObject.Find("ItemGenerator");
                     GenerateItems igScript = itemGenerator.GetComponent<GenerateItems>();
                     igScript.smashRock(hitFront.collider.gameObject);
+                    animationBoard.Hit();
                     powerUp = PowerUp.none;
                 }
             }
