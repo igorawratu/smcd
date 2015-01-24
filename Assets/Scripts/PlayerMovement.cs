@@ -49,7 +49,6 @@ public class PlayerMovement : MonoBehaviour
 	// Update is called once per frame
 	void FixedUpdate () 
     {
-        
         Vector3 vel = gameObject.rigidbody2D.velocity;
         vel += rightAcceleration*Time.deltaTime;
 

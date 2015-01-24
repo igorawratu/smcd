@@ -64,10 +64,7 @@ public class GenerateItems : MonoBehaviour {
                 deadScript.setInfo(mDeadPlayers[chosenDeadPlayer].name, mDeadPlayers[chosenDeadPlayer].colour);
             }
 
-            if (mItems[itemType] == doubleJumpPU || mItems[itemType] == boostedJumpPU)
-                newItem.transform.position = new Vector2(Camera.main.transform.position.x + 30, 0.85f);
-            else
-                newItem.transform.position = new Vector2(Camera.main.transform.position.x + 30, 5);
+            newItem.transform.position = new Vector2(Camera.main.transform.position.x + 30, 0.85f);
             mItemsList.Add(newItem);
             mTimeSinceLastObstacle = 0;
 
@@ -95,7 +92,7 @@ public class GenerateItems : MonoBehaviour {
     public void playerDied(string _tag, Color _col){
         mDeadPlayers.Add(new DeadPlayerInfo(_tag, _col));
         mItems.Add(deadPlayer);
-        mItems.Add(deadPlayer);
+        //mItems.Add(deadPlayer);
     }
 
     private List<GameObject> mItems;
