@@ -64,7 +64,7 @@ public class GenerateItems : MonoBehaviour {
                 deadScript.setInfo(mDeadPlayers[chosenDeadPlayer].name, mDeadPlayers[chosenDeadPlayer].colour);
             }
 
-            newItem.transform.position = new Vector2(Camera.main.transform.position.x + 30, 1.1f);
+            newItem.transform.position = new Vector2(Camera.main.transform.position.x + 20, 1.1f);
             mItemsList.Add(newItem);
             mTimeSinceLastObstacle = 0;
 
