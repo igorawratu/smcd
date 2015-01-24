@@ -16,21 +16,28 @@ public class GenerateItems : MonoBehaviour {
     public GameObject deadPlayer;
     public GameObject rockbig;
     public GameObject rocksmall;
+    public GameObject doubleJumpPU;
+    public GameObject boostedJumpPU;
 
 	// Use this for initialization
 	void Start () {
         mItems = new List<GameObject>();
         mRng = new System.Random();
-        mTimeLimit = 2;
+        mTimeLimit = 1;
         mTimeSinceLastObstacle = 0;
         mItemsList = new List<GameObject>();
-        mTimeLowerBound = 0.5f;
+        mTimeLowerBound = 0.25f;
         mDeadPlayers = new List<DeadPlayerInfo>();
-        mItems.Add(rockbig);
+        mDecTimer = 0;
+
+        /*mItems.Add(rockbig);
         mItems.Add(rocksmall);
         mItems.Add(deadPlayer);
-        mItems.Add(deadPlayer);
-        mDeadPlayers.Add(new DeadPlayerInfo("q", new Color(255, 255, 255)));
+        mItems.Add(deadPlayer);*/
+        mItems.Add(doubleJumpPU);
+        mItems.Add(boostedJumpPU);
+
+        //mDeadPlayers.Add(new DeadPlayerInfo("q", new Color(255, 255, 255)));
 	}
 	
 	// Update is called once per frame
@@ -40,18 +47,14 @@ public class GenerateItems : MonoBehaviour {
 
 	void FixedUpdate(){
         mTimeSinceLastObstacle += Time.deltaTime;
-        float tElapsed = Time.realtimeSinceStartup;
-        int tElapsedInt = (int)tElapsed;
-        float delta = tElapsed - (int)tElapsed;
-        if (delta < 0)
-            delta = -delta;
-        float epsilon = 0.001f;
+        mDecTimer += Time.deltaTime;
 
-        if (delta < epsilon && mTimeLimit > mTimeLowerBound)
+        if(mDecTimer > 1 && mTimeLimit > mTimeLowerBound){
             mTimeLimit -= 0.01f;
-            
+            mDecTimer = 0;
+        }   
 
-        if (mRng.Next(0, 100) < 10 && mTimeSinceLastObstacle > mTimeLimit){
+        if (mRng.Next(0, 100) < 3 && mTimeSinceLastObstacle > mTimeLimit){
             int itemType = mRng.Next(0, mItems.Count);
             GameObject newItem = (GameObject)Instantiate(mItems[itemType]);
 
@@ -61,7 +64,10 @@ public class GenerateItems : MonoBehaviour {
                 deadScript.setInfo(mDeadPlayers[chosenDeadPlayer].name, mDeadPlayers[chosenDeadPlayer].colour);
             }
 
-            newItem.transform.position = new Vector2(Camera.main.transform.position.x + 30, 5);
+            if (mItems[itemType] == doubleJumpPU || mItems[itemType] == boostedJumpPU)
+                newItem.transform.position = new Vector2(Camera.main.transform.position.x + 30, 0.85f);
+            else
+                newItem.transform.position = new Vector2(Camera.main.transform.position.x + 30, 5);
             mItemsList.Add(newItem);
             mTimeSinceLastObstacle = 0;
 
@@ -99,4 +105,5 @@ public class GenerateItems : MonoBehaviour {
     private float mTimeSinceLastObstacle;
     private float mTimeLowerBound;
     private List<GameObject> mItemsList;
+    private float mDecTimer;
 }

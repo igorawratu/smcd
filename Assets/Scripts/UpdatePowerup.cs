@@ -17,8 +17,8 @@ public class UpdatePowerup : MonoBehaviour {
         
 	}
 
-    void OnTriggerEnter(Collider _collider){
-        if (_collider.tag == "someplayer" && !mDeactivated){
+    void OnTriggerEnter2D(Collider2D _collider){
+        if (_collider.tag == "Player" && !mDeactivated){
             GameObject itemGenerator = GameObject.Find("ItemGenerator");
             GenerateItems igScript = itemGenerator.GetComponent<GenerateItems>();
             igScript.removeGameObject(gameObject);
