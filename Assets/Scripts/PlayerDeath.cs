@@ -23,6 +23,7 @@ public class PlayerDeath : MonoBehaviour {
             Instantiate(bloodEffect,
                 new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, bloodEffect.transform.position.z),
                 bloodEffect.transform.rotation);
+            RandomShake.randomShake.PlayShakeX();
 
         }
 	}
