@@ -9,7 +9,6 @@ public class MenuScript : MonoBehaviour {
 
 	public Text joinText;
 	public Text countDownText;
-	public Text playersText;
 
 	private Dictionary<KeyCode, float> keysPressed;
 
@@ -17,7 +16,21 @@ public class MenuScript : MonoBehaviour {
 
 	public float timeToHold = 2;
 
-	//private List<KeyCode> playerKeys;
+	public GameObject floorPrefab;
+	public GameObject groundPrefab;
+	public GameObject playerPrefab;
+
+	public GameObject[] floorArr = new GameObject[40];
+	public GameObject[] groundArr = new GameObject[40];
+	public Sprite[] floorSprites = new Sprite[6];
+	public Vector3 floorOffset = new Vector3(-20, 0, 0);
+
+	private Vector3 floorSize;
+	private Vector3 groundSize;
+
+	private List<float> spawnPoints;
+
+	public GameObject headTextPrefab;
 
 	// Use this for initialization
 	void Start () {
@@ -28,7 +41,35 @@ public class MenuScript : MonoBehaviour {
 		StartCoroutine(flashText());
 		StartCoroutine(countDown());
 
-		//playerKeys = new List<KeyCode>();
+		//Create player colors
+		CurrentPlayerKeys.Instance.playerColors.Add(Color.blue);
+		CurrentPlayerKeys.Instance.playerColors.Add(Color.red);
+		CurrentPlayerKeys.Instance.playerColors.Add(Color.green);
+		CurrentPlayerKeys.Instance.playerColors.Add(Color.yellow);
+		CurrentPlayerKeys.Instance.playerColors.Add(Color.cyan);
+		CurrentPlayerKeys.Instance.playerColors.Add(Color.magenta);
+		CurrentPlayerKeys.Instance.playerColors.Add(Color.grey);
+
+		floorSize = floorPrefab.transform.renderer.bounds.max - floorPrefab.transform.renderer.bounds.min;
+		groundSize = groundPrefab.transform.renderer.bounds.max - groundPrefab.transform.renderer.bounds.min;
+
+		for (int i = 0; i < floorArr.Length; i++)
+		{
+			floorArr[i] = (GameObject)Instantiate(floorPrefab);
+			setFloorSprite(floorArr[i]);
+			
+			Vector3 pos = floorOffset + new Vector3(floorSize.x * i, 0.0f, 0.0f);
+			floorArr[i].transform.position = pos;
+		}
+
+		for (int i = 0; i < floorArr.Length; i++)
+		{
+			groundArr[i] = (GameObject)Instantiate(groundPrefab);
+			Vector3 pos = floorOffset + new Vector3(groundSize.x * i, -floorSize.y, 0.0f);
+			groundArr[i].transform.position = pos;
+		}
+
+		spawnPoints = new List<float>();
 	}
 	
 	// Update is called once per frame
@@ -40,8 +81,21 @@ public class MenuScript : MonoBehaviour {
 					keysPressed[keyCodes[i]] += Time.deltaTime;
 					if (keysPressed[keyCodes[i]] >= timeToHold) {
 						CurrentPlayerKeys.Instance.playerKeys.Add(keyCodes[i]);
-						//Text stuff here
-						playersText.text = playersText.text + " " + keyCodes[i].ToString() + " ";
+
+						//Spawn stuff here
+						GameObject canvas = GameObject.Find("Canvas");
+						float xSpawn = Random.Range(0, 700);
+						//GameObject player = (GameObject)Instantiate(playerPrefab);
+						//player.GetComponent<PlayerMovement>().setJumpKey(KeyCode.Asterisk);
+						//player.GetComponent<PlayerMovement>().playerColour = CurrentPlayerKeys.Instance.playerColors[i];
+						//player.transform.position = new Vector3(xSpawn, player.transform.position.y, 0);
+						//Add text
+						GameObject aboveHead = (GameObject)Instantiate(headTextPrefab);
+
+						aboveHead.transform.SetParent(canvas.transform);
+						Text aboveHeadText = aboveHead.GetComponent<Text>();
+						aboveHeadText.text = keyCodes[i].ToString();
+						aboveHeadText.rectTransform.position = new Vector3(xSpawn, 150, 0);
 
 						keysPressed[keyCodes[i]] = -100;
 					}
@@ -69,5 +123,12 @@ public class MenuScript : MonoBehaviour {
 		}
 
 		Application.LoadLevel("TestScene");
+	}
+
+	void setFloorSprite(GameObject gObj)
+	{
+		int randomTile = Random.Range(0, floorSprites.Length);
+		SpriteRenderer sr = gObj.GetComponent<SpriteRenderer>();
+		sr.sprite = floorSprites[randomTile];
 	}
 }

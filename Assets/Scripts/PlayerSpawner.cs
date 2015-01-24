@@ -8,7 +8,8 @@ public class PlayerSpawner : MonoBehaviour {
     public float startPoint = 0.0f;
 	// Use this for initialization
 	void Start () {
-		foreach (KeyCode kc in CurrentPlayerKeys.Instance.playerKeys) {
+		for (int i = 0; i < CurrentPlayerKeys.Instance.playerKeys.Count; i++) {
+			KeyCode kc = CurrentPlayerKeys.Instance.playerKeys[i];
 			GameObject player = (GameObject) Instantiate(playerPrefab);
 			player.name = kc.ToString();
 			player.GetComponent<PlayerMovement>().setJumpKey(kc);
@@ -17,6 +18,8 @@ public class PlayerSpawner : MonoBehaviour {
 			offset = Random.Range(0, 2);
             player.transform.position = new Vector3(startPoint + offset, 0.59f, 0);
 
+			//Assign player color
+			player.GetComponent<PlayerMovement>().playerColour = CurrentPlayerKeys.Instance.playerColors[i];
 		}
 	}
 	
