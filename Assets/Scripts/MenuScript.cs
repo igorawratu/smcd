@@ -12,7 +12,7 @@ public class MenuScript : MonoBehaviour {
 
 	private Dictionary<KeyCode, float> keysPressed;
 
-	private static KeyCode[] keyCodes;
+	public static KeyCode[] keyCodes;
 
 	public float timeToHold = 2;
 
@@ -153,7 +153,13 @@ public class MenuScript : MonoBehaviour {
 			yield return new WaitForSeconds(1);
 		}
 
-		Application.LoadLevel("TestScene");
+		if (CurrentPlayerKeys.Instance.playerKeys.Count > 0) {
+			Application.LoadLevel("TestScene");
+		}
+		else {
+			Application.LoadLevel("MenuScene");
+		}
+
 	}
 
 	void setFloorSprite(GameObject gObj)
