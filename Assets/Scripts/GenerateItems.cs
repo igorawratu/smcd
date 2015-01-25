@@ -20,6 +20,7 @@ public class GenerateItems : MonoBehaviour {
     public GameObject boostedJumpPU;
     public GameObject glidePU;
     public GameObject smashPU;
+    public GameObject cloudObject;
 
 	// Use this for initialization
 	void Start () {
@@ -34,6 +35,8 @@ public class GenerateItems : MonoBehaviour {
         mDecTimer = 0;
         mTimeSinceLastPowerup = 0;
         mPowerupTimeLimit = 2;
+        mTimeSinceLastCloud = 0;
+        mCloudTimeLimit = 1;
 
         mItems.Add(rockbig);
         mItems.Add(rocksmall);
@@ -55,6 +58,7 @@ public class GenerateItems : MonoBehaviour {
 	void FixedUpdate(){
         mTimeSinceLastObstacle += Time.deltaTime;
         mTimeSinceLastPowerup += Time.deltaTime;
+        mTimeSinceLastCloud += Time.deltaTime;
         mDecTimer += Time.deltaTime;
         bool itemCreated = false;
 
@@ -62,6 +66,8 @@ public class GenerateItems : MonoBehaviour {
             mTimeLimit -= 0.01f;
             mDecTimer = 0;
         }
+
+        spawnClouds();
 
         if(mRng.Next(0, 100) < 1 && mTimeSinceLastPowerup > mPowerupTimeLimit){
             float max = mTimeSinceLastObstacle > 0.5 ? 3 : 4;
@@ -111,6 +117,22 @@ public class GenerateItems : MonoBehaviour {
         }
 	}
 
+    public void spawnClouds(){
+        if(mRng.Next(0, 100) < 10 && mTimeSinceLastCloud > mCloudTimeLimit)
+        {
+            float max = mTimeSinceLastObstacle = 1;
+            float min = mTimeSinceLastObstacle = -1;
+            float ypos = (float)mRng.NextDouble() * (max - min) + min;
+            float xpos = (float)mRng.NextDouble() * (max - min) + min;
+
+            GameObject newCloud = (GameObject)Instantiate(cloudObject);
+
+            newCloud.transform.position = new Vector2(Camera.main.transform.position.x + 15 + xpos, cloudObject.transform.position.y + ypos);
+            mItemsList.Add(newCloud);
+            mTimeSinceLastCloud = 0;
+        }
+    }
+
     public void removeGameObject(GameObject _obj){
         mItemsList.Remove(_obj);
         Destroy(_obj);
@@ -135,7 +157,10 @@ public class GenerateItems : MonoBehaviour {
     private float mTimeSinceLastPowerup;
     private float mPowerupTimeLimit;
     private float mTimeLowerBound;
+    private float mTimeSinceLastCloud;
+    private float mCloudTimeLimit;
     private List<GameObject> mItemsList;
     private List<GameObject> mPowerups;
+    private List<GameObject> mClouds;
     private float mDecTimer;
 }
