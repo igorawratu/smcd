@@ -80,7 +80,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (infront)
         {
-            Debug.Log(hitFront.collider.gameObject.tag);
+            //Debug.Log(hitFront.collider.gameObject.tag);
             if (hitFront.collider.gameObject.tag == "obstacle" && obj != hitFront.collider.gameObject)
             {
                 RandomShake.randomShake.PlaySinShake();
@@ -92,10 +92,10 @@ public class PlayerMovement : MonoBehaviour
 
             if (powerUp == PowerUp.smash)
             {
-                Debug.Log("obstacle1");
+                //Debug.Log("obstacle1");
                 if (hitFront.collider.gameObject.tag == "obstacle")
                 {
-                    Debug.Log("obstacle2");
+                    //Debug.Log("obstacle2");
                     GameObject itemGenerator = GameObject.Find("ItemGenerator");
                     GenerateItems igScript = itemGenerator.GetComponent<GenerateItems>();
                     igScript.smashRock(hitFront.collider.gameObject);
@@ -260,7 +260,7 @@ public class PlayerMovement : MonoBehaviour
             jumpDelay &&
             jumpReleased)
         {
-            Debug.Log("Glide!");
+            //Debug.Log("Glide!");
             vel.y = 0;
 
             canDoubleJump = false;
