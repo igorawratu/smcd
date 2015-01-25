@@ -113,8 +113,10 @@ public class MenuScript : MonoBehaviour {
 								break;
 							}
 						}
-						player.GetComponent<SpriteRenderer>().color = CurrentPlayerKeys.Instance.possibleColors[colourIndex];
-
+						Transform spacer = player.GetComponentInChildren<Transform>();
+						spacer.GetComponentInChildren<SpriteRenderer>().color = CurrentPlayerKeys.Instance.possibleColors[colourIndex];
+						Transform spawnEffect = spacer.GetComponentInChildren<Transform>();
+						spawnEffect.GetComponentsInChildren<SpriteRenderer>()[0].color = CurrentPlayerKeys.Instance.possibleColors[colourIndex];
 						//Convert position
 						Vector3 xPt = new Vector3(initialSpawn, 0, 0);
 						Vector3 newXPt = Camera.main.ScreenToWorldPoint(xPt);
