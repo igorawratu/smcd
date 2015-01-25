@@ -127,8 +127,8 @@ public class GenerateItems : MonoBehaviour {
 
             GameObject newCloud = (GameObject)Instantiate(cloudObject);
 
-            newPowerup.transform.position = new Vector2(Camera.main.transform.position.x + 15 + xpos, mPowerups[powerupType].transform.position.y + ypos);
-            mItemsList.Add(newPowerup);
+            newCloud.transform.position = new Vector2(Camera.main.transform.position.x + 15 + xpos, cloudObject.transform.position.y + ypos);
+            mItemsList.Add(newCloud);
             mTimeSinceLastCloud = 0;
         }
     }
