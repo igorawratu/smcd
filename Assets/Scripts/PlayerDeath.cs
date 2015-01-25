@@ -24,7 +24,9 @@ public class PlayerDeath : MonoBehaviour {
 
             GameObject itemGenerator = GameObject.Find("ItemGenerator");
             GenerateItems igScript = itemGenerator.GetComponent<GenerateItems>();
-            igScript.playerDied(gameObject.name, gameObject.GetComponent<PlayerMovement>().playerColour);
+            PlayerMovement pm = gameObject.GetComponent<PlayerMovement>();
+
+            igScript.playerDied(pm.playerKey, gameObject.GetComponent<PlayerMovement>().playerColour);
 
             gameObject.SetActive(false);
             Instantiate(bloodEffect,

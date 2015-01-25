@@ -2,16 +2,15 @@
 using System.Collections;
 
 public class DeadPlayer : MonoBehaviour {
-    private string mPKey;
+    private KeyCode mPKey;
     public LayerMask mask;
 
 	// Use this for initialization
     void Awake()
     {
-        mPKey = "a";
+        mPKey = KeyCode.A;
         SpriteRenderer sr = gameObject.GetComponent<SpriteRenderer>();
         sr.color = new Color(255, 0, 0);
-        Debug.Log("Start called");
     }
 
 	void Start () {
@@ -44,7 +43,7 @@ public class DeadPlayer : MonoBehaviour {
         }
     }
 
-    public void setInfo(string _key, Color _col){
+    public void setInfo(KeyCode _key, Color _col){
         mPKey = _key;
         gameObject.name = "dead" + mPKey;
         SpriteRenderer sr = gameObject.GetComponent<SpriteRenderer>();
