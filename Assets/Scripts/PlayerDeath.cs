@@ -19,9 +19,13 @@ public class PlayerDeath : MonoBehaviour {
         Vector2 cameraLeftPos = Camera.main.ScreenToWorldPoint(new Vector2(0, 0));
         if (pos.x < cameraLeftPos.x)
         {
-            GameObject itemGenerator = GameObject.Find("WinnerChecker");
-            WinnerChecker script = itemGenerator.GetComponent<WinnerChecker>();
+            GameObject winnerChecker = GameObject.Find("WinnerChecker");
+            WinnerChecker script = winnerChecker.GetComponent<WinnerChecker>();
             script.removePlayer(gameObject.name);
+
+            GameObject itemGenerator = GameObject.Find("ItemGenerator");
+            GenerateItems igScript = itemGenerator.GetComponent<GenerateItems>();
+            igScript.playerDied(gameObject.name, gameObject.GetComponent<PlayerMovement>().playerColour);
 
             gameObject.SetActive(false);
             Instantiate(bloodEffect,

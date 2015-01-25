@@ -18,6 +18,8 @@ public class GenerateItems : MonoBehaviour {
     public GameObject rocksmall;
     public GameObject doubleJumpPU;
     public GameObject boostedJumpPU;
+    public GameObject glidePU;
+    public GameObject smashPU;
 
 	// Use this for initialization
 	void Start () {
@@ -26,18 +28,23 @@ public class GenerateItems : MonoBehaviour {
         mTimeLimit = 1;
         mTimeSinceLastObstacle = 0;
         mItemsList = new List<GameObject>();
+        mPowerups = new List<GameObject>();
         mTimeLowerBound = 0.25f;
         mDeadPlayers = new List<DeadPlayerInfo>();
         mDecTimer = 0;
+        mTimeSinceLastPowerup = 0;
+        mPowerupTimeLimit = 2;
 
         mItems.Add(rockbig);
         mItems.Add(rocksmall);
-        /*mItems.Add(deadPlayer);
-        mItems.Add(deadPlayer);*/
-        mItems.Add(doubleJumpPU);
-        mItems.Add(boostedJumpPU);
+        mPowerups.Add(doubleJumpPU);
+        mPowerups.Add(boostedJumpPU);
+        mPowerups.Add(glidePU);
+        mPowerups.Add(smashPU);
 
-        //mDeadPlayers.Add(new DeadPlayerInfo("q", new Color(255, 255, 255)));
+        /*mItems.Add(deadPlayer);
+        mItems.Add(deadPlayer);
+        mDeadPlayers.Add(new DeadPlayerInfo("q", new Color(255, 0, 255)));*/
 	}
 	
 	// Update is called once per frame
@@ -47,14 +54,31 @@ public class GenerateItems : MonoBehaviour {
 
 	void FixedUpdate(){
         mTimeSinceLastObstacle += Time.deltaTime;
+        mTimeSinceLastPowerup += Time.deltaTime;
         mDecTimer += Time.deltaTime;
+        bool itemCreated = false;
 
         if(mDecTimer > 1 && mTimeLimit > mTimeLowerBound){
             mTimeLimit -= 0.01f;
             mDecTimer = 0;
-        }   
+        }
 
-        if (mRng.Next(0, 100) < 3 && mTimeSinceLastObstacle > mTimeLimit){
+        if(mRng.Next(0, 1000) < 5 && mTimeSinceLastPowerup > mPowerupTimeLimit){
+            float max = mTimeSinceLastObstacle > 0.25 ? 3 : 4;
+            float min = mTimeSinceLastObstacle > 0.25 ? 0 : 2;
+            float ypos = (float)mRng.NextDouble() * (max - min) + min;
+
+            int powerupType = mRng.Next(0, mPowerups.Count);
+            GameObject newPowerup = (GameObject)Instantiate(mPowerups[powerupType]);
+
+            newPowerup.transform.position = new Vector2(Camera.main.transform.position.x + 20, mPowerups[powerupType].transform.position.y + ypos);
+            mItemsList.Add(newPowerup);
+            mTimeSinceLastPowerup = 0;
+
+            itemCreated = true;
+        }
+
+        if (mRng.Next(0, 100) < 2 && mTimeSinceLastObstacle > mTimeLimit){
             int itemType = mRng.Next(0, mItems.Count);
             GameObject newItem = (GameObject)Instantiate(mItems[itemType]);
 
@@ -67,7 +91,10 @@ public class GenerateItems : MonoBehaviour {
             newItem.transform.position = new Vector2(Camera.main.transform.position.x + 20, mItems[itemType].transform.position.y);
             mItemsList.Add(newItem);
             mTimeSinceLastObstacle = 0;
+            itemCreated = true;
+        }
 
+        if(itemCreated){
             List<GameObject> tempItemList = new List<GameObject>();
             List<GameObject> destroyList = new List<GameObject>();
             foreach (GameObject item in mItemsList){
@@ -105,7 +132,10 @@ public class GenerateItems : MonoBehaviour {
     private System.Random mRng;
     private float mTimeLimit;
     private float mTimeSinceLastObstacle;
+    private float mTimeSinceLastPowerup;
+    private float mPowerupTimeLimit;
     private float mTimeLowerBound;
     private List<GameObject> mItemsList;
+    private List<GameObject> mPowerups;
     private float mDecTimer;
 }
