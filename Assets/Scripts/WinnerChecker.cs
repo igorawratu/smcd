@@ -44,7 +44,7 @@ public class WinnerChecker : MonoBehaviour {
 
     private IEnumerator countDown()
     {
-        gameOver.text = "GAME OVER";
+        gameOver.text = "PLAYER " + CurrentPlayerKeys.Instance.lastWinner + " WINS";
         yield return new WaitForSeconds(2);
 
         Application.LoadLevel("EndScene");
