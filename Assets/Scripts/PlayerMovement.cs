@@ -244,7 +244,7 @@ public class PlayerMovement : MonoBehaviour
 
 		GameObject powerupFX = (GameObject)Instantiate(powerupEffect);
 		powerupFX.transform.position = new Vector3(transform.position.x, 1, 0);
-		powerupFX.GetComponentsInChildren<SpriteRenderer>()[1].color = playerColour;
+		powerupFX.GetComponentsInChildren<SpriteRenderer>()[0].color = playerColour;
     }
 
     void resetTempSpeedBoost()
