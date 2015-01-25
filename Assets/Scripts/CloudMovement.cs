@@ -25,10 +25,5 @@ public class CloudMovement : MonoBehaviour {
         currentPos += moveVel * Time.deltaTime;
 
         gameObject.transform.position = currentPos;
-
-        if (!transform.renderer.IsVisibleFrom(Camera.main))
-        {
-            Destroy(gameObject);
-        }
     }
 }

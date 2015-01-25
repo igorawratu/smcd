@@ -56,6 +56,7 @@ public class GenerateItems : MonoBehaviour {
 	}
 
 	void FixedUpdate(){
+        Debug.Log(Time.deltaTime);
         mTimeSinceLastObstacle += Time.deltaTime;
         mTimeSinceLastPowerup += Time.deltaTime;
         mTimeSinceLastCloud += Time.deltaTime;
@@ -117,11 +118,11 @@ public class GenerateItems : MonoBehaviour {
         }
 	}
 
-    public void spawnClouds(){
-        if(mRng.Next(0, 100) < 10 && mTimeSinceLastCloud > mCloudTimeLimit)
+    public bool spawnClouds(){
+        if (mRng.Next(0, 100) < 10 && mTimeSinceLastCloud > mCloudTimeLimit)
         {
-            float max = mTimeSinceLastObstacle = 1;
-            float min = mTimeSinceLastObstacle = -1;
+            float max = 1;
+            float min = -1;
             float ypos = (float)mRng.NextDouble() * (max - min) + min;
             float xpos = (float)mRng.NextDouble() * (max - min) + min;
 
@@ -130,7 +131,11 @@ public class GenerateItems : MonoBehaviour {
             newCloud.transform.position = new Vector2(Camera.main.transform.position.x + 15 + xpos, cloudObject.transform.position.y + ypos);
             mItemsList.Add(newCloud);
             mTimeSinceLastCloud = 0;
+
+            return true;
         }
+        return false;
+       
     }
 
     public void removeGameObject(GameObject _obj){
@@ -146,7 +151,7 @@ public class GenerateItems : MonoBehaviour {
 
     public void smashRock(GameObject _obj){
         mItemsList.Remove(_obj);
-        GameObject.Destroy(_obj);
+        Destroy(_obj);
     }
 
     private List<GameObject> mItems;
