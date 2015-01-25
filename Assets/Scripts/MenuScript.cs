@@ -42,26 +42,26 @@ public class MenuScript : MonoBehaviour {
 		StartCoroutine(countDown());
 
 		//Create player colors
-		CurrentPlayerKeys.Instance.playerColors.Add(new Color(0.33f, 0, 0));
-		CurrentPlayerKeys.Instance.playerColors.Add(new Color(0, 0.33f, 0));
-		CurrentPlayerKeys.Instance.playerColors.Add(new Color(0.2f, 0.2f, 0));
-		CurrentPlayerKeys.Instance.playerColors.Add(new Color(0.3f, 0, 0.1f));
-		CurrentPlayerKeys.Instance.playerColors.Add(new Color(0.33f, 0, 0.33f));
-		CurrentPlayerKeys.Instance.playerColors.Add(new Color(0.6f, 0.6f, 1));
-		CurrentPlayerKeys.Instance.playerColors.Add(new Color(1, 1, 0.6f));
-		CurrentPlayerKeys.Instance.playerColors.Add(Color.yellow);
-		CurrentPlayerKeys.Instance.playerColors.Add(Color.white);
-		CurrentPlayerKeys.Instance.playerColors.Add(Color.red);
-		CurrentPlayerKeys.Instance.playerColors.Add(new Color(1, 0.2f, 0.6f));
-		CurrentPlayerKeys.Instance.playerColors.Add(new Color(0, 0.33f, 0.33f));
-		CurrentPlayerKeys.Instance.playerColors.Add(new Color(1, 0.2f, 0.6f));
-		CurrentPlayerKeys.Instance.playerColors.Add(Color.blue);		
-		CurrentPlayerKeys.Instance.playerColors.Add(Color.cyan);
-		CurrentPlayerKeys.Instance.playerColors.Add(new Color(1, 0.2f, 0.6f));
-		CurrentPlayerKeys.Instance.playerColors.Add(new Color(0, 1, 0.5f));
-		CurrentPlayerKeys.Instance.playerColors.Add(Color.grey);
-		CurrentPlayerKeys.Instance.playerColors.Add(new Color(1, 0.5f, 0));
-		CurrentPlayerKeys.Instance.playerColors.Add(new Color(0.5f, 1, 0));
+		CurrentPlayerKeys.Instance.possibleColors.Add(new Color(0.33f, 0, 0));
+		CurrentPlayerKeys.Instance.possibleColors.Add(new Color(0, 0.33f, 0));
+		CurrentPlayerKeys.Instance.possibleColors.Add(new Color(0.2f, 0.2f, 0));
+		CurrentPlayerKeys.Instance.possibleColors.Add(new Color(0.3f, 0, 0.1f));
+		CurrentPlayerKeys.Instance.possibleColors.Add(new Color(0.33f, 0, 0.33f));
+		CurrentPlayerKeys.Instance.possibleColors.Add(new Color(0.6f, 0.6f, 1));
+		CurrentPlayerKeys.Instance.possibleColors.Add(new Color(1, 1, 0.6f));
+		CurrentPlayerKeys.Instance.possibleColors.Add(Color.yellow);
+		CurrentPlayerKeys.Instance.possibleColors.Add(Color.white);
+		CurrentPlayerKeys.Instance.possibleColors.Add(Color.red);
+		CurrentPlayerKeys.Instance.possibleColors.Add(new Color(1, 0.2f, 0.6f));
+		CurrentPlayerKeys.Instance.possibleColors.Add(new Color(0, 0.33f, 0.33f));
+		CurrentPlayerKeys.Instance.possibleColors.Add(new Color(1, 0.2f, 0.6f));
+		CurrentPlayerKeys.Instance.possibleColors.Add(Color.blue);		
+		CurrentPlayerKeys.Instance.possibleColors.Add(Color.cyan);
+		CurrentPlayerKeys.Instance.possibleColors.Add(new Color(1, 0.2f, 0.6f));
+		CurrentPlayerKeys.Instance.possibleColors.Add(new Color(0, 1, 0.5f));
+		CurrentPlayerKeys.Instance.possibleColors.Add(Color.grey);
+		CurrentPlayerKeys.Instance.possibleColors.Add(new Color(1, 0.5f, 0));
+		CurrentPlayerKeys.Instance.possibleColors.Add(new Color(0.5f, 1, 0));
 
 
 		floorSize = floorPrefab.transform.renderer.bounds.max - floorPrefab.transform.renderer.bounds.min;
@@ -101,13 +101,18 @@ public class MenuScript : MonoBehaviour {
 
 						GameObject player = (GameObject)Instantiate(playerPrefab);
 						//set color here
-						player.transform.position = new Vector3(initialSpawn, player.transform.position.y, 0);
+
+						//Convert position
+						Vector3 xPt = new Vector3(xSpawn, 0, 0);
+						Vector3 newXPt = Camera.main.ScreenToWorldPoint(xPt);
+						player.transform.position = new Vector3(newXPt.x, 1, 0);
 
 						//Add text
 						GameObject aboveHead = (GameObject)Instantiate(headTextPrefab);
 						aboveHead.transform.SetParent(canvas.transform);
 						Text aboveHeadText = aboveHead.GetComponent<Text>();
 						aboveHeadText.text = keyCodes[i].ToString();
+						aboveHeadText.fontStyle = FontStyle.Bold;
 						aboveHeadText.rectTransform.position = new Vector3(initialSpawn, 150, 0);
 
 						keysPressed[keyCodes[i]] = -100;

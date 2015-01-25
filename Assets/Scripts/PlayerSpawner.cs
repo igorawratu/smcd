@@ -57,6 +57,18 @@ public class PlayerSpawner : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	
+		if (Input.anyKey) {
+			bool isNew = true;
+			foreach (KeyCode kc in CurrentPlayerKeys.Instance.playerKeys) {
+				if (Input.GetKey(kc)) {
+					isNew = false;
+					break;
+				}
+			}
+
+			if (isNew) {
+
+			}
+		}
 	}
 }
