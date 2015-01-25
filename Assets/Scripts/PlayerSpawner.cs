@@ -24,19 +24,7 @@ public class PlayerSpawner : MonoBehaviour {
 			offset = Random.Range(0, 2);
             player.transform.position = new Vector3(startPoint + offset, 0.59f, 0);
 
-			//Assign player color
-			int colourIndex = Random.Range(0, CurrentPlayerKeys.Instance.playerColors.Count);
-			while (true) {
-				if (chosenColours.Contains(colourIndex)) {
-					//go again
-					colourIndex = Random.Range(0, CurrentPlayerKeys.Instance.playerColors.Count);
-				}
-				else {
-					chosenColours.Add(colourIndex);
-					break;
-				}
-			}
-			player.GetComponent<PlayerMovement>().playerColour = CurrentPlayerKeys.Instance.playerColors[colourIndex];
+			player.GetComponent<PlayerMovement>().playerColour = CurrentPlayerKeys.Instance.playerColors[i];
 		}
 
         if (CurrentPlayerKeys.Instance.playerKeys.Count==0)

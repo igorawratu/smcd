@@ -96,14 +96,27 @@ public class MenuScript : MonoBehaviour {
 
 						//Spawn stuff here
 						GameObject canvas = GameObject.Find("Canvas");
-						float xSpawn = Random.Range(25, 75);
+						float xSpawn = Random.Range(30, 100);
 						initialSpawn += xSpawn;
 
 						GameObject player = (GameObject)Instantiate(playerPrefab);
-						//set color here
+
+						//Assign player color
+						int colourIndex = Random.Range(0, CurrentPlayerKeys.Instance.possibleColors.Count);
+						while (true) {
+							if (CurrentPlayerKeys.Instance.playerColors.Contains(CurrentPlayerKeys.Instance.possibleColors[colourIndex])) {
+								//go again
+								colourIndex = Random.Range(0, CurrentPlayerKeys.Instance.possibleColors.Count);
+							}
+							else {
+								CurrentPlayerKeys.Instance.playerColors.Add(CurrentPlayerKeys.Instance.possibleColors[colourIndex]);
+								break;
+							}
+						}
+						player.GetComponent<SpriteRenderer>().color = CurrentPlayerKeys.Instance.possibleColors[colourIndex];
 
 						//Convert position
-						Vector3 xPt = new Vector3(xSpawn, 0, 0);
+						Vector3 xPt = new Vector3(initialSpawn, 0, 0);
 						Vector3 newXPt = Camera.main.ScreenToWorldPoint(xPt);
 						player.transform.position = new Vector3(newXPt.x, 1, 0);
 
