@@ -33,6 +33,7 @@ public class PlayerMovement : MonoBehaviour
 
     public GameObject hitEffect;
     public GameObject rockEffect;
+	public GameObject powerupEffect;
 
     public enum PowerUp
     {
@@ -240,6 +241,10 @@ public class PlayerMovement : MonoBehaviour
 
         int rnd = Random.Range(0, SoundManager.soundManager.pickupSounds.Count - 1);
         audio.PlayOneShot(SoundManager.soundManager.pickupSounds[rnd], SoundManager.soundManager.pickupSoundLevel);
+
+		GameObject powerupFX = (GameObject)Instantiate(powerupEffect);
+		powerupFX.transform.position = new Vector3(transform.position.x, 1, 0);
+		powerupFX.GetComponentsInChildren<SpriteRenderer>()[1].color = playerColour;
     }
 
     void resetTempSpeedBoost()
