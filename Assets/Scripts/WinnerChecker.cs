@@ -25,7 +25,7 @@ public class WinnerChecker : MonoBehaviour {
     }
 
     public void removePlayer(string _player){
-        if (end)
+        if(end)
             return;
 
         mPlayersActive.Remove(_player);
