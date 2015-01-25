@@ -1,10 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-[RequireComponent(typeof(AudioSource))]
 public class PlayerDeath : MonoBehaviour {
 
     public GameObject bloodEffect;
+    public GameObject deathSoundObject;
 	// Use this for initialization
 	void Start () 
     {
@@ -14,8 +14,6 @@ public class PlayerDeath : MonoBehaviour {
 	// Update is called once per frame
 	void Update () 
     {
-
-
         Vector2 pos = transform.position;
         Vector2 cameraLeftPos = Camera.main.ScreenToWorldPoint(new Vector2(0, 0));
         if (pos.x < cameraLeftPos.x)
@@ -34,9 +32,7 @@ public class PlayerDeath : MonoBehaviour {
                 bloodEffect.transform.rotation);
             RandomShake.randomShake.PlayShakeX();
 
-
-            int rnd = Random.Range(0, SoundManager.soundManager.deathSounds.Count - 1);
-            audio.PlayOneShot(SoundManager.soundManager.deathSounds[rnd], SoundManager.soundManager.deathSoundLevel);
+            Instantiate(deathSoundObject,transform.position,transform.rotation);
 
         }
 	}

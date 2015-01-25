@@ -26,6 +26,7 @@ public class PlayerMovement : MonoBehaviour
     public float raycastLengthRight = 3.0f;
     public LayerMask mask;
     float gravityScale = 0.0f;
+    public bool canFootstep = true;
     public float jumpGlideTime = 0.4f;
     GameObject obj = null;
 
@@ -58,7 +59,10 @@ public class PlayerMovement : MonoBehaviour
         sr.color = playerColour;
         gravityScale = gameObject.rigidbody2D.gravityScale;
 	}
-	
+	void canFootstepReset()
+    {
+        canFootstep = true;
+    }
 	// Update is called once per frame
 	void FixedUpdate () 
     {
@@ -131,6 +135,14 @@ public class PlayerMovement : MonoBehaviour
             canDoubleJump = true;
             jumpReleased = false;
             calledFalling = false;
+
+            if (canFootstep)
+            {
+                int rnd = Random.Range(0, SoundManager.soundManager.footstepSounds.Count - 1);
+                audio.PlayOneShot(SoundManager.soundManager.footstepSounds[rnd], SoundManager.soundManager.footstepSoundLevel);
+                canFootstep = false;
+                Invoke("canFootstepReset", SoundManager.soundManager.footstepSounds[rnd].length);
+            }
 
             if (inTheAir)
             {
