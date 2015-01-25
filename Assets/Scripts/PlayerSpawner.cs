@@ -24,19 +24,7 @@ public class PlayerSpawner : MonoBehaviour {
 			offset = Random.Range(0, 2);
             player.transform.position = new Vector3(startPoint + offset, 0.59f, 0);
 
-			//Assign player color
-			int colourIndex = Random.Range(0, CurrentPlayerKeys.Instance.playerColors.Count);
-			while (true) {
-				if (chosenColours.Contains(colourIndex)) {
-					//go again
-					colourIndex = Random.Range(0, CurrentPlayerKeys.Instance.playerColors.Count);
-				}
-				else {
-					chosenColours.Add(colourIndex);
-					break;
-				}
-			}
-			player.GetComponent<PlayerMovement>().playerColour = CurrentPlayerKeys.Instance.playerColors[colourIndex];
+			player.GetComponent<PlayerMovement>().playerColour = CurrentPlayerKeys.Instance.playerColors[i];
 		}
 
         if (CurrentPlayerKeys.Instance.playerKeys.Count==0)
@@ -57,6 +45,18 @@ public class PlayerSpawner : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	
+		if (Input.anyKey) {
+			bool isNew = true;
+			foreach (KeyCode kc in CurrentPlayerKeys.Instance.playerKeys) {
+				if (Input.GetKey(kc)) {
+					isNew = false;
+					break;
+				}
+			}
+
+			if (isNew) {
+
+			}
+		}
 	}
 }

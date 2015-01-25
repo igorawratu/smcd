@@ -9,6 +9,7 @@ public class PlayerMovement : MonoBehaviour
     public float jumpVel = 0.0f;
     public float jumpBoostVel = 0.0f;
     public float jumpTimeDelay = 0.4f;
+    float tempSpeedBoost = 0.0f;
     bool jumpDelay = true;
     bool canDoubleJump = false;
     bool jumpReleased = false;
@@ -160,13 +161,34 @@ public class PlayerMovement : MonoBehaviour
         //{
         //    vel.x = maxVel.x;
         //}
-        if (vel.x >= VariableSpeed.current)
+        if (vel.x >= VariableSpeed.current + tempSpeedBoost)
         {
-            vel.x = VariableSpeed.current;
+            vel.x = VariableSpeed.current + tempSpeedBoost;
         }
 
         
         gameObject.rigidbody2D.velocity = vel;
+
+
+        if (transform.position.x > Camera.main.transform.position.x)
+        {
+            Debug.Log(transform.position.x);
+            Debug.Log(Camera.main.transform.position.x);
+
+            SpriteRenderer sr = gameObject.GetComponentInChildren<SpriteRenderer>();
+
+            Vector3 worldPos = Camera.current.ScreenToWorldPoint(new Vector3(Camera.current.pixelWidth, 0.0f, 0.0f));
+            Vector3 size = sr.renderer.bounds.max - sr.renderer.bounds.min;
+            worldPos.x -= size.x;
+            worldPos.y = transform.position.y;
+            worldPos.z = transform.position.z;
+
+            if (transform.position.x>worldPos.x)
+            {
+                transform.position = worldPos;
+            }
+        }
+
 	}
 
     void resetJumpTImer()
@@ -196,6 +218,14 @@ public class PlayerMovement : MonoBehaviour
         {
             powerUp = PowerUp.smash;
         }
+
+        tempSpeedBoost += VariableSpeed.currentBoost;
+        Invoke("resetTempSpeedBoost", VariableSpeed.currentSpeedBoostTime);
+    }
+
+    void resetTempSpeedBoost()
+    {
+        tempSpeedBoost = 0.0f;
     }
 
     Vector3 jumpLogic(Vector3 vel, bool onTheGround)
