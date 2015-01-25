@@ -76,6 +76,10 @@ public class PlayerSpawner : MonoBehaviour {
 								startPoint = Camera.main.ViewportToWorldPoint(screenMid).x;
 								offset = Random.Range(-1, 1);
 								player.transform.position = new Vector3(startPoint + offset, 0.59f, 0);
+
+                                GameObject wc = GameObject.Find("WinnerChecker");
+                                WinnerChecker wcscript = wc.GetComponent<WinnerChecker>();
+                                wcscript.addPlayer(player.name);
 								
 								//Assign player color
 								int colourIndex = Random.Range(0, CurrentPlayerKeys.Instance.possibleColors.Count);

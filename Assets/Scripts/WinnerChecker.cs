@@ -20,12 +20,16 @@ public class WinnerChecker : MonoBehaviour {
 	void Update () {
 	}
 
+    public void addPlayer(string _player){
+        mPlayersActive.Add(_player);
+    }
+
     public void removePlayer(string _player){
         if (end)
             return;
 
         mPlayersActive.Remove(_player);
-        if (mPlayersActive.Count < 1){
+        if (mPlayersActive.Count <= 1){
             string winner;
             if (mPlayersActive.Count == 0)
                 winner = _player;
