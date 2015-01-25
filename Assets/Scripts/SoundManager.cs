@@ -19,6 +19,7 @@ public class SoundManager : MonoBehaviour
     public float pickupSoundLevel = 1.0f;
 
     public AudioClip winSound;
+    public float winSoundLevel = 1.0f;
     public AudioClip menuMusic;
     public AudioClip gameMusic;
 

@@ -4,11 +4,11 @@ using System.Collections.Generic;
 
 public class GenerateItems : MonoBehaviour {
     private class DeadPlayerInfo{
-        public DeadPlayerInfo(string _name, Color _col){
+        public DeadPlayerInfo(KeyCode _name, Color _col){
             name = _name;
             colour = _col;
         }
-        public string name;
+        public KeyCode name;
         public Color colour;
     }
 
@@ -42,9 +42,9 @@ public class GenerateItems : MonoBehaviour {
         mPowerups.Add(glidePU);
         mPowerups.Add(smashPU);
 
+        /*mItems.Add(deadPlayer);
         mItems.Add(deadPlayer);
-        mItems.Add(deadPlayer);
-        mDeadPlayers.Add(new DeadPlayerInfo("q", new Color(255, 0, 255)));
+        mDeadPlayers.Add(new DeadPlayerInfo(KeyCode.Q, new Color(255, 0, 255)));*/
 	}
 	
 	// Update is called once per frame
@@ -116,7 +116,7 @@ public class GenerateItems : MonoBehaviour {
         Destroy(_obj);
     }
 
-    public void playerDied(string _tag, Color _col){
+    public void playerDied(KeyCode _tag, Color _col){
         mDeadPlayers.Add(new DeadPlayerInfo(_tag, _col));
         mItems.Add(deadPlayer);
         //mItems.Add(deadPlayer);
