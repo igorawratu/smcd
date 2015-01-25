@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 
+[RequireComponent(typeof(AudioSource))]
 public class WinnerChecker : MonoBehaviour {
     public Text gameOver;
 
@@ -36,6 +37,8 @@ public class WinnerChecker : MonoBehaviour {
             else CurrentPlayerKeys.Instance.playerScores[winner] = 1;
 
             CurrentPlayerKeys.Instance.lastWinner = winner;
+            
+            audio.PlayOneShot(SoundManager.soundManager.winSound, SoundManager.soundManager.winSoundLevel);
 
             StartCoroutine(countDown());
             end = true;
