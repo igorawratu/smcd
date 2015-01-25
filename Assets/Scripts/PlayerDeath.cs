@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+[RequireComponent(typeof(AudioSource))]
 public class PlayerDeath : MonoBehaviour {
 
     public GameObject bloodEffect;
@@ -32,6 +33,10 @@ public class PlayerDeath : MonoBehaviour {
                 new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, bloodEffect.transform.position.z),
                 bloodEffect.transform.rotation);
             RandomShake.randomShake.PlayShakeX();
+
+
+            int rnd = Random.Range(0, SoundManager.soundManager.deathSounds.Count - 1);
+            audio.PlayOneShot(SoundManager.soundManager.deathSounds[rnd], SoundManager.soundManager.deathSoundLevel);
 
         }
 	}
