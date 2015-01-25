@@ -12,6 +12,7 @@ public class WinnerChecker : MonoBehaviour {
         foreach (KeyCode player in CurrentPlayerKeys.Instance.playerKeys){
             mPlayersActive.Add(player.ToString());
         }
+        end = false;
 	}
 	
 	// Update is called once per frame
@@ -19,12 +20,15 @@ public class WinnerChecker : MonoBehaviour {
 	}
 
     public void removePlayer(string _player){
-        if (mPlayersActive.Count == 1)
+        if (end)
             return;
 
         mPlayersActive.Remove(_player);
-        if (mPlayersActive.Count == 1){
-            string winner = mPlayersActive[0];
+        if (mPlayersActive.Count < 1){
+            string winner;
+            if (mPlayersActive.Count == 0)
+                winner = _player;
+            winner = mPlayersActive[0];
             Dictionary<string, int> scoreBook = CurrentPlayerKeys.Instance.playerScores;
             if (CurrentPlayerKeys.Instance.playerScores.ContainsKey(winner)){
                 CurrentPlayerKeys.Instance.playerScores[winner]++;
@@ -34,16 +38,18 @@ public class WinnerChecker : MonoBehaviour {
             CurrentPlayerKeys.Instance.lastWinner = winner;
 
             StartCoroutine(countDown());
+            end = true;
         }
     }
 
     private IEnumerator countDown()
     {
         gameOver.text = "GAME OVER";
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(2);
 
         Application.LoadLevel("EndScene");
     }
 
     private List<string> mPlayersActive;
+    private bool end;
 }
