@@ -28,7 +28,7 @@ public class WinnerChecker : MonoBehaviour {
             string winner;
             if (mPlayersActive.Count == 0)
                 winner = _player;
-            winner = mPlayersActive[0];
+            else winner = mPlayersActive[0];
             Dictionary<string, int> scoreBook = CurrentPlayerKeys.Instance.playerScores;
             if (CurrentPlayerKeys.Instance.playerScores.ContainsKey(winner)){
                 CurrentPlayerKeys.Instance.playerScores[winner]++;
@@ -44,7 +44,9 @@ public class WinnerChecker : MonoBehaviour {
 
     private IEnumerator countDown()
     {
+        GameObject player = GameObject.Find(CurrentPlayerKeys.Instance.lastWinner);
         gameOver.text = "PLAYER " + CurrentPlayerKeys.Instance.lastWinner + " WINS";
+        gameOver.color = player.GetComponent<PlayerMovement>().playerColour;
         yield return new WaitForSeconds(2);
 
         Application.LoadLevel("EndScene");

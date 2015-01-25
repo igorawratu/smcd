@@ -42,9 +42,9 @@ public class GenerateItems : MonoBehaviour {
         mPowerups.Add(glidePU);
         mPowerups.Add(smashPU);
 
-        /*mItems.Add(deadPlayer);
         mItems.Add(deadPlayer);
-        mDeadPlayers.Add(new DeadPlayerInfo("q", new Color(255, 0, 255)));*/
+        mItems.Add(deadPlayer);
+        mDeadPlayers.Add(new DeadPlayerInfo("q", new Color(255, 0, 255)));
 	}
 	
 	// Update is called once per frame

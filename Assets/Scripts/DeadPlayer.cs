@@ -31,15 +31,16 @@ public class DeadPlayer : MonoBehaviour {
         }
 
         if (Input.GetKey(mPKey)){
+            Debug.Log("WEEEEEE");
             Vector2 position = (Vector2)gameObject.transform.position;
-            float raycastLength = 0.8f;
+            float raycastLength = 0.9f;
             Vector2 down = -Vector2.up * raycastLength;
             
             bool onTheGround = Physics2D.Raycast(position, down, raycastLength, ~mask.value);
             Debug.Log(onTheGround ? "true" : "false");
 
             if(onTheGround)
-                gameObject.rigidbody2D.velocity = new Vector2(gameObject.rigidbody2D.velocity.x, 10);
+                gameObject.rigidbody2D.velocity = new Vector2(gameObject.rigidbody2D.velocity.x, 20);
         }
     }
 

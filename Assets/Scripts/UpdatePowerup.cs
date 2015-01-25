@@ -46,7 +46,7 @@ public class UpdatePowerup : MonoBehaviour {
         }
         else if (mPattern == PowerupPattern.UD)
         {
-            if (gameObject.transform.position.y < center.y - 1 || gameObject.transform.position.y > center.y + 1)
+            if (gameObject.transform.position.y < center.y - 0.5 || gameObject.transform.position.y > center.y + 2.5)
                 gameObject.rigidbody2D.velocity = -gameObject.rigidbody2D.velocity;
         }
         else if (mPattern == PowerupPattern.CIRCLE)
