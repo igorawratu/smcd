@@ -31,12 +31,12 @@ public class SoundManager : MonoBehaviour
 	// Use this for initialization
 	void Start () 
     {
-        if (Application.loadedLevel == 0)
+        if (Application.loadedLevel == 1)
         {
             audio.clip = menuMusic; 
             audio.Play();
         }
-        else if (Application.loadedLevel == 1)
+        else if (Application.loadedLevel == 2)
         {
             audio.clip = gameMusic;
             audio.Play();
