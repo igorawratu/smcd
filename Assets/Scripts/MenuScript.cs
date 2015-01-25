@@ -96,7 +96,7 @@ public class MenuScript : MonoBehaviour {
 
 						//Spawn stuff here
 						GameObject canvas = GameObject.Find("Canvas");
-						float xSpawn = Random.Range(30, 100);
+						float xSpawn = Random.Range(45, 100);
 						initialSpawn += xSpawn;
 
 						GameObject player = (GameObject)Instantiate(playerPrefab);
@@ -128,7 +128,7 @@ public class MenuScript : MonoBehaviour {
 						Text aboveHeadText = aboveHead.GetComponent<Text>();
 						aboveHeadText.text = keyCodes[i].ToString();
 						aboveHeadText.fontStyle = FontStyle.Bold;
-						aboveHeadText.rectTransform.position = new Vector3(initialSpawn, 150, 0);
+						aboveHeadText.rectTransform.position = new Vector3(initialSpawn, 225, 0);
 
 						keysPressed[keyCodes[i]] = -100;
 					}
