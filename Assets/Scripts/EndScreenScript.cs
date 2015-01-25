@@ -8,6 +8,7 @@ public class EndScreenScript : MonoBehaviour {
     public Text winner;
     public Text resetTimer;
     public Text record;
+    public Text timeLeft;
     public GameObject textPrefab;
 
 
@@ -16,7 +17,6 @@ public class EndScreenScript : MonoBehaviour {
         title.text = "GAME OVER:";
         string win = CurrentPlayerKeys.Instance.lastWinner;
         winner.text = "PLAYER " + win + " WINS";
-        resetTimer.text = "PLAY AGAIN? Y/N";
         record.text = "RECORD:";
         float offSetNum = 30;
 
@@ -38,29 +38,26 @@ public class EndScreenScript : MonoBehaviour {
             score.text = "PLAYER " + player.Key + ": " + player.Value;
         }
         mBusy = false;
+        StartCoroutine(countDown());
 	}
 	
 	// Update is called once per frame
 	void Update () {
-        if (!mBusy){
-            if (Input.GetKey("n"))
-                Application.Quit();
-            else if (Input.GetKey("y"))
-            {
-                mBusy = true;
-                StartCoroutine(countDown());
-            }
-        }
+        if(Input.anyKey)
+            Application.LoadLevel("TestScene");
 	}
 
     private IEnumerator countDown()
     {
         for (int i = 10; i >= 0; i--){
-            resetTimer.text = "RESTARTING IN " + i;
+            if(i % 2 == 1)
+                resetTimer.text = "";
+            else resetTimer.text = "PRESS ANY KEY TO CONTINUE";
+            timeLeft.text = "TIME LEFT: " + i;
             yield return new WaitForSeconds(1);
         }
 
-        Application.LoadLevel("TestScene");
+        Application.Quit();
     }
 
     bool mBusy;
