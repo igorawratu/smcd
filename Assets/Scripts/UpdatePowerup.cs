@@ -16,12 +16,13 @@ public class UpdatePowerup : MonoBehaviour {
         mPatterns[0] = PowerupPattern.LR;
         mPatterns[1] = PowerupPattern.UD;
         System.Random rng = new System.Random();
-        mPattern = mPatterns[rng.Next(0, 1)];
+        int pattern = rng.Next(0, 2);
+        mPattern = mPatterns[pattern];
         center = new Vector2(gameObject.transform.position.x, gameObject.transform.position.y);
         origin = 0;
 
         if (mPattern == PowerupPattern.LR){
-            gameObject.rigidbody2D.velocity = new Vector2(2, 0);
+            gameObject.rigidbody2D.velocity = new Vector2(4, 0);
         }
         else if (mPattern == PowerupPattern.UD)
         {

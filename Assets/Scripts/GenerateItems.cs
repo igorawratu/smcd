@@ -63,9 +63,9 @@ public class GenerateItems : MonoBehaviour {
             mDecTimer = 0;
         }
 
-        if(mRng.Next(0, 1000) < 5 && mTimeSinceLastPowerup > mPowerupTimeLimit){
-            float max = mTimeSinceLastObstacle > 0.25 ? 3 : 4;
-            float min = mTimeSinceLastObstacle > 0.25 ? 0 : 2;
+        if(mRng.Next(0, 100) < 1 && mTimeSinceLastPowerup > mPowerupTimeLimit){
+            float max = mTimeSinceLastObstacle > 0.5 ? 3 : 4;
+            float min = mTimeSinceLastObstacle > 0.5 ? 0 : 2;
             float ypos = (float)mRng.NextDouble() * (max - min) + min;
 
             int powerupType = mRng.Next(0, mPowerups.Count);
