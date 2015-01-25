@@ -316,7 +316,7 @@ public class PlayerMovement : MonoBehaviour
             jumpDelay &&
             jumpReleased)
         {
-            Debug.Log("Glide!");
+            //Debug.Log("Glide!");
             vel.y = 0;
 
             canDoubleJump = false;
