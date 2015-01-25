@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+[RequireComponent(typeof(AudioSource))]
 public class PlayerMovement : MonoBehaviour 
 {
     Vector3 moveVel = Vector3.zero;
@@ -25,6 +26,7 @@ public class PlayerMovement : MonoBehaviour
     public float raycastLengthRight = 3.0f;
     public LayerMask mask;
     float gravityScale = 0.0f;
+    public bool canFootstep = true;
     public float jumpGlideTime = 0.4f;
     GameObject obj = null;
 
@@ -57,7 +59,10 @@ public class PlayerMovement : MonoBehaviour
         sr.color = playerColour;
         gravityScale = gameObject.rigidbody2D.gravityScale;
 	}
-	
+	void canFootstepReset()
+    {
+        canFootstep = true;
+    }
 	// Update is called once per frame
 	void FixedUpdate () 
     {
@@ -89,6 +94,9 @@ public class PlayerMovement : MonoBehaviour
                     new Vector3(hitFront.point.x, hitFront.point.y, hitEffect.transform.position.z),
                     hitEffect.transform.rotation);
                 obj = hitFront.collider.gameObject;
+
+                int rnd = Random.Range(0, SoundManager.soundManager.hitSounds.Count-1);
+                audio.PlayOneShot(SoundManager.soundManager.hitSounds[rnd], SoundManager.soundManager.hitSoundLevel);
             }
 
             if (powerUp == PowerUp.smash)
@@ -127,6 +135,14 @@ public class PlayerMovement : MonoBehaviour
             canDoubleJump = true;
             jumpReleased = false;
             calledFalling = false;
+
+            if (canFootstep)
+            {
+                int rnd = Random.Range(0, SoundManager.soundManager.footstepSounds.Count - 1);
+                audio.PlayOneShot(SoundManager.soundManager.footstepSounds[rnd], SoundManager.soundManager.footstepSoundLevel);
+                canFootstep = false;
+                Invoke("canFootstepReset", SoundManager.soundManager.footstepSounds[rnd].length);
+            }
 
             if (inTheAir)
             {
@@ -172,12 +188,12 @@ public class PlayerMovement : MonoBehaviour
 
         if (transform.position.x > Camera.main.transform.position.x)
         {
-            Debug.Log(transform.position.x);
-            Debug.Log(Camera.main.transform.position.x);
+            //Debug.Log(transform.position.x);
+            //Debug.Log(Camera.main.transform.position.x);
 
             SpriteRenderer sr = gameObject.GetComponentInChildren<SpriteRenderer>();
 
-            Vector3 worldPos = Camera.current.ScreenToWorldPoint(new Vector3(Camera.current.pixelWidth, 0.0f, 0.0f));
+            Vector3 worldPos = Camera.main.ScreenToWorldPoint(new Vector3(Camera.main.pixelWidth, 0.0f, 0.0f));
             Vector3 size = sr.renderer.bounds.max - sr.renderer.bounds.min;
             worldPos.x -= size.x;
             worldPos.y = transform.position.y;
@@ -198,7 +214,7 @@ public class PlayerMovement : MonoBehaviour
 
     public void ActivatePowerUp(string tag)
     {
-        if(tag=="speedUp")
+        if (tag == "speedUp")
         {
             powerUp = PowerUp.speedUp;
         }
@@ -221,6 +237,9 @@ public class PlayerMovement : MonoBehaviour
 
         tempSpeedBoost += VariableSpeed.currentBoost;
         Invoke("resetTempSpeedBoost", VariableSpeed.currentSpeedBoostTime);
+
+        int rnd = Random.Range(0, SoundManager.soundManager.pickupSounds.Count - 1);
+        audio.PlayOneShot(SoundManager.soundManager.pickupSounds[rnd], SoundManager.soundManager.pickupSoundLevel);
     }
 
     void resetTempSpeedBoost()
@@ -249,6 +268,10 @@ public class PlayerMovement : MonoBehaviour
                 Invoke("resetJumpTImer", jumpTimeDelay);
             jumpReleased = false;
             inTheAir = true;
+
+            int rnd = Random.Range(0, SoundManager.soundManager.jumpSounds.Count - 1);
+            //Debug.Log();
+            audio.PlayOneShot(SoundManager.soundManager.jumpSounds[rnd], SoundManager.soundManager.jumpSoundLevel);
         }
         return vel;
     }
@@ -278,6 +301,9 @@ public class PlayerMovement : MonoBehaviour
             Invoke("resetJumpTImer", jumpTimeDelay);
             jumpReleased = false;
             inTheAir = true;
+
+            int rnd = Random.Range(0, SoundManager.soundManager.jumpSounds.Count - 1);
+            audio.PlayOneShot(SoundManager.soundManager.jumpSounds[rnd], SoundManager.soundManager.jumpSoundLevel);
         }
         return vel;
     }
@@ -301,6 +327,9 @@ public class PlayerMovement : MonoBehaviour
             Invoke("resetJumpTImer", jumpTimeDelay);
             jumpReleased = false;
             inTheAir = true;
+
+            int rnd = Random.Range(0, SoundManager.soundManager.jumpSounds.Count - 1);
+            audio.PlayOneShot(SoundManager.soundManager.jumpSounds[rnd], SoundManager.soundManager.jumpSoundLevel);
         }
         return vel;
     }
