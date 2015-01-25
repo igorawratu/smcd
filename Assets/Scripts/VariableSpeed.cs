@@ -12,12 +12,17 @@ public class VariableSpeed : MonoBehaviour {
     public float timeDelay = 20.0f;
     float timeElapsed = 0.0f;
 
+
+    public Vector2 speedCloudVariable = new Vector2(0.0f, 0.0f);
+    public static float currentCloudSpeed = 0.0f;
+
 	// Use this for initialization
 	void Start () 
     {
         current = speedsVariables.x;
         currentBoost = speedsBoostVariables.x;
         currentSpeedBoostTime = speedBoostTime;
+        currentCloudSpeed = speedCloudVariable.x;
 	}
 
     // Update is called once per frame
@@ -28,11 +33,13 @@ public class VariableSpeed : MonoBehaviour {
         {
             current = Mathf.Lerp(speedsVariables.x, speedsVariables.y, timeElapsed / timeDelay);
             currentBoost = Mathf.Lerp(speedsBoostVariables.x, speedsBoostVariables.y, timeElapsed / timeDelay);
+            currentCloudSpeed = Mathf.Lerp(speedCloudVariable.x, speedCloudVariable.y, timeElapsed / timeDelay);
         }
         else
         {
             current = speedsVariables.y;
             currentBoost = speedsBoostVariables.y;
+            currentCloudSpeed = speedCloudVariable.y;
         }
     }
 }
