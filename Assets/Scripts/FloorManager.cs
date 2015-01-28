@@ -94,7 +94,7 @@ public class FloorManager : MonoBehaviour {
                 //get position of last floor piece
                 Transform lastFloor = arr[arr.Length - 1].transform;
 
-                arr[0].transform.position = new Vector3(lastFloor.position.x + tileSize.x, arr[0].transform.position.y, arr[0].transform.position.z);
+                arr[0].transform.position = new Vector3(lastFloor.position.x + tileSize.x - 0.1f, arr[0].transform.position.y, arr[0].transform.position.z);
 
                 //Shuffle all the pieces down
                 GameObject temp = arr[0];
