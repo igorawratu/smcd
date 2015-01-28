@@ -35,7 +35,8 @@ public class EndScreenScript : MonoBehaviour {
             //Debug.Log(record.rectTransform.position.y - 30);
             score.rectTransform.position = new Vector3(record.rectTransform.position.x - 15, record.rectTransform.position.y - offSetNum, 0);
             offSetNum += 30;
-            score.text = "PLAYER " + player.Key + ": " + player.Value;
+            string pname = player.Key.Contains("Arrow") ? player.Key.Substring(0, player.Key.Length - 5) : player.Key;
+            score.text = "PLAYER " + pname + ": " + player.Value;
         }
         mBusy = false;
         StartCoroutine(countDown());
