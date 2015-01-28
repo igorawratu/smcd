@@ -61,6 +61,8 @@ public class PlayerMovement : MonoBehaviour
         jumpDelay = true;
         SpriteRenderer sr = gameObject.GetComponentInChildren<SpriteRenderer>();
         sr.color = playerColour;
+        sr.sortingOrder = Random.Range(0, 10);
+        powerUpSpriteRenderer.sortingOrder = Random.Range(0, 10);
         gravityScale = gameObject.rigidbody2D.gravityScale;
 	}
 	void canFootstepReset()
