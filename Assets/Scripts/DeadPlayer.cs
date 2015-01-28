@@ -4,6 +4,7 @@ using System.Collections;
 public class DeadPlayer : MonoBehaviour {
     private KeyCode mPKey;
     public LayerMask mask;
+    public Font font;
 
 	// Use this for initialization
     void Awake()
@@ -11,6 +12,7 @@ public class DeadPlayer : MonoBehaviour {
         mPKey = KeyCode.A;
         SpriteRenderer sr = gameObject.GetComponent<SpriteRenderer>();
         sr.color = new Color(255, 0, 0);
+        
     }
 
 	void Start () {
@@ -48,6 +50,9 @@ public class DeadPlayer : MonoBehaviour {
         gameObject.name = "dead" + mPKey;
         SpriteRenderer sr = gameObject.GetComponent<SpriteRenderer>();
         sr.color = _col;
-        //Debug.Log("Setinfo called");
+
+        GameObject textChild = transform.FindChild("DeadPlayerText").gameObject;
+        DeadPlayerText dptScript = textChild.GetComponent<DeadPlayerText>();
+        dptScript.setName(mPKey.ToString());
     }
 }
