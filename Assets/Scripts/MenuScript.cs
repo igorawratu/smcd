@@ -122,13 +122,30 @@ public class MenuScript : MonoBehaviour {
 						Vector3 newXPt = Camera.main.ScreenToWorldPoint(xPt);
 						player.transform.position = new Vector3(newXPt.x, 1, 0);
 
-						//Add text
-						GameObject aboveHead = (GameObject)Instantiate(headTextPrefab);
-						aboveHead.transform.SetParent(canvas.transform);
-						Text aboveHeadText = aboveHead.GetComponent<Text>();
-						aboveHeadText.text = keyCodes[i].ToString();
-						aboveHeadText.fontStyle = FontStyle.Bold;
-						aboveHeadText.rectTransform.position = new Vector3(initialSpawn, 225, 0);
+                        ////Add text
+                        //GameObject aboveHead = (GameObject)Instantiate(headTextPrefab);
+                        //aboveHead.transform.SetParent(canvas.transform);
+                        //Text aboveHeadText = aboveHead.GetComponent<Text>();
+                        
+                        //aboveHeadText.text = keyCodes[i].ToString();
+                        //if(aboveHeadText.text.Contains("Arrow"))
+                        //{
+                        //    aboveHeadText.text = aboveHeadText.text.Substring(0, aboveHeadText.text.Length - 5);
+                        //}
+                        //aboveHeadText.fontStyle = FontStyle.Bold;
+                        //aboveHeadText.rectTransform.position = new Vector3(initialSpawn, 225, 0);
+
+
+                        GameObject spacerObject = player.transform.FindChild("spacer").gameObject;
+                        GameObject keyText = spacerObject.transform.FindChild("KeyText").gameObject;
+
+                        TextMesh tm = keyText.GetComponent<TextMesh>();
+                        tm.text = keyCodes[i].ToString();
+                        if (tm.text.Contains("Arrow"))
+                        {
+                            tm.text = tm.text.Substring(0, tm.text.Length - 5);
+                        }
+
 
 						keysPressed[keyCodes[i]] = -100;
 					}

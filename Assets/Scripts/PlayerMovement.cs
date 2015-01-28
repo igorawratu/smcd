@@ -19,6 +19,8 @@ public class PlayerMovement : MonoBehaviour
     public KeyCode playerKey;
     public Color playerColour;
 
+    public Color[] powerUpColours = new Color[4];
+
     public AnimationBoard animationBoard;
     public SpriteRenderer playerSprite;
 
@@ -45,6 +47,7 @@ public class PlayerMovement : MonoBehaviour
         smash
     };
     public PowerUp powerUp;
+    public SpriteRenderer powerUpSpriteRenderer;
 
 
 	// Use this for initialization
@@ -212,7 +215,17 @@ public class PlayerMovement : MonoBehaviour
     {
         jumpDelay = true;
     }
-
+    public void Update()
+    {
+        if (powerUp == PowerUp.none)
+        {
+            powerUpSpriteRenderer.gameObject.SetActive(false);
+        }
+        else
+        {
+            powerUpSpriteRenderer.gameObject.SetActive(true);
+        }
+    }
     public void ActivatePowerUp(string tag)
     {
         if (tag == "speedUp")
@@ -245,6 +258,23 @@ public class PlayerMovement : MonoBehaviour
 		GameObject powerupFX = (GameObject)Instantiate(powerupEffect);
 		powerupFX.transform.position = new Vector3(transform.position.x, 1, 0);
 		powerupFX.GetComponentsInChildren<SpriteRenderer>()[0].color = playerColour;
+
+        switch (powerUp)
+        {
+            case PowerUp.doubleJump:
+                powerUpSpriteRenderer.color = powerUpColours[0];
+                break;
+            case PowerUp.glide:
+                powerUpSpriteRenderer.color = powerUpColours[1];
+                break;
+            case PowerUp.jumpBoost:
+                powerUpSpriteRenderer.color = powerUpColours[2];
+                break;
+            case PowerUp.smash:
+                powerUpSpriteRenderer.color = powerUpColours[3];
+                break;
+        }
+        //Invoke
     }
 
     void resetTempSpeedBoost()

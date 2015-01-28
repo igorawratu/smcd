@@ -56,7 +56,7 @@ public class GenerateItems : MonoBehaviour {
 	}
 
 	void FixedUpdate(){
-        Debug.Log(Time.deltaTime);
+        //Debug.Log(Time.deltaTime);
         mTimeSinceLastObstacle += Time.deltaTime;
         mTimeSinceLastPowerup += Time.deltaTime;
         mTimeSinceLastCloud += Time.deltaTime;

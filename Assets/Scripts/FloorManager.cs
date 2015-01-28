@@ -58,7 +58,7 @@ public class FloorManager : MonoBehaviour {
         sr.sprite = floorSprites[randomTile];
     }
 	// Update is called once per frame
-	void FixedUpdate () {
+	void Update () {
 		if (floorArr[0].transform.position.x < Camera.main.transform.position.x) {
 			if (!floorArr[0].transform.renderer.IsVisibleFrom(Camera.main)) {
 				//get position of last floor piece
@@ -81,6 +81,7 @@ public class FloorManager : MonoBehaviour {
         rotateArray(skyArr, skySize);
         for (int i = 0; i < skyArr.Length; i++)
         {
+            //skyArr[i].transform.position = skyArr[i].transform.position + skySpeed * Time.deltaTime;
             skyArr[i].transform.position = skyArr[i].transform.position + skySpeed * Time.deltaTime;
         }
 
