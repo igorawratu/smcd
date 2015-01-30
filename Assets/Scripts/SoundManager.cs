@@ -65,13 +65,12 @@ public class SoundManager : MonoBehaviour
         }
         else if (Application.loadedLevelName == "TitleScreen")
         {
-            audio.clip = titleSound;
-            audio.volume = titleVolume;
-            audio.loop = false;
-            audio.Play();
+            GameObject tempSound = (GameObject)Instantiate(SoundManager.soundManager.tempSound);
+            TemporarySound ts = tempSound.GetComponent<TemporarySound>();
+            ts.play(SoundManager.soundManager.titleSound,
+                    SoundManager.soundManager.titleVolume);
 
-            audio.clip = gameMusic;
-            audio.Play();
+            Invoke("playTitleMusic", SoundManager.soundManager.titleSound.length);
         }
         else
         {
@@ -79,6 +78,12 @@ public class SoundManager : MonoBehaviour
             audio.Play();
         }
 	}
+
+    void playTitleMusic()
+    {
+        audio.clip = gameMusic;
+        audio.Play();
+    }
     void playTemporarySound(AudioClip clip, float volume)
     {
         GameObject tempS = (GameObject)Instantiate(tempSound);

@@ -9,14 +9,17 @@ public class PlayerSpawner : MonoBehaviour {
     public float startPoint = 0.0f;
 
 	private List<int> chosenColours;
-	private Dictionary<KeyCode, float> enteringPlayers;
+    private Dictionary<KeyCode, float> enteringPlayers;
+    private Dictionary<KeyCode, TemporarySound> keysSound;
+
 
 	public float timeToHold = 2;
 
 	// Use this for initialization
 	void Start () {
 		chosenColours = new List<int>();
-		enteringPlayers = new Dictionary<KeyCode, float>();
+        enteringPlayers = new Dictionary<KeyCode, float>();
+        keysSound = new Dictionary<KeyCode, TemporarySound>();
 
 		for (int i = 0; i < CurrentPlayerKeys.Instance.playerKeys.Count; i++) {
 			KeyCode kc = CurrentPlayerKeys.Instance.playerKeys[i];
@@ -49,24 +52,42 @@ public class PlayerSpawner : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (Input.anyKey) {
-			bool isNew = true;
-			foreach (KeyCode kc in CurrentPlayerKeys.Instance.playerKeys) {
-				if (Input.GetKey(kc)) {
+        //if (Input.anyKey) 
+        //{
+            bool isNew = true;
+            bool isNewReleased = true;
+			foreach (KeyCode kc in CurrentPlayerKeys.Instance.playerKeys) 
+            {
+				if (Input.GetKey(kc)) 
+                {
 					isNew = false;
 					break;
 				}
 			}
+            foreach (KeyCode kc in CurrentPlayerKeys.Instance.playerKeys)
+            {
+                if (Input.GetKeyUp(kc))
+                {
+                    isNewReleased = false;
+                    break;
+                }
+            }
 
-			if (isNew) {
-				for (int i = 0; i < MenuScript.keyCodes.Length; i++) {
-					if (Input.GetKey(MenuScript.keyCodes[i])) {
+            if (isNew)
+            {
+				for (int i = 0; i < MenuScript.keyCodes.Length; i++) 
+                {
+					if (Input.GetKey(MenuScript.keyCodes[i])) 
+                    {
 						float temp = 0;
-						if (enteringPlayers.TryGetValue(MenuScript.keyCodes[i], out temp)) {
+						if (enteringPlayers.TryGetValue(MenuScript.keyCodes[i], out temp)) 
+                        {
 							enteringPlayers[MenuScript.keyCodes[i]] += Time.deltaTime;
-							if (enteringPlayers[MenuScript.keyCodes[i]] >= timeToHold) {
+							if (enteringPlayers[MenuScript.keyCodes[i]] >= timeToHold) 
+                            {
 								CurrentPlayerKeys.Instance.playerKeys.Add(MenuScript.keyCodes[i]);
-								
+
+                                Debug.Log("Adding player " + MenuScript.keyCodes[i].ToString());
 								//Spawn stuff here								
 								GameObject player = (GameObject)Instantiate(playerPrefab);
 								player.name = MenuScript.keyCodes[i].ToString();
@@ -76,6 +97,7 @@ public class PlayerSpawner : MonoBehaviour {
 								startPoint = Camera.main.ViewportToWorldPoint(screenMid).x;
 								offset = Random.Range(-1, 1);
 								player.transform.position = new Vector3(startPoint + offset, 0.59f, 0);
+                                Debug.Log("Added player " + player.name);
 
                                 GameObject wc = GameObject.Find("WinnerChecker");
                                 WinnerChecker wcscript = wc.GetComponent<WinnerChecker>();
@@ -94,16 +116,50 @@ public class PlayerSpawner : MonoBehaviour {
 									}
 								}
 								player.GetComponent<PlayerMovement>().playerColour = CurrentPlayerKeys.Instance.possibleColors[colourIndex];
-								
-								enteringPlayers[MenuScript.keyCodes[i]] = -100;
+
+                                enteringPlayers[MenuScript.keyCodes[i]] = -1000;
 							}
 						}
-						else {
+						else 
+                        {
 							enteringPlayers.Add(MenuScript.keyCodes[i], 0);
+
+                            GameObject tempSound = (GameObject)Instantiate(SoundManager.soundManager.tempSound);
+                            TemporarySound ts = tempSound.GetComponent<TemporarySound>();
+                            int rnd = Random.Range(0, SoundManager.soundManager.introSpawnSounds.Count);
+                            ts.play(SoundManager.soundManager.introSpawnSounds[rnd],
+                                    SoundManager.soundManager.introSpawnVolume);
+                            keysSound.Add(MenuScript.keyCodes[i], ts);
 						}
 					}
+                    
 				}
 			}
-		}
+            if (isNewReleased)
+            {
+                for (int i = 0; i < MenuScript.keyCodes.Length; i++)
+                {
+                    if (Input.GetKeyUp(MenuScript.keyCodes[i]))
+                    {
+                        float temp = -1000;
+                        if (enteringPlayers.TryGetValue(MenuScript.keyCodes[i], out temp))
+                        {
+                            if (temp < timeToHold && temp > -900)
+                            {
+                                enteringPlayers.Remove(MenuScript.keyCodes[i]);
+
+                                TemporarySound ts = null;
+                                bool success = keysSound.TryGetValue(MenuScript.keyCodes[i], out ts);
+                                if (success)
+                                {
+                                    ts.stop();
+                                    keysSound.Remove(MenuScript.keyCodes[i]);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        //}
 	}
 }

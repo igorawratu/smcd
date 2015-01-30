@@ -160,13 +160,13 @@ public class MenuScript : MonoBehaviour {
                     TemporarySound ts = tempSound.GetComponent<TemporarySound>();
                     int rnd = Random.Range(0,SoundManager.soundManager.introSpawnSounds.Count);
                     ts.play(SoundManager.soundManager.introSpawnSounds[rnd],
-                        SoundManager.soundManager.introSpawnVolume);
+                            SoundManager.soundManager.introSpawnVolume);
                     keysSound.Add(keyCodes[i], ts);
 				}
 			}
             if (Input.GetKeyUp(keyCodes[i]))
             {
-                float temp = -100;
+                float temp = -1000;
                 if (keysPressed.TryGetValue(keyCodes[i], out temp))
                 {
                     if (temp < timeToHold && temp>-900)
