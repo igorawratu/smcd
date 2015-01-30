@@ -2,6 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 
+enum ObstacleSequence{S, B, SS, BB, SBS, BSB, SBSBS, BSBSB, BSBSBSB};
+
 public class GenerateItems : MonoBehaviour {
     private class DeadPlayerInfo{
         public DeadPlayerInfo(KeyCode _name, Color _col){
@@ -10,6 +12,16 @@ public class GenerateItems : MonoBehaviour {
         }
         public KeyCode name;
         public Color colour;
+    }
+
+    private class ObstacleSequenceInfo {
+        public ObstacleSequenceInfo(List<int> _types, List<Vector2> _positions) {
+            types = _types;
+            positions = _positions;
+        }
+
+        public List<int> types;
+        public List<Vector2> positions;
     }
 
 	public GameObject prefab;
@@ -26,7 +38,7 @@ public class GenerateItems : MonoBehaviour {
 	void Start () {
         mItems = new List<GameObject>();
         mRng = new System.Random();
-        mTimeLimit = 1;
+        mTimeLimit = 2;
         mTimeSinceLastObstacle = 0;
         mItemsList = new List<GameObject>();
         mPowerups = new List<GameObject>();
@@ -45,9 +57,7 @@ public class GenerateItems : MonoBehaviour {
         mPowerups.Add(glidePU);
         mPowerups.Add(smashPU);
 
-        /*mItems.Add(deadPlayer);
-        mItems.Add(deadPlayer);
-        mDeadPlayers.Add(new DeadPlayerInfo(KeyCode.Q, new Color(255, 0, 255)));*/
+        initObstacleSequenceTypes();
 	}
 	
 	// Update is called once per frame
@@ -63,16 +73,21 @@ public class GenerateItems : MonoBehaviour {
         mDecTimer += Time.deltaTime;
         bool itemCreated = false;
 
-        if(mDecTimer > 1 && mTimeLimit > mTimeLowerBound){
+        /*if(mDecTimer > 1 && mTimeLimit > mTimeLowerBound){
             mTimeLimit -= 0.01f;
             mDecTimer = 0;
+        }*/
+
+        if (mDecTimer > 3 * mObstacleTypes && mObstacleTypes < 9) {
+            mDecTimer = 0;
+            mObstacleTypes++;
         }
 
         spawnClouds();
 
         if(mRng.Next(0, 100) < 1 && mTimeSinceLastPowerup > mPowerupTimeLimit){
-            float max = mTimeSinceLastObstacle > 0.5 ? 3 : 4;
-            float min = mTimeSinceLastObstacle > 0.5 ? 0 : 2;
+            float max = mTimeSinceLastObstacle > 0.5 || (mTimeLimit - mTimeSinceLastObstacle) < 0.5 ? 3 : 4;
+            float min = mTimeSinceLastObstacle > 0.5 || (mTimeLimit - mTimeSinceLastObstacle) < 0.5 ? 0 : 2;
             float ypos = (float)mRng.NextDouble() * (max - min) + min;
 
             int powerupType = mRng.Next(0, mPowerups.Count);
@@ -84,19 +99,23 @@ public class GenerateItems : MonoBehaviour {
 
             itemCreated = true;
         }
-
+        
         if (mRng.Next(0, 100) < 2 && mTimeSinceLastObstacle > mTimeLimit){
             int itemType = mRng.Next(0, mItems.Count);
-            GameObject newItem = (GameObject)Instantiate(mItems[itemType]);
-
-            if (mItems[itemType] == deadPlayer){
+            
+            if (mItems[itemType] == deadPlayer) {
+                GameObject newItem = (GameObject)Instantiate(mItems[itemType]);
                 int chosenDeadPlayer = mRng.Next(0, mDeadPlayers.Count);
                 DeadPlayer deadScript = newItem.GetComponent<DeadPlayer>();
                 deadScript.setInfo(mDeadPlayers[chosenDeadPlayer].name, mDeadPlayers[chosenDeadPlayer].colour);
+                newItem.transform.position = new Vector2(Camera.main.transform.position.x + 20, mItems[itemType].transform.position.y);
+                mItemsList.Add(newItem);
+            }
+            else {
+                List<GameObject> newObstacles = generateObstacleSequence();
+                mItemsList.AddRange(newObstacles);
             }
 
-            newItem.transform.position = new Vector2(Camera.main.transform.position.x + 20, mItems[itemType].transform.position.y);
-            mItemsList.Add(newItem);
             mTimeSinceLastObstacle = 0;
             itemCreated = true;
         }
@@ -154,6 +173,43 @@ public class GenerateItems : MonoBehaviour {
         Destroy(_obj);
     }
 
+    private List<GameObject> generateObstacleSequence(){
+        ObstacleSequenceInfo sInfo = mObstacleSequences[mPossibleSequences[mRng.Next(0, mObstacleTypes)]];
+        List<GameObject> sequence = new List<GameObject>();
+
+        for (int k = 0; k < sInfo.types.Count; ++k) {
+            GameObject instantiateMe = sInfo.types[k] == 0 ? rocksmall : rockbig;
+            GameObject newObstacle = (GameObject)Instantiate(instantiateMe);
+
+            newObstacle.transform.position = new Vector2(Camera.main.transform.position.x + 20 + sInfo.positions[k].x, instantiateMe.transform.position.y + sInfo.positions[k].y);
+            sequence.Add(newObstacle);
+        }
+
+        return sequence;
+    }
+
+    private void initObstacleSequenceTypes() {
+        mObstacleTypes = 1;
+        mPossibleSequences = new ObstacleSequence[9] { ObstacleSequence.S, ObstacleSequence.B, ObstacleSequence.SS, 
+            ObstacleSequence.BB, ObstacleSequence.SBS, ObstacleSequence.BSB, ObstacleSequence.SBSBS, ObstacleSequence.BSBSB, ObstacleSequence.BSBSBSB };
+        mObstacleSequences = new Dictionary<ObstacleSequence, ObstacleSequenceInfo>();
+        mObstacleSequences[ObstacleSequence.S] = new ObstacleSequenceInfo(new List<int>(){0}, new List<Vector2>(){new Vector2(0, 0)});
+        mObstacleSequences[ObstacleSequence.B] = new ObstacleSequenceInfo(new List<int>(){1}, new List<Vector2>(){new Vector2(0, 0)});
+        mObstacleSequences[ObstacleSequence.BB] = new ObstacleSequenceInfo(new List<int>(){1, 1}, new List<Vector2>(){new Vector2(2.5f, 0), new Vector2(-2.5f, 0)});
+        mObstacleSequences[ObstacleSequence.SS] = new ObstacleSequenceInfo(new List<int>(){0, 0}, new List<Vector2>(){new Vector2(2.5f, 0), new Vector2(-2.5f, 0)});
+        mObstacleSequences[ObstacleSequence.BSB] = new ObstacleSequenceInfo(new List<int>(){1, 0, 1},
+            new List<Vector2>(){new Vector2(-5, 0), new Vector2(0, 0), new Vector2(5, 0)});
+        mObstacleSequences[ObstacleSequence.SBS] = new ObstacleSequenceInfo(new List<int>(){0, 1, 0}, 
+            new List<Vector2>(){new Vector2(-5, 0), new Vector2(0, 0), new Vector2(5, 0)});
+        mObstacleSequences[ObstacleSequence.SBSBS] = new ObstacleSequenceInfo(new List<int>(){0, 1, 0, 1, 0}, 
+            new List<Vector2>(){new Vector2(-8, 0), new Vector2(-4, 0), new Vector2(0, 0), new Vector2(4, 0), new Vector2(8, 0)});
+        mObstacleSequences[ObstacleSequence.BSBSB] = new ObstacleSequenceInfo(new List<int>(){1, 0, 1, 0, 1}, 
+            new List<Vector2>(){new Vector2(-8, 0), new Vector2(-4, 0), new Vector2(0, 0), new Vector2(4, 0), new Vector2(8, 0)});
+        mObstacleSequences[ObstacleSequence.BSBSBSB] = new ObstacleSequenceInfo(new List<int>(){1, 0, 1, 0, 1, 0, 1}, 
+            new List<Vector2>(){new Vector2(-12, 0), new Vector2(-8, 0), new Vector2(-4, 0), new Vector2(0, 0), new Vector2(4, 0), new Vector2(8, 0), new Vector2(12, 0)});
+
+    }
+
     private List<GameObject> mItems;
     private List<DeadPlayerInfo> mDeadPlayers;
     private System.Random mRng;
@@ -168,4 +224,7 @@ public class GenerateItems : MonoBehaviour {
     private List<GameObject> mPowerups;
     private List<GameObject> mClouds;
     private float mDecTimer;
+    private Dictionary<ObstacleSequence, ObstacleSequenceInfo> mObstacleSequences;
+    private ObstacleSequence[] mPossibleSequences;
+    private int mObstacleTypes;
 }
