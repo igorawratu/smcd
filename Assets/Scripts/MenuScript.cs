@@ -10,7 +10,8 @@ public class MenuScript : MonoBehaviour {
 	public Text joinText;
 	public Text countDownText;
 
-	private Dictionary<KeyCode, float> keysPressed;
+    private Dictionary<KeyCode, float> keysPressed;
+    private Dictionary<KeyCode, TemporarySound> keysSound;
 
 	public static KeyCode[] keyCodes;
 
@@ -35,6 +36,7 @@ public class MenuScript : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		keysPressed = new Dictionary<KeyCode, float>();
+        keysSound = new Dictionary<KeyCode, TemporarySound>();
 
 		keyCodes = (KeyCode[])System.Enum.GetValues(typeof(KeyCode));
 
@@ -86,8 +88,10 @@ public class MenuScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		for (int i = 0; i < keyCodes.Length; i++) {
-			if (Input.GetKey(keyCodes[i])) {
+		for (int i = 0; i < keyCodes.Length; i++) 
+        {
+			if (Input.GetKey(keyCodes[i])) 
+            {
 				float temp = 0;
 				if (keysPressed.TryGetValue(keyCodes[i], out temp)) {
 					keysPressed[keyCodes[i]] += Time.deltaTime;
@@ -147,13 +151,38 @@ public class MenuScript : MonoBehaviour {
                         }
 
 
-						keysPressed[keyCodes[i]] = -100;
+						keysPressed[keyCodes[i]] = -1000;
 					}
 				}
 				else {
 					keysPressed.Add(keyCodes[i], 0);
+                    GameObject tempSound = (GameObject)Instantiate(SoundManager.soundManager.tempSound);
+                    TemporarySound ts = tempSound.GetComponent<TemporarySound>();
+                    int rnd = Random.Range(0,SoundManager.soundManager.introSpawnSounds.Count);
+                    ts.play(SoundManager.soundManager.introSpawnSounds[rnd],
+                        SoundManager.soundManager.introSpawnVolume);
+                    keysSound.Add(keyCodes[i], ts);
 				}
 			}
+            if (Input.GetKeyUp(keyCodes[i]))
+            {
+                float temp = -100;
+                if (keysPressed.TryGetValue(keyCodes[i], out temp))
+                {
+                    if (temp < timeToHold && temp>-900)
+                    {
+                        keysPressed.Remove(keyCodes[i]);
+
+                        TemporarySound ts = null;
+                        bool success = keysSound.TryGetValue(keyCodes[i], out ts);
+                        if (success)
+                        {
+                            ts.stop();
+                            keysSound.Remove(keyCodes[i]);
+                        }
+                    }
+                }
+            }
 		}
 	}
 
@@ -173,7 +202,7 @@ public class MenuScript : MonoBehaviour {
 		}
 
 		if (CurrentPlayerKeys.Instance.playerKeys.Count > 0) {
-			Application.LoadLevel("TestScene");
+			Application.LoadLevel("MainRunSequence");
 		}
 		else {
 			Application.LoadLevel("MenuScene");
