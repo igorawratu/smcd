@@ -166,7 +166,7 @@ public class MenuScript : MonoBehaviour {
 			}
             if (Input.GetKeyUp(keyCodes[i]))
             {
-                float temp = -100;
+                float temp = -1000;
                 if (keysPressed.TryGetValue(keyCodes[i], out temp))
                 {
                     if (temp < timeToHold && temp>-900)
