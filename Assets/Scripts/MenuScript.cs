@@ -202,10 +202,10 @@ public class MenuScript : MonoBehaviour {
 		}
 
 		if (CurrentPlayerKeys.Instance.playerKeys.Count > 0) {
-			Application.LoadLevel("MainRunSequence");
+			Application.LoadLevel("RunScene");
 		}
 		else {
-			Application.LoadLevel("MenuScene");
+			Application.LoadLevel("JoinScene");
 		}
 
 	}

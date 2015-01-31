@@ -39,14 +39,14 @@ public class FloorManager : MonoBehaviour {
         for (int i = 0; i < floorArr.Length; i++)
         {
             groundArr[i] = (GameObject)Instantiate(groundPrefab);
-            Vector3 pos = floorOffset + new Vector3(groundSize.x * i, -floorSize.y, 0.0f);
+            Vector3 pos = floorOffset + new Vector3(groundSize.x * i, groundPrefab.transform.position.y, 0.0f);
             groundArr[i].transform.position = pos;
         }
 
         for (int i = 0; i < skyArr.Length; i++)
         {
             skyArr[i] = (GameObject)Instantiate(skyPrefab);
-            Vector3 pos = skyOffset + new Vector3(skySize.x * i, -floorSize.y, 0.0f);
+            Vector3 pos = skyOffset + new Vector3(skySize.x * i, skyPrefab.transform.position.y, 0.0f);
             skyArr[i].transform.position = pos;
         }
     }

@@ -93,16 +93,20 @@ public class PlayerMovement : MonoBehaviour
         if (infront)
         {
             //Debug.Log(hitFront.collider.gameObject.tag);
-            if (hitFront.collider.gameObject.tag == "obstacle" && obj != hitFront.collider.gameObject)
+            if( obj != hitFront.collider.gameObject)
             {
-                RandomShake.randomShake.PlaySinShake();
-                Instantiate(hitEffect,
-                    new Vector3(hitFront.point.x, hitFront.point.y, hitEffect.transform.position.z),
-                    hitEffect.transform.rotation);
-                obj = hitFront.collider.gameObject;
+                if (hitFront.collider.gameObject.tag == "obstacle" || hitFront.collider.gameObject.tag == "deadplayer")
+                {
+                
+                    RandomShake.randomShake.PlaySinShake();
+                    Instantiate(hitEffect,
+                        new Vector3(hitFront.point.x, hitFront.point.y, hitEffect.transform.position.z),
+                        hitEffect.transform.rotation);
+                    obj = hitFront.collider.gameObject;
 
-                int rnd = Random.Range(0, SoundManager.soundManager.hitSounds.Count-1);
-                audio.PlayOneShot(SoundManager.soundManager.hitSounds[rnd], SoundManager.soundManager.hitVolume);
+                    int rnd = Random.Range(0, SoundManager.soundManager.hitSounds.Count-1);
+                    audio.PlayOneShot(SoundManager.soundManager.hitSounds[rnd], SoundManager.soundManager.hitVolume);
+                }
             }
 
             if (powerUp == PowerUp.smash)

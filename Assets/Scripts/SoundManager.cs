@@ -51,14 +51,14 @@ public class SoundManager : MonoBehaviour
 	// Use this for initialization
 	void Start () 
     {
-        if (Application.loadedLevelName == "MenuScene")
+        if (Application.loadedLevelName == "JoinScene")
         {
             audio.clip = introSound;
             audio.volume = introSpawnVolume;
             audio.loop = false;
             audio.Play();
         }
-        else if (Application.loadedLevelName == "MainRunSequence")
+        else if (Application.loadedLevelName == "RunScene")
         {
             audio.clip = gameMusic;
             audio.Play();

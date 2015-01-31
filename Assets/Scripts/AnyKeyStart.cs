@@ -21,6 +21,6 @@ public class AnyKeyStart : MonoBehaviour {
 	}
     void loadMenu()
     {
-        Application.LoadLevel("MenuScene");
+        Application.LoadLevel("JoinScene");
     }
 }
