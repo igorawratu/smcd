@@ -48,6 +48,7 @@ public class PlayerMovement : MonoBehaviour
     };
     public PowerUp powerUp;
     public SpriteRenderer powerUpSpriteRenderer;
+    int smashCharges = 0;
 
 
 	// Use this for initialization
@@ -123,10 +124,14 @@ public class PlayerMovement : MonoBehaviour
                         new Vector3(hitFront.point.x, hitFront.point.y, hitEffect.transform.position.z),
                         rockEffect.transform.rotation);
                     obj = hitFront.collider.gameObject;
-
-
                     animationBoard.Hit();
-                    powerUp = PowerUp.none;
+
+                    smashCharges--;
+                    if (smashCharges <= 0)
+                    {
+                        powerUp = PowerUp.none;
+                        //gameObject.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+                    }
                 }
             }
         }
@@ -234,6 +239,7 @@ public class PlayerMovement : MonoBehaviour
     }
     public void ActivatePowerUp(string tag)
     {
+        //gameObject.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
         if (tag == "speedUp")
         {
             powerUp = PowerUp.speedUp;
@@ -253,6 +259,9 @@ public class PlayerMovement : MonoBehaviour
         else if (tag == "smash")
         {
             powerUp = PowerUp.smash;
+            //transform.localScale += new Vector3(0.3f, 0.3f, 0.0f);
+            //.transform.position = gameObject.transform.position + new Vector3(0.0f, 1.0f, 0.0f);
+            smashCharges=3;
         }
 
         tempSpeedBoost += VariableSpeed.currentBoost;
