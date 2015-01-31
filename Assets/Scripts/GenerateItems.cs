@@ -202,11 +202,11 @@ public class GenerateItems : MonoBehaviour {
         mObstacleSequences[ObstacleSequence.SBS] = new ObstacleSequenceInfo(new List<int>(){0, 1, 0}, 
             new List<Vector2>(){new Vector2(-5, 0), new Vector2(0, 0), new Vector2(5, 0)});
         mObstacleSequences[ObstacleSequence.SBSBS] = new ObstacleSequenceInfo(new List<int>(){0, 1, 0, 1, 0}, 
-            new List<Vector2>(){new Vector2(-8, 0), new Vector2(-4, 0), new Vector2(0, 0), new Vector2(4, 0), new Vector2(8, 0)});
+            new List<Vector2>(){new Vector2(-10, 0), new Vector2(-5, 0), new Vector2(0, 0), new Vector2(5, 0), new Vector2(10, 0)});
         mObstacleSequences[ObstacleSequence.BSBSB] = new ObstacleSequenceInfo(new List<int>(){1, 0, 1, 0, 1}, 
-            new List<Vector2>(){new Vector2(-8, 0), new Vector2(-4, 0), new Vector2(0, 0), new Vector2(4, 0), new Vector2(8, 0)});
+            new List<Vector2>(){new Vector2(-10, 0), new Vector2(-5, 0), new Vector2(0, 0), new Vector2(5, 0), new Vector2(10, 0)});
         mObstacleSequences[ObstacleSequence.BSBSBSB] = new ObstacleSequenceInfo(new List<int>(){1, 0, 1, 0, 1, 0, 1}, 
-            new List<Vector2>(){new Vector2(-12, 0), new Vector2(-8, 0), new Vector2(-4, 0), new Vector2(0, 0), new Vector2(4, 0), new Vector2(8, 0), new Vector2(12, 0)});
+            new List<Vector2>(){new Vector2(-15, 0), new Vector2(-10, 0), new Vector2(-5, 0), new Vector2(0, 0), new Vector2(5, 0), new Vector2(10, 0), new Vector2(15, 0)});
 
     }
 
