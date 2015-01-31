@@ -36,7 +36,9 @@ public class SoundManager : MonoBehaviour
     public float winVolume = 1.0f;
 
     public AudioClip menuMusic;
-    public AudioClip gameMusic;
+    public List<AudioClip> gameMusic;
+    int lastTrackPlayed = 0;
+    bool firstTrack = true;
 
 
     public AudioClip introSound;
@@ -60,8 +62,7 @@ public class SoundManager : MonoBehaviour
         }
         else if (Application.loadedLevelName == "RunScene")
         {
-            audio.clip = gameMusic;
-            audio.Play();
+            playNextTrack();
         }
         else if (Application.loadedLevelName == "TitleScreen")
         {
@@ -70,20 +71,48 @@ public class SoundManager : MonoBehaviour
             ts.play(SoundManager.soundManager.titleSound,
                     SoundManager.soundManager.titleVolume);
 
-            Invoke("playTitleMusic", SoundManager.soundManager.titleSound.length);
+            Invoke("playNextTrack", SoundManager.soundManager.titleSound.length);
         }
         else
         {
-            audio.clip = gameMusic;
-            audio.Play();
+            playNextTrack();
         }
 	}
 
-    void playTitleMusic()
+    void playNextTrack()
     {
-        audio.clip = gameMusic;
-        audio.Play();
+        int rnd = getNewTrack();
+        audio.clip = gameMusic[rnd];
+        audio.Play(); 
+        Invoke("playNextTrack", gameMusic[rnd].length);
     }
+    int getNewTrack()
+    {
+        if (firstTrack)
+        {
+            int rnd = Random.Range(0, gameMusic.Count);
+            lastTrackPlayed = rnd;
+            return lastTrackPlayed;
+        }
+
+        if (gameMusic.Count <= 1)
+        {
+            lastTrackPlayed = 1;
+        }
+        else
+        {
+            int rnd = Random.Range(0, gameMusic.Count);
+            while (rnd == lastTrackPlayed)
+            {
+                rnd = Random.Range(0, gameMusic.Count);
+            }
+            lastTrackPlayed = rnd;
+        }
+
+        firstTrack = false;
+        return lastTrackPlayed;
+    }
+
     void playTemporarySound(AudioClip clip, float volume)
     {
         GameObject tempS = (GameObject)Instantiate(tempSound);
