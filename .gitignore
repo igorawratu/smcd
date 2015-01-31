@@ -4,6 +4,7 @@
 Temp/
 Library/
 Windows/
+Builds/
 
 # ===================================== #
 # Visual Studio / MonoDevelop generated #
@@ -30,3 +31,4 @@ obj/
 .Trashes
 ehthumbs.db
 Thumbs.db
+Thumbs.db.meta
