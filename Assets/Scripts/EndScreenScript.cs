@@ -31,11 +31,12 @@ public class EndScreenScript : MonoBehaviour {
             GameObject scoreObj = (GameObject)Instantiate(textPrefab);
             scoreObj.transform.SetParent(canvas.transform);
             Text score = scoreObj.GetComponent<Text>();
-            Debug.Log(record.rectTransform.position.x);
-            Debug.Log(record.rectTransform.position.y - 30);
+            //Debug.Log(record.rectTransform.position.x);
+            //Debug.Log(record.rectTransform.position.y - 30);
             score.rectTransform.position = new Vector3(record.rectTransform.position.x - 15, record.rectTransform.position.y - offSetNum, 0);
             offSetNum += 30;
-            score.text = "PLAYER " + player.Key + ": " + player.Value;
+            string pname = player.Key.Contains("Arrow") ? player.Key.Substring(0, player.Key.Length - 5) : player.Key;
+            score.text = "PLAYER " + pname + ": " + player.Value;
         }
         mBusy = false;
         StartCoroutine(countDown());
@@ -44,7 +45,7 @@ public class EndScreenScript : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         if(Input.anyKey)
-            Application.LoadLevel("TestScene");
+            Application.LoadLevel("RunScene");
 	}
 
     private IEnumerator countDown()
@@ -57,7 +58,7 @@ public class EndScreenScript : MonoBehaviour {
             yield return new WaitForSeconds(1);
         }
 
-        Application.Quit();
+        Application.LoadLevel(0);
     }
 
     bool mBusy;

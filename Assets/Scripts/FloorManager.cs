@@ -39,14 +39,14 @@ public class FloorManager : MonoBehaviour {
         for (int i = 0; i < floorArr.Length; i++)
         {
             groundArr[i] = (GameObject)Instantiate(groundPrefab);
-            Vector3 pos = floorOffset + new Vector3(groundSize.x * i, -floorSize.y, 0.0f);
+            Vector3 pos = floorOffset + new Vector3(groundSize.x * i, groundPrefab.transform.position.y, 0.0f);
             groundArr[i].transform.position = pos;
         }
 
         for (int i = 0; i < skyArr.Length; i++)
         {
             skyArr[i] = (GameObject)Instantiate(skyPrefab);
-            Vector3 pos = skyOffset + new Vector3(skySize.x * i, -floorSize.y, 0.0f);
+            Vector3 pos = skyOffset + new Vector3(skySize.x * i, skyPrefab.transform.position.y, 0.0f);
             skyArr[i].transform.position = pos;
         }
     }
@@ -58,7 +58,7 @@ public class FloorManager : MonoBehaviour {
         sr.sprite = floorSprites[randomTile];
     }
 	// Update is called once per frame
-	void FixedUpdate () {
+	void Update () {
 		if (floorArr[0].transform.position.x < Camera.main.transform.position.x) {
 			if (!floorArr[0].transform.renderer.IsVisibleFrom(Camera.main)) {
 				//get position of last floor piece
@@ -81,6 +81,7 @@ public class FloorManager : MonoBehaviour {
         rotateArray(skyArr, skySize);
         for (int i = 0; i < skyArr.Length; i++)
         {
+            //skyArr[i].transform.position = skyArr[i].transform.position + skySpeed * Time.deltaTime;
             skyArr[i].transform.position = skyArr[i].transform.position + skySpeed * Time.deltaTime;
         }
 
@@ -94,7 +95,7 @@ public class FloorManager : MonoBehaviour {
                 //get position of last floor piece
                 Transform lastFloor = arr[arr.Length - 1].transform;
 
-                arr[0].transform.position = new Vector3(lastFloor.position.x + tileSize.x, arr[0].transform.position.y, arr[0].transform.position.z);
+                arr[0].transform.position = new Vector3(lastFloor.position.x + tileSize.x - 0.1f, arr[0].transform.position.y, arr[0].transform.position.z);
 
                 //Shuffle all the pieces down
                 GameObject temp = arr[0];

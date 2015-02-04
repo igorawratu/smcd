@@ -34,6 +34,7 @@ public class WinnerChecker : MonoBehaviour {
             if (mPlayersActive.Count == 0)
                 winner = _player;
             else winner = mPlayersActive[0];
+
             Dictionary<string, int> scoreBook = CurrentPlayerKeys.Instance.playerScores;
             if (CurrentPlayerKeys.Instance.playerScores.ContainsKey(winner)){
                 CurrentPlayerKeys.Instance.playerScores[winner]++;
@@ -42,7 +43,7 @@ public class WinnerChecker : MonoBehaviour {
 
             CurrentPlayerKeys.Instance.lastWinner = winner;
             
-            audio.PlayOneShot(SoundManager.soundManager.winSound, SoundManager.soundManager.winSoundLevel);
+            audio.PlayOneShot(SoundManager.soundManager.winSound, SoundManager.soundManager.winVolume);
 
             StartCoroutine(countDown());
             end = true;
@@ -52,7 +53,8 @@ public class WinnerChecker : MonoBehaviour {
     private IEnumerator countDown()
     {
         GameObject player = GameObject.Find(CurrentPlayerKeys.Instance.lastWinner);
-        gameOver.text = "PLAYER " + CurrentPlayerKeys.Instance.lastWinner + " WINS";
+        string name = CurrentPlayerKeys.Instance.lastWinner.Contains("Arrow") ? CurrentPlayerKeys.Instance.lastWinner.Substring(0, CurrentPlayerKeys.Instance.lastWinner.Length - 5) : CurrentPlayerKeys.Instance.lastWinner;
+        gameOver.text = "PLAYER " + name + " WINS";
         gameOver.color = player.GetComponent<PlayerMovement>().playerColour;
         yield return new WaitForSeconds(2);
 

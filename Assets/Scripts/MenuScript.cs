@@ -10,7 +10,8 @@ public class MenuScript : MonoBehaviour {
 	public Text joinText;
 	public Text countDownText;
 
-	private Dictionary<KeyCode, float> keysPressed;
+    private Dictionary<KeyCode, float> keysPressed;
+    private Dictionary<KeyCode, TemporarySound> keysSound;
 
 	public static KeyCode[] keyCodes;
 
@@ -35,6 +36,7 @@ public class MenuScript : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		keysPressed = new Dictionary<KeyCode, float>();
+        keysSound = new Dictionary<KeyCode, TemporarySound>();
 
 		keyCodes = (KeyCode[])System.Enum.GetValues(typeof(KeyCode));
 
@@ -86,8 +88,10 @@ public class MenuScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		for (int i = 0; i < keyCodes.Length; i++) {
-			if (Input.GetKey(keyCodes[i])) {
+		for (int i = 0; i < keyCodes.Length; i++) 
+        {
+			if (Input.GetKey(keyCodes[i])) 
+            {
 				float temp = 0;
 				if (keysPressed.TryGetValue(keyCodes[i], out temp)) {
 					keysPressed[keyCodes[i]] += Time.deltaTime;
@@ -122,21 +126,63 @@ public class MenuScript : MonoBehaviour {
 						Vector3 newXPt = Camera.main.ScreenToWorldPoint(xPt);
 						player.transform.position = new Vector3(newXPt.x, 1, 0);
 
-						//Add text
-						GameObject aboveHead = (GameObject)Instantiate(headTextPrefab);
-						aboveHead.transform.SetParent(canvas.transform);
-						Text aboveHeadText = aboveHead.GetComponent<Text>();
-						aboveHeadText.text = keyCodes[i].ToString();
-						aboveHeadText.fontStyle = FontStyle.Bold;
-						aboveHeadText.rectTransform.position = new Vector3(initialSpawn, 225, 0);
+                        ////Add text
+                        //GameObject aboveHead = (GameObject)Instantiate(headTextPrefab);
+                        //aboveHead.transform.SetParent(canvas.transform);
+                        //Text aboveHeadText = aboveHead.GetComponent<Text>();
+                        
+                        //aboveHeadText.text = keyCodes[i].ToString();
+                        //if(aboveHeadText.text.Contains("Arrow"))
+                        //{
+                        //    aboveHeadText.text = aboveHeadText.text.Substring(0, aboveHeadText.text.Length - 5);
+                        //}
+                        //aboveHeadText.fontStyle = FontStyle.Bold;
+                        //aboveHeadText.rectTransform.position = new Vector3(initialSpawn, 225, 0);
 
-						keysPressed[keyCodes[i]] = -100;
+
+                        GameObject spacerObject = player.transform.FindChild("spacer").gameObject;
+                        GameObject keyText = spacerObject.transform.FindChild("KeyText").gameObject;
+
+                        TextMesh tm = keyText.GetComponent<TextMesh>();
+                        tm.text = keyCodes[i].ToString();
+                        if (tm.text.Contains("Arrow"))
+                        {
+                            tm.text = tm.text.Substring(0, tm.text.Length - 5);
+                        }
+
+
+						keysPressed[keyCodes[i]] = -1000;
 					}
 				}
 				else {
 					keysPressed.Add(keyCodes[i], 0);
+                    GameObject tempSound = (GameObject)Instantiate(SoundManager.soundManager.tempSound);
+                    TemporarySound ts = tempSound.GetComponent<TemporarySound>();
+                    int rnd = Random.Range(0,SoundManager.soundManager.introSpawnSounds.Count);
+                    ts.play(SoundManager.soundManager.introSpawnSounds[rnd],
+                            SoundManager.soundManager.introSpawnVolume);
+                    keysSound.Add(keyCodes[i], ts);
 				}
 			}
+            if (Input.GetKeyUp(keyCodes[i]))
+            {
+                float temp = -1000;
+                if (keysPressed.TryGetValue(keyCodes[i], out temp))
+                {
+                    if (temp < timeToHold && temp>-900)
+                    {
+                        keysPressed.Remove(keyCodes[i]);
+
+                        TemporarySound ts = null;
+                        bool success = keysSound.TryGetValue(keyCodes[i], out ts);
+                        if (success)
+                        {
+                            ts.stop();
+                            keysSound.Remove(keyCodes[i]);
+                        }
+                    }
+                }
+            }
 		}
 	}
 
@@ -156,10 +202,10 @@ public class MenuScript : MonoBehaviour {
 		}
 
 		if (CurrentPlayerKeys.Instance.playerKeys.Count > 0) {
-			Application.LoadLevel("TestScene");
+			Application.LoadLevel("RunScene");
 		}
 		else {
-			Application.LoadLevel("MenuScene");
+			Application.LoadLevel("JoinScene");
 		}
 
 	}

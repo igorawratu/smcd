@@ -19,6 +19,8 @@ public class PlayerMovement : MonoBehaviour
     public KeyCode playerKey;
     public Color playerColour;
 
+    public Color[] powerUpColours = new Color[4];
+
     public AnimationBoard animationBoard;
     public SpriteRenderer playerSprite;
 
@@ -45,6 +47,8 @@ public class PlayerMovement : MonoBehaviour
         smash
     };
     public PowerUp powerUp;
+    public SpriteRenderer powerUpSpriteRenderer;
+    int smashCharges = 0;
 
 
 	// Use this for initialization
@@ -58,6 +62,8 @@ public class PlayerMovement : MonoBehaviour
         jumpDelay = true;
         SpriteRenderer sr = gameObject.GetComponentInChildren<SpriteRenderer>();
         sr.color = playerColour;
+        sr.sortingOrder = Random.Range(0, 10);
+        powerUpSpriteRenderer.sortingOrder = Random.Range(0, 10);
         gravityScale = gameObject.rigidbody2D.gravityScale;
 	}
 	void canFootstepReset()
@@ -88,16 +94,20 @@ public class PlayerMovement : MonoBehaviour
         if (infront)
         {
             //Debug.Log(hitFront.collider.gameObject.tag);
-            if (hitFront.collider.gameObject.tag == "obstacle" && obj != hitFront.collider.gameObject)
+            if( obj != hitFront.collider.gameObject)
             {
-                RandomShake.randomShake.PlaySinShake();
-                Instantiate(hitEffect,
-                    new Vector3(hitFront.point.x, hitFront.point.y, hitEffect.transform.position.z),
-                    hitEffect.transform.rotation);
-                obj = hitFront.collider.gameObject;
+                if (hitFront.collider.gameObject.tag == "obstacle" || hitFront.collider.gameObject.tag == "deadplayer")
+                {
+                
+                    RandomShake.randomShake.PlaySinShake();
+                    Instantiate(hitEffect,
+                        new Vector3(hitFront.point.x, hitFront.point.y, hitEffect.transform.position.z),
+                        hitEffect.transform.rotation);
+                    obj = hitFront.collider.gameObject;
 
-                int rnd = Random.Range(0, SoundManager.soundManager.hitSounds.Count-1);
-                audio.PlayOneShot(SoundManager.soundManager.hitSounds[rnd], SoundManager.soundManager.hitSoundLevel);
+                    int rnd = Random.Range(0, SoundManager.soundManager.hitSounds.Count-1);
+                    audio.PlayOneShot(SoundManager.soundManager.hitSounds[rnd], SoundManager.soundManager.hitVolume);
+                }
             }
 
             if (powerUp == PowerUp.smash)
@@ -114,10 +124,14 @@ public class PlayerMovement : MonoBehaviour
                         new Vector3(hitFront.point.x, hitFront.point.y, hitEffect.transform.position.z),
                         rockEffect.transform.rotation);
                     obj = hitFront.collider.gameObject;
-
-
                     animationBoard.Hit();
-                    powerUp = PowerUp.none;
+
+                    smashCharges--;
+                    if (smashCharges <= 0)
+                    {
+                        powerUp = PowerUp.none;
+                        //gameObject.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+                    }
                 }
             }
         }
@@ -140,7 +154,7 @@ public class PlayerMovement : MonoBehaviour
             if (canFootstep)
             {
                 int rnd = Random.Range(0, SoundManager.soundManager.footstepSounds.Count - 1);
-                audio.PlayOneShot(SoundManager.soundManager.footstepSounds[rnd], SoundManager.soundManager.footstepSoundLevel);
+                audio.PlayOneShot(SoundManager.soundManager.footstepSounds[rnd], SoundManager.soundManager.footstepVolume);
                 canFootstep = false;
                 Invoke("canFootstepReset", SoundManager.soundManager.footstepSounds[rnd].length);
             }
@@ -212,9 +226,20 @@ public class PlayerMovement : MonoBehaviour
     {
         jumpDelay = true;
     }
-
+    public void Update()
+    {
+        if (powerUp == PowerUp.none)
+        {
+            powerUpSpriteRenderer.gameObject.SetActive(false);
+        }
+        else
+        {
+            powerUpSpriteRenderer.gameObject.SetActive(true);
+        }
+    }
     public void ActivatePowerUp(string tag)
     {
+        //gameObject.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
         if (tag == "speedUp")
         {
             powerUp = PowerUp.speedUp;
@@ -234,17 +259,37 @@ public class PlayerMovement : MonoBehaviour
         else if (tag == "smash")
         {
             powerUp = PowerUp.smash;
+            //transform.localScale += new Vector3(0.3f, 0.3f, 0.0f);
+            //.transform.position = gameObject.transform.position + new Vector3(0.0f, 1.0f, 0.0f);
+            smashCharges=3;
         }
 
         tempSpeedBoost += VariableSpeed.currentBoost;
         Invoke("resetTempSpeedBoost", VariableSpeed.currentSpeedBoostTime);
 
         int rnd = Random.Range(0, SoundManager.soundManager.pickupSounds.Count - 1);
-        audio.PlayOneShot(SoundManager.soundManager.pickupSounds[rnd], SoundManager.soundManager.pickupSoundLevel);
+        audio.PlayOneShot(SoundManager.soundManager.pickupSounds[rnd], SoundManager.soundManager.pickupVolume);
 
 		GameObject powerupFX = (GameObject)Instantiate(powerupEffect);
 		powerupFX.transform.position = new Vector3(transform.position.x, 1, 0);
-		powerupFX.GetComponentsInChildren<SpriteRenderer>()[1].color = playerColour;
+		powerupFX.GetComponentsInChildren<SpriteRenderer>()[0].color = playerColour;
+
+        switch (powerUp)
+        {
+            case PowerUp.doubleJump:
+                powerUpSpriteRenderer.color = powerUpColours[0];
+                break;
+            case PowerUp.glide:
+                powerUpSpriteRenderer.color = powerUpColours[1];
+                break;
+            case PowerUp.jumpBoost:
+                powerUpSpriteRenderer.color = powerUpColours[2];
+                break;
+            case PowerUp.smash:
+                powerUpSpriteRenderer.color = powerUpColours[3];
+                break;
+        }
+        //Invoke
     }
 
     void resetTempSpeedBoost()
@@ -276,7 +321,7 @@ public class PlayerMovement : MonoBehaviour
 
             int rnd = Random.Range(0, SoundManager.soundManager.jumpSounds.Count - 1);
             //Debug.Log();
-            audio.PlayOneShot(SoundManager.soundManager.jumpSounds[rnd], SoundManager.soundManager.jumpSoundLevel);
+            audio.PlayOneShot(SoundManager.soundManager.jumpSounds[rnd], SoundManager.soundManager.jumpVolume);
         }
         return vel;
     }
@@ -308,7 +353,7 @@ public class PlayerMovement : MonoBehaviour
             inTheAir = true;
 
             int rnd = Random.Range(0, SoundManager.soundManager.jumpSounds.Count - 1);
-            audio.PlayOneShot(SoundManager.soundManager.jumpSounds[rnd], SoundManager.soundManager.jumpSoundLevel);
+            audio.PlayOneShot(SoundManager.soundManager.jumpSounds[rnd], SoundManager.soundManager.jumpVolume);
         }
         return vel;
     }
@@ -334,7 +379,7 @@ public class PlayerMovement : MonoBehaviour
             inTheAir = true;
 
             int rnd = Random.Range(0, SoundManager.soundManager.jumpSounds.Count - 1);
-            audio.PlayOneShot(SoundManager.soundManager.jumpSounds[rnd], SoundManager.soundManager.jumpSoundLevel);
+            audio.PlayOneShot(SoundManager.soundManager.jumpSounds[rnd], SoundManager.soundManager.jumpVolume);
         }
         return vel;
     }

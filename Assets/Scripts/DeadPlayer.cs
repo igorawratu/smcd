@@ -4,6 +4,7 @@ using System.Collections;
 public class DeadPlayer : MonoBehaviour {
     private KeyCode mPKey;
     public LayerMask mask;
+    public Font font;
 
 	// Use this for initialization
     void Awake()
@@ -11,6 +12,7 @@ public class DeadPlayer : MonoBehaviour {
         mPKey = KeyCode.A;
         SpriteRenderer sr = gameObject.GetComponent<SpriteRenderer>();
         sr.color = new Color(255, 0, 0);
+        
     }
 
 	void Start () {
@@ -30,13 +32,13 @@ public class DeadPlayer : MonoBehaviour {
         }
 
         if (Input.GetKey(mPKey)){
-            Debug.Log("WEEEEEE");
+            //Debug.Log("WEEEEEE");
             Vector2 position = (Vector2)gameObject.transform.position;
             float raycastLength = 0.9f;
             Vector2 down = -Vector2.up * raycastLength;
             
             bool onTheGround = Physics2D.Raycast(position, down, raycastLength, ~mask.value);
-            Debug.Log(onTheGround ? "true" : "false");
+            //Debug.Log(onTheGround ? "true" : "false");
 
             if(onTheGround)
                 gameObject.rigidbody2D.velocity = new Vector2(gameObject.rigidbody2D.velocity.x, 20);
@@ -48,6 +50,9 @@ public class DeadPlayer : MonoBehaviour {
         gameObject.name = "dead" + mPKey;
         SpriteRenderer sr = gameObject.GetComponent<SpriteRenderer>();
         sr.color = _col;
-        Debug.Log("Setinfo called");
+
+        GameObject textChild = transform.FindChild("DeadPlayerText").gameObject;
+        DeadPlayerText dptScript = textChild.GetComponent<DeadPlayerText>();
+        dptScript.setName(mPKey.ToString());
     }
 }
