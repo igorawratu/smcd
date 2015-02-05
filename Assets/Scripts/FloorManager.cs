@@ -8,8 +8,8 @@ public class FloorManager : MonoBehaviour {
     public GameObject groundPrefab;
     public GameObject skyPrefab;
     public GameObject[] floorArr = new GameObject[3];
-    GameObject[] groundArr;
-    public GameObject[] skyArr;
+    public GameObject[] groundArr = new GameObject[3];
+    public GameObject[] skyArr = new GameObject[3];
     public Sprite[] floorSprites = new Sprite[3];
 
     private Vector3 floorSize;
@@ -20,7 +20,7 @@ public class FloorManager : MonoBehaviour {
     public Vector3 skySpeed = new Vector3(-0.2f, 0, 0);
 
 	// Use this for initialization
-	void Start () {
+	void Awake () {
 
 
         floorSize = floorPrefab.transform.renderer.bounds.max - floorPrefab.transform.renderer.bounds.min;
@@ -35,8 +35,8 @@ public class FloorManager : MonoBehaviour {
             Vector3 pos = floorOffset + new Vector3(floorSize.x * i, 0.0f, 0.0f);
             floorArr[i].transform.position = pos;
         }
-        groundArr = new GameObject[floorArr.Length];
-        for (int i = 0; i < floorArr.Length; i++)
+        //groundArr = new GameObject[floorArr.Length];
+        for (int i = 0; i < groundArr.Length; i++)
         {
             groundArr[i] = (GameObject)Instantiate(groundPrefab);
             Vector3 pos = floorOffset + new Vector3(groundSize.x * i, groundPrefab.transform.position.y, 0.0f);

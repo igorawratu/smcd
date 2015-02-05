@@ -15,14 +15,16 @@ public class MenuScript : MonoBehaviour {
 
 	public static KeyCode[] keyCodes;
 
-	public float timeToHold = 2;
+    public float timeToHold = 2;
+    public float flashSpeed = 1;
+    public float flashSpeedBlank = 1;
 
 	public GameObject floorPrefab;
 	public GameObject groundPrefab;
 	public GameObject playerPrefab;
 
-	public GameObject[] floorArr = new GameObject[40];
-	public GameObject[] groundArr = new GameObject[40];
+    public GameObject[] floorArr = new GameObject[20];
+	public GameObject[] groundArr = new GameObject[20];
 	public Sprite[] floorSprites = new Sprite[6];
 	public Vector3 floorOffset = new Vector3(-20, 0, 0);
 
@@ -189,9 +191,9 @@ public class MenuScript : MonoBehaviour {
 	private IEnumerator flashText() {
 		while(true) {
 			joinText.text = "HOLD A BUTTON TO JOIN!";
-			yield return new WaitForSeconds(1.5f);
+            yield return new WaitForSeconds(flashSpeed);
 			joinText.text = "";
-			yield return new WaitForSeconds(0.5f);
+			yield return new WaitForSeconds(flashSpeedBlank);
 		}
 	}
 
