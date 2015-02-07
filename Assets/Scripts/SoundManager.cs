@@ -114,6 +114,10 @@ public class SoundManager : MonoBehaviour
         {
             audio.clip = gameMusic[0];
         }
+        else if (Application.loadedLevelName == "JoinScene")
+        {
+
+        }
         else
         {
             int newClip = 0;
