@@ -107,6 +107,9 @@ public class MenuScript : MonoBehaviour {
 
 						GameObject player = (GameObject)Instantiate(playerPrefab);
 
+                        JoinPlayerJump jpj = player.GetComponent<JoinPlayerJump>();
+                        jpj.setKey(keyCodes[i]);
+
 						//Assign player color
 						int colourIndex = Random.Range(0, CurrentPlayerKeys.Instance.possibleColors.Count);
 						while (true) {
