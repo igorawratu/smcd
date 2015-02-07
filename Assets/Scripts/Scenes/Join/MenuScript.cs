@@ -161,11 +161,11 @@ public class MenuScript : MonoBehaviour {
 				}
 				else {
 					keysPressed.Add(keyCodes[i], 0);
-                    GameObject tempSound = (GameObject)Instantiate(SoundManager.soundManager.tempSound);
+                    GameObject tempSound = (GameObject)Instantiate(SoundManager.instance.tempSound);
                     TemporarySound ts = tempSound.GetComponent<TemporarySound>();
-                    int rnd = Random.Range(0,SoundManager.soundManager.introSpawnSounds.Count);
-                    ts.play(SoundManager.soundManager.introSpawnSounds[rnd],
-                            SoundManager.soundManager.introSpawnVolume);
+                    int rnd = Random.Range(0,SoundManager.instance.introSpawnSounds.Count);
+                    ts.play(SoundManager.instance.introSpawnSounds[rnd],
+                            SoundManager.instance.introSpawnVolume);
                     keysSound.Add(keyCodes[i], ts);
 				}
 			}

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 [RequireComponent(typeof(AudioSource))]
 public class SoundManager : MonoBehaviour 
 {
-    public static SoundManager soundManager;
+    //public static SoundManager soundManager;
 
     public List<AudioClip> hitSounds;
     public float hitVolume = 1.0f;
@@ -45,10 +45,28 @@ public class SoundManager : MonoBehaviour
 
     public GameObject tempSound;
 
+
+    private static SoundManager _instance = null;
+    public static SoundManager instance
+    {
+        get 
+        {
+            return _instance; 
+        }
+    }
+
     void Awake()
     {
         //DontDestroyOnLoad(transform.gameObject);
-        soundManager = this;
+        if (_instance != null && _instance != this)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            _instance = this;
+        }
+        DontDestroyOnLoad(gameObject);
     }
 	// Use this for initialization
 	void Start () 
@@ -57,34 +75,78 @@ public class SoundManager : MonoBehaviour
         {
             audio.clip = introSound;
             audio.volume = introSpawnVolume;
-            audio.loop = false;
+            audio.loop = true;
             audio.Play();
         }
         else if (Application.loadedLevelName == "RunScene")
         {
-            playNextTrack();
+            playLevelTrack();
         }
         else if (Application.loadedLevelName == "TitleScreen")
         {
-            GameObject tempSound = (GameObject)Instantiate(SoundManager.soundManager.tempSound);
-            TemporarySound ts = tempSound.GetComponent<TemporarySound>();
-            ts.play(SoundManager.soundManager.titleSound,
-                    SoundManager.soundManager.titleVolume);
+            //GameObject tempSound = (GameObject)Instantiate(SoundManager.instance.tempSound);
+            //TemporarySound ts = tempSound.GetComponent<TemporarySound>();
+            //ts.play(SoundManager.instance.titleSound,
+            //        SoundManager.instance.titleVolume);
+            audio.clip = SoundManager.instance.titleSound;
+            audio.volume = SoundManager.instance.titleVolume;
+            audio.loop = false;
+            audio.Play();
 
-            Invoke("playNextTrack", SoundManager.soundManager.titleSound.length);
+            //Invoke("playLevelTrack", SoundManager.instance.titleSound.length);
+        }
+        else if (Application.loadedLevelName == "EndScene")
+        {
         }
         else
         {
-            playNextTrack();
+            playLevelTrack();
         }
 	}
 
-    void playNextTrack()
+    void playLevelTrack()
     {
-        int rnd = getNewTrack();
-        audio.clip = gameMusic[rnd];
-        audio.Play(); 
-        Invoke("playNextTrack", gameMusic[rnd].length);
+        //int rnd = getNewTrack();
+        //audio.clip = gameMusic[rnd];
+        audio.loop = true;
+        bool sameTrack = false;
+        if (Application.loadedLevelName == "TitleScreen")
+        {
+            audio.clip = gameMusic[0];
+        }
+        else
+        {
+            int newClip = 0;
+            switch (LevelTypeManager.currentLevel)
+            {
+                case LevelTypeManager.Level.standard:
+                    newClip = 0;
+                    break;
+                case LevelTypeManager.Level.evening:
+                    newClip = 1;
+                    break;
+                case LevelTypeManager.Level.sunset:
+                    newClip = 1;
+                    break;
+                case LevelTypeManager.Level.underground:
+                    newClip = 0;
+                    break;
+            }
+
+            if (audio.clip != gameMusic[newClip])
+            {
+                audio.clip = gameMusic[newClip];
+            }
+            else
+            {
+                sameTrack = true;
+            }
+        }
+        if (!sameTrack)
+        {
+            audio.Play();
+        }
+        //Invoke("playNextTrack", gameMusic[rnd].length);
     }
     int getNewTrack()
     {
@@ -119,9 +181,17 @@ public class SoundManager : MonoBehaviour
         TemporarySound script = tempS.GetComponent<TemporarySound>();
         script.play(clip, volume);
     }
+    public void sceneChanged()
+    {
+        Debug.Log("scene changed");
+        Start();
+    }
 	// Update is called once per frame
 	void Update () 
     {
-        
+        if (!audio.isPlaying)
+        {
+            playLevelTrack();
+        }
 	}
 }

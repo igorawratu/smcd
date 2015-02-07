@@ -31,7 +31,7 @@ public class JoinPlayerJump : MonoBehaviour {
     //}
     void FixedUpdate()
     {
-        Debug.Log(animator.GetCurrentAnimatorStateInfo(0).IsName("idle"));
+        //Debug.Log(animator.GetCurrentAnimatorStateInfo(0).IsName("idle"));
         if (animator.GetCurrentAnimatorStateInfo(0).IsName("idle"))
         {
             Vector2 position = (Vector2)gameObject.transform.position;

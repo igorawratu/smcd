@@ -7,9 +7,9 @@ public class DeathSoundScript : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 
-        int rnd = Random.Range(0, SoundManager.soundManager.deathSounds.Count - 1);
-        audio.PlayOneShot(SoundManager.soundManager.deathSounds[rnd], SoundManager.soundManager.deathVolume);
-        Invoke("destroyObject", SoundManager.soundManager.deathSounds[rnd].length);
+        int rnd = Random.Range(0, SoundManager.instance.deathSounds.Count - 1);
+        audio.PlayOneShot(SoundManager.instance.deathSounds[rnd], SoundManager.instance.deathVolume);
+        Invoke("destroyObject", SoundManager.instance.deathSounds[rnd].length);
 	}
 	
     void destroyObject()
