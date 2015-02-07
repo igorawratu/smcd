@@ -49,7 +49,7 @@ public class RandomShake : MonoBehaviour {
             x *= magnitude * damper;
             y *= magnitude * damper;
 
-            gameObject.transform.position = originalCamPos + CameraLogic.camLogic.moveVel * elapsed + new Vector3(x, y, originalCamPos.z);
+            gameObject.transform.position = originalCamPos + CameraLogic.camLogic.moveVel * elapsed + new Vector3(x, y, 0.0f);
 
             yield return null;
         }
@@ -73,7 +73,7 @@ public class RandomShake : MonoBehaviour {
             float x = Random.value * 2.0f - 1.0f;
             x *= magnitude*5.0f * damper;
 
-            gameObject.transform.position = originalCamPos + CameraLogic.camLogic.moveVel * elapsed + new Vector3(x, 0.0f, originalCamPos.z);
+            gameObject.transform.position = originalCamPos + CameraLogic.camLogic.moveVel * elapsed + new Vector3(x, 0.0f, 0.0f);
 
             yield return null;
         }
@@ -100,7 +100,7 @@ public class RandomShake : MonoBehaviour {
 			x *= magnitude * damper;
 			y *= magnitude * damper;
 
-            gameObject.transform.position = originalCamPos + CameraLogic.camLogic.moveVel * elapsed + new Vector3(x, y, originalCamPos.z);
+            gameObject.transform.position = originalCamPos + CameraLogic.camLogic.moveVel * elapsed + new Vector3(x, y, 0.0f);
 				
 			yield return null;
 		}

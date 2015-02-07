@@ -183,7 +183,7 @@ public class SoundManager : MonoBehaviour
     }
     public void sceneChanged()
     {
-        Debug.Log("scene changed");
+        //Debug.Log("scene changed");
         Start();
     }
 	// Update is called once per frame

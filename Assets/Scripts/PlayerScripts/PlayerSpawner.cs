@@ -52,114 +52,82 @@ public class PlayerSpawner : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        //if (Input.anyKey) 
-        //{
-            bool isNew = true;
-            bool isNewReleased = true;
-			foreach (KeyCode kc in CurrentPlayerKeys.Instance.playerKeys) 
+        if (CurrentPlayerKeys.Instance.colourNumbers.Count > 0)
+        {
+            for (int i = 0; i < MenuScript.keyCodes.Length; i++)
             {
-				if (Input.GetKey(kc)) 
+                if (Input.GetKey(MenuScript.keyCodes[i]) &&
+                    !CurrentPlayerKeys.Instance.playerKeys.Contains(MenuScript.keyCodes[i]))
                 {
-					isNew = false;
-					break;
-				}
-			}
-            foreach (KeyCode kc in CurrentPlayerKeys.Instance.playerKeys)
-            {
-                if (Input.GetKeyUp(kc))
-                {
-                    isNewReleased = false;
-                    break;
+                    float temp = 0;
+                    if (enteringPlayers.TryGetValue(MenuScript.keyCodes[i], out temp))
+                    {
+                        enteringPlayers[MenuScript.keyCodes[i]] += Time.deltaTime;
+                        if (enteringPlayers[MenuScript.keyCodes[i]] >= timeToHold)
+                        {
+                            CurrentPlayerKeys.Instance.playerKeys.Add(MenuScript.keyCodes[i]);
+
+                            Debug.Log("Adding player " + MenuScript.keyCodes[i].ToString());
+                            //Spawn stuff here								
+                            GameObject player = (GameObject)Instantiate(playerPrefab);
+                            player.name = MenuScript.keyCodes[i].ToString();
+                            player.GetComponent<PlayerMovement>().setJumpKey(MenuScript.keyCodes[i]);
+                            //Random player's spawn position near the middle
+                            Vector3 screenMid = new Vector3(0.5f, 0, 0);
+                            startPoint = Camera.main.ViewportToWorldPoint(screenMid).x;
+                            offset = Random.Range(-1, 1);
+                            player.transform.position = new Vector3(startPoint + offset, 0.59f, 0);
+                            Debug.Log("Added player " + player.name);
+
+                            GameObject wc = GameObject.Find("WinnerChecker");
+                            WinnerChecker wcscript = wc.GetComponent<WinnerChecker>();
+                            wcscript.addPlayer(player.name);
+
+                            //Assign player color
+                            int colourIndex = CurrentPlayerKeys.Instance.colourNumbers.Pop();
+                            CurrentPlayerKeys.Instance.playerColors.Add(CurrentPlayerKeys.Instance.possibleColors[colourIndex]);
+
+                            player.GetComponent<PlayerMovement>().playerColour = CurrentPlayerKeys.Instance.possibleColors[colourIndex];
+
+                            enteringPlayers[MenuScript.keyCodes[i]] = -1000;
+
+                        }
+                    }
+                    else
+                    {
+                        enteringPlayers.Add(MenuScript.keyCodes[i], 0);
+
+                        GameObject tempSound = (GameObject)Instantiate(SoundManager.instance.tempSound);
+                        TemporarySound ts = tempSound.GetComponent<TemporarySound>();
+                        int rnd = Random.Range(0, SoundManager.instance.introSpawnSounds.Count);
+                        ts.play(SoundManager.instance.introSpawnSounds[rnd],
+                                SoundManager.instance.introSpawnVolume);
+                        keysSound.Add(MenuScript.keyCodes[i], ts);
+                    }
                 }
-            }
 
-            if (isNew)
-            {
-				for (int i = 0; i < MenuScript.keyCodes.Length; i++) 
+                if (Input.GetKeyUp(MenuScript.keyCodes[i]) &&
+                    !CurrentPlayerKeys.Instance.playerKeys.Contains(MenuScript.keyCodes[i]))
                 {
-					if (Input.GetKey(MenuScript.keyCodes[i])) 
-                    {
-						float temp = 0;
-						if (enteringPlayers.TryGetValue(MenuScript.keyCodes[i], out temp)) 
-                        {
-							enteringPlayers[MenuScript.keyCodes[i]] += Time.deltaTime;
-							if (enteringPlayers[MenuScript.keyCodes[i]] >= timeToHold) 
-                            {
-								CurrentPlayerKeys.Instance.playerKeys.Add(MenuScript.keyCodes[i]);
-
-                                Debug.Log("Adding player " + MenuScript.keyCodes[i].ToString());
-								//Spawn stuff here								
-								GameObject player = (GameObject)Instantiate(playerPrefab);
-								player.name = MenuScript.keyCodes[i].ToString();
-								player.GetComponent<PlayerMovement>().setJumpKey(MenuScript.keyCodes[i]);
-								//Random player's spawn position near the middle
-								Vector3 screenMid = new Vector3(0.5f, 0, 0);
-								startPoint = Camera.main.ViewportToWorldPoint(screenMid).x;
-								offset = Random.Range(-1, 1);
-								player.transform.position = new Vector3(startPoint + offset, 0.59f, 0);
-                                Debug.Log("Added player " + player.name);
-
-                                GameObject wc = GameObject.Find("WinnerChecker");
-                                WinnerChecker wcscript = wc.GetComponent<WinnerChecker>();
-                                wcscript.addPlayer(player.name);
-								
-								//Assign player color
-								int colourIndex = Random.Range(0, CurrentPlayerKeys.Instance.possibleColors.Count);
-								while (true) {
-									if (CurrentPlayerKeys.Instance.playerColors.Contains(CurrentPlayerKeys.Instance.possibleColors[colourIndex])) {
-										//go again
-										colourIndex = Random.Range(0, CurrentPlayerKeys.Instance.possibleColors.Count);
-									}
-									else {
-										CurrentPlayerKeys.Instance.playerColors.Add(CurrentPlayerKeys.Instance.possibleColors[colourIndex]);
-										break;
-									}
-								}
-								player.GetComponent<PlayerMovement>().playerColour = CurrentPlayerKeys.Instance.possibleColors[colourIndex];
-
-                                enteringPlayers[MenuScript.keyCodes[i]] = -1000;
-							}
-						}
-						else 
-                        {
-							enteringPlayers.Add(MenuScript.keyCodes[i], 0);
-
-                            GameObject tempSound = (GameObject)Instantiate(SoundManager.instance.tempSound);
-                            TemporarySound ts = tempSound.GetComponent<TemporarySound>();
-                            int rnd = Random.Range(0, SoundManager.instance.introSpawnSounds.Count);
-                            ts.play(SoundManager.instance.introSpawnSounds[rnd],
-                                    SoundManager.instance.introSpawnVolume);
-                            keysSound.Add(MenuScript.keyCodes[i], ts);
-						}
-					}
                     
-				}
-			}
-            if (isNewReleased)
-            {
-                for (int i = 0; i < MenuScript.keyCodes.Length; i++)
-                {
-                    if (Input.GetKeyUp(MenuScript.keyCodes[i]))
+                    float temp = -1000;
+                    if (enteringPlayers.TryGetValue(MenuScript.keyCodes[i], out temp))
                     {
-                        float temp = -1000;
-                        if (enteringPlayers.TryGetValue(MenuScript.keyCodes[i], out temp))
+                        if (temp < timeToHold && temp > -900)
                         {
-                            if (temp < timeToHold && temp > -900)
-                            {
-                                enteringPlayers.Remove(MenuScript.keyCodes[i]);
+                            enteringPlayers.Remove(MenuScript.keyCodes[i]);
 
-                                TemporarySound ts = null;
-                                bool success = keysSound.TryGetValue(MenuScript.keyCodes[i], out ts);
-                                if (success)
-                                {
-                                    ts.stop();
-                                    keysSound.Remove(MenuScript.keyCodes[i]);
-                                }
+                            TemporarySound ts = null;
+                            bool success = keysSound.TryGetValue(MenuScript.keyCodes[i], out ts);
+                            if (success)
+                            {
+                                ts.stop();
+                                keysSound.Remove(MenuScript.keyCodes[i]);
                             }
                         }
                     }
                 }
             }
-        //}
+        }
 	}
 }
