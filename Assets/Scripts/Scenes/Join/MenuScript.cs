@@ -41,6 +41,40 @@ public class MenuScript : MonoBehaviour {
         keysSound = new Dictionary<KeyCode, TemporarySound>();
 
 		keyCodes = (KeyCode[])System.Enum.GetValues(typeof(KeyCode));
+        List<KeyCode> keyList = new List<KeyCode>();
+
+        List<int> numsToDelete = new List<int>();
+        for(int i = 0;i< keyCodes.Length ;i++)
+        {
+            string keyTokens = keyCodes[i].ToString();
+
+            if (keyTokens.Length < 14)
+            {
+                keyList.Add(keyCodes[i]);
+            }
+            else
+            {
+                if (keyTokens.Substring(0, 14) != "JoystickButton")
+                {
+                    keyList.Add(keyCodes[i]);
+                    Debug.Log(keyTokens);
+                    Debug.Log("to remove");
+                }
+            }
+        }
+
+        keyCodes = keyList.ToArray();
+        //for (int i = 0; i < keyCodes.Length; i++)
+        //{
+        //    string keyTokens = keyCodes[i].ToString();
+        //    if (keyTokens.Length >= 8)
+        //    {
+        //        if (keyTokens.Substring(0, 8) == "Joystick")
+        //        {
+        //            Debug.Log(keyTokens);
+        //        }
+        //    }
+        //}
 
 		StartCoroutine(flashText());
 		StartCoroutine(countDown());
@@ -99,7 +133,6 @@ public class MenuScript : MonoBehaviour {
 	void Update () {
         if (CurrentPlayerKeys.Instance.colourNumbers.Count > 0)
         {
-
             for (int i = 0; i < keyCodes.Length; i++)
             {
                 if (Input.GetKey(keyCodes[i]) &&
