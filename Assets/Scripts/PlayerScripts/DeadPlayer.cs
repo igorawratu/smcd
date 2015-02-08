@@ -31,16 +31,7 @@ public class DeadPlayer : MonoBehaviour {
             gameObject.rigidbody2D.velocity = new Vector2(gameObject.rigidbody2D.velocity.x, 0);
         }
 
-        if (Input.GetKey(mPKey))
-        {
-            Vector2 position = (Vector2)gameObject.transform.position;
-            float raycastLength = 0.9f;
-            Vector2 down = -Vector2.up * raycastLength;
-            
-            bool onTheGround = Physics2D.Raycast(position, down, raycastLength, ~mask.value);
-            if(onTheGround)
-                gameObject.rigidbody2D.velocity = new Vector2(gameObject.rigidbody2D.velocity.x, 20);
-        }
+        jump();
     }
 
     public void setInfo(KeyCode _key, Color _col){
@@ -52,5 +43,45 @@ public class DeadPlayer : MonoBehaviour {
         GameObject textChild = transform.FindChild("DeadPlayerText").gameObject;
         DeadPlayerText dptScript = textChild.GetComponent<DeadPlayerText>();
         dptScript.setName(mPKey.ToString());
+    }
+
+    void jump() {
+        if(Input.GetKey(mPKey)) {
+            Vector2 position = (Vector2)gameObject.transform.position;
+            float raycastLength = 0.9f;
+            Vector2 down = -Vector2.up * raycastLength;
+
+            bool onTheGround = Physics2D.Raycast(position, down, raycastLength, ~mask.value);
+            if(onTheGround)
+                gameObject.rigidbody2D.velocity = new Vector2(gameObject.rigidbody2D.velocity.x, 20);
+        }
+    }
+
+    void flap() {
+        Vector3 worldPos = Camera.main.ViewportToWorldPoint(new Vector3(1, 1, Camera.main.nearClipPlane));
+        if(Input.GetKey(mPKey) && gameObject.transform.position.y < worldPos.y - 0.5f) {
+            gameObject.rigidbody2D.velocity = new Vector2(gameObject.rigidbody2D.velocity.x, 20);
+
+            if(gameObject.transform.position.y > worldPos.y) {
+                gameObject.transform.position = new Vector2(gameObject.transform.position.x, worldPos.y);
+                gameObject.rigidbody2D.velocity = new Vector2(gameObject.rigidbody2D.velocity.x, 0);
+            }
+        }
+    }
+
+    void invertGravity() {
+        Vector3 worldPos = Camera.main.ViewportToWorldPoint(new Vector3(1, 1, Camera.main.nearClipPlane));
+
+        if(Input.GetKey(mPKey)) {
+            Vector2 position = (Vector2)gameObject.transform.position;
+            float raycastLength = 0.9f;
+            Vector2 down = -Vector2.up * raycastLength;
+            Vector2 up = Vector2.up * raycastLength;
+
+            bool onTheGround = Physics2D.Raycast(position, down, raycastLength, ~mask.value);
+            bool onTheCeiling = Physics2D.Raycast(position, up, raycastLength, ~mask.value);
+            if(onTheGround || onTheCeiling)
+                rigidbody2D.gravityScale *= -1;
+        }
     }
 }
