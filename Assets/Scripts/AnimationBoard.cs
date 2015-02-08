@@ -8,6 +8,7 @@ public class AnimationBoard : MonoBehaviour
     private int grounded = Animator.StringToHash("grounded");
     private int falling = Animator.StringToHash("falling");
     private int stumble = Animator.StringToHash("stumble");
+    private int jump = Animator.StringToHash("jump");
 
     private void Awake()
     {
@@ -17,6 +18,7 @@ public class AnimationBoard : MonoBehaviour
     public void Jump()
     {
         //Debug.Log("jump");
+        animator.SetTrigger(jump);
         animator.SetBool(grounded, false);
     }
     public void Fall()
