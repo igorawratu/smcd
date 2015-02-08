@@ -41,6 +41,40 @@ public class MenuScript : MonoBehaviour {
         keysSound = new Dictionary<KeyCode, TemporarySound>();
 
 		keyCodes = (KeyCode[])System.Enum.GetValues(typeof(KeyCode));
+        List<KeyCode> keyList = new List<KeyCode>();
+
+        List<int> numsToDelete = new List<int>();
+        for(int i = 0;i< keyCodes.Length ;i++)
+        {
+            string keyTokens = keyCodes[i].ToString();
+
+            if (keyTokens.Length < 14)
+            {
+                keyList.Add(keyCodes[i]);
+            }
+            else
+            {
+                if (keyTokens.Substring(0, 14) != "JoystickButton")
+                {
+                    keyList.Add(keyCodes[i]);
+                    Debug.Log(keyTokens);
+                    Debug.Log("to remove");
+                }
+            }
+        }
+
+        keyCodes = keyList.ToArray();
+        //for (int i = 0; i < keyCodes.Length; i++)
+        //{
+        //    string keyTokens = keyCodes[i].ToString();
+        //    if (keyTokens.Length >= 8)
+        //    {
+        //        if (keyTokens.Substring(0, 8) == "Joystick")
+        //        {
+        //            Debug.Log(keyTokens);
+        //        }
+        //    }
+        //}
 
 		StartCoroutine(flashText());
 		StartCoroutine(countDown());
@@ -67,8 +101,14 @@ public class MenuScript : MonoBehaviour {
 		CurrentPlayerKeys.Instance.possibleColors.Add(new Color(1, 0.5f, 0));
 		CurrentPlayerKeys.Instance.possibleColors.Add(new Color(0.5f, 1, 0));
 
+        CurrentPlayerKeys.Instance.colourNumbers.Clear();
+        for (int i = 0; i < CurrentPlayerKeys.Instance.possibleColors.Count; i++)
+        {
+            CurrentPlayerKeys.Instance.colourNumbers.Push(i);
+        }
 
-		floorSize = floorPrefab.transform.renderer.bounds.max - floorPrefab.transform.renderer.bounds.min;
+
+            floorSize = floorPrefab.transform.renderer.bounds.max - floorPrefab.transform.renderer.bounds.min;
 		groundSize = groundPrefab.transform.renderer.bounds.max - groundPrefab.transform.renderer.bounds.min;
 
 		for (int i = 0; i < floorArr.Length; i++)
@@ -86,109 +126,98 @@ public class MenuScript : MonoBehaviour {
 			Vector3 pos = floorOffset + new Vector3(groundSize.x * i, -floorSize.y, 0.0f);
 			groundArr[i].transform.position = pos;
 		}
+        CurrentPlayerKeys.Instance.playerKeys.Clear();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		for (int i = 0; i < keyCodes.Length; i++) 
+        if (CurrentPlayerKeys.Instance.colourNumbers.Count > 0)
         {
-			if (Input.GetKey(keyCodes[i])) 
+            for (int i = 0; i < keyCodes.Length; i++)
             {
-				float temp = 0;
-				if (keysPressed.TryGetValue(keyCodes[i], out temp)) {
-					keysPressed[keyCodes[i]] += Time.deltaTime;
-					if (keysPressed[keyCodes[i]] >= timeToHold) {
-						CurrentPlayerKeys.Instance.playerKeys.Add(keyCodes[i]);
-
-						//Spawn stuff here
-						GameObject canvas = GameObject.Find("Canvas");
-						float xSpawn = Random.Range(45, 100);
-						initialSpawn += xSpawn;
-
-						GameObject player = (GameObject)Instantiate(playerPrefab);
-
-                        JoinPlayerJump jpj = player.GetComponent<JoinPlayerJump>();
-                        jpj.setKey(keyCodes[i]);
-
-						//Assign player color
-						int colourIndex = Random.Range(0, CurrentPlayerKeys.Instance.possibleColors.Count);
-						while (true) {
-							if (CurrentPlayerKeys.Instance.playerColors.Contains(CurrentPlayerKeys.Instance.possibleColors[colourIndex])) {
-								//go again
-								colourIndex = Random.Range(0, CurrentPlayerKeys.Instance.possibleColors.Count);
-							}
-							else {
-								CurrentPlayerKeys.Instance.playerColors.Add(CurrentPlayerKeys.Instance.possibleColors[colourIndex]);
-								break;
-							}
-						}
-						Transform spacer = player.GetComponentInChildren<Transform>();
-						spacer.GetComponentInChildren<SpriteRenderer>().color = CurrentPlayerKeys.Instance.possibleColors[colourIndex];
-						Transform spawnEffect = spacer.GetComponentInChildren<Transform>();
-						spawnEffect.GetComponentsInChildren<SpriteRenderer>()[1].color = CurrentPlayerKeys.Instance.possibleColors[colourIndex];
-						//Convert position
-						Vector3 xPt = new Vector3(initialSpawn, 0, 0);
-						Vector3 newXPt = Camera.main.ScreenToWorldPoint(xPt);
-						player.transform.position = new Vector3(newXPt.x, 1, 0);
-
-                        ////Add text
-                        //GameObject aboveHead = (GameObject)Instantiate(headTextPrefab);
-                        //aboveHead.transform.SetParent(canvas.transform);
-                        //Text aboveHeadText = aboveHead.GetComponent<Text>();
-                        
-                        //aboveHeadText.text = keyCodes[i].ToString();
-                        //if(aboveHeadText.text.Contains("Arrow"))
-                        //{
-                        //    aboveHeadText.text = aboveHeadText.text.Substring(0, aboveHeadText.text.Length - 5);
-                        //}
-                        //aboveHeadText.fontStyle = FontStyle.Bold;
-                        //aboveHeadText.rectTransform.position = new Vector3(initialSpawn, 225, 0);
-
-
-                        GameObject spacerObject = player.transform.FindChild("spacer").gameObject;
-                        GameObject keyText = spacerObject.transform.FindChild("KeyText").gameObject;
-
-                        TextMesh tm = keyText.GetComponent<TextMesh>();
-                        tm.text = keyCodes[i].ToString();
-                        if (tm.text.Contains("Arrow"))
-                        {
-                            tm.text = tm.text.Substring(0, tm.text.Length - 5);
-                        }
-
-
-						keysPressed[keyCodes[i]] = -1000;
-					}
-				}
-				else {
-					keysPressed.Add(keyCodes[i], 0);
-                    GameObject tempSound = (GameObject)Instantiate(SoundManager.soundManager.tempSound);
-                    TemporarySound ts = tempSound.GetComponent<TemporarySound>();
-                    int rnd = Random.Range(0,SoundManager.soundManager.introSpawnSounds.Count);
-                    ts.play(SoundManager.soundManager.introSpawnSounds[rnd],
-                            SoundManager.soundManager.introSpawnVolume);
-                    keysSound.Add(keyCodes[i], ts);
-				}
-			}
-            if (Input.GetKeyUp(keyCodes[i]))
-            {
-                float temp = -1000;
-                if (keysPressed.TryGetValue(keyCodes[i], out temp))
+                if (Input.GetKey(keyCodes[i]) &&
+                    !CurrentPlayerKeys.Instance.playerKeys.Contains(MenuScript.keyCodes[i]))
                 {
-                    if (temp < timeToHold && temp>-900)
+                    float temp = 0;
+                    if (keysPressed.TryGetValue(keyCodes[i], out temp))
                     {
-                        keysPressed.Remove(keyCodes[i]);
-
-                        TemporarySound ts = null;
-                        bool success = keysSound.TryGetValue(keyCodes[i], out ts);
-                        if (success)
+                        keysPressed[keyCodes[i]] += Time.deltaTime;
+                        if (keysPressed[keyCodes[i]] >= timeToHold)
                         {
-                            ts.stop();
-                            keysSound.Remove(keyCodes[i]);
+
+                            CurrentPlayerKeys.Instance.playerKeys.Add(keyCodes[i]);
+
+                            //Spawn stuff here
+                            GameObject canvas = GameObject.Find("Canvas");
+                            float xSpawn = Random.Range(45, 100);
+                            initialSpawn += xSpawn;
+
+                            GameObject player = (GameObject)Instantiate(playerPrefab);
+
+                            JoinPlayerJump jpj = player.GetComponent<JoinPlayerJump>();
+                            jpj.setKey(keyCodes[i]);
+
+                            //Assign player color
+                            int colourIndex = CurrentPlayerKeys.Instance.colourNumbers.Pop();
+                            CurrentPlayerKeys.Instance.playerColors.Add(CurrentPlayerKeys.Instance.possibleColors[colourIndex]);
+                                
+                            Transform spacer = player.GetComponentInChildren<Transform>();
+                            spacer.GetComponentInChildren<SpriteRenderer>().color = CurrentPlayerKeys.Instance.possibleColors[colourIndex];
+                            Transform spawnEffect = spacer.GetComponentInChildren<Transform>();
+                            spawnEffect.GetComponentsInChildren<SpriteRenderer>()[1].color = CurrentPlayerKeys.Instance.possibleColors[colourIndex];
+                            //Convert position
+                            Vector3 xPt = new Vector3(initialSpawn, 0, 0);
+                            Vector3 newXPt = Camera.main.ScreenToWorldPoint(xPt);
+                            player.transform.position = new Vector3(newXPt.x, 1, 0);
+                                
+                            GameObject spacerObject = player.transform.FindChild("spacer").gameObject;
+                            GameObject keyText = spacerObject.transform.FindChild("KeyText").gameObject;
+
+                            TextMesh tm = keyText.GetComponent<TextMesh>();
+                            tm.text = keyCodes[i].ToString();
+                            if (tm.text.Contains("Arrow"))
+                            {
+                                tm.text = tm.text.Substring(0, tm.text.Length - 5);
+                            }
+
+
+                            keysPressed[keyCodes[i]] = -1000;
+
+                        }
+                    }
+                    else
+                    {
+                        keysPressed.Add(keyCodes[i], 0);
+                        GameObject tempSound = (GameObject)Instantiate(SoundManager.instance.tempSound);
+                        TemporarySound ts = tempSound.GetComponent<TemporarySound>();
+                        int rnd = Random.Range(0, SoundManager.instance.introSpawnSounds.Count);
+                        ts.play(SoundManager.instance.introSpawnSounds[rnd],
+                                SoundManager.instance.introSpawnVolume);
+                        keysSound.Add(keyCodes[i], ts);
+                    }
+                }
+                if (Input.GetKeyUp(keyCodes[i]) &&
+                    !CurrentPlayerKeys.Instance.playerKeys.Contains(MenuScript.keyCodes[i]))
+                {
+                    float temp = -1000;
+                    if (keysPressed.TryGetValue(keyCodes[i], out temp))
+                    {
+                        if (temp < timeToHold && temp > -900)
+                        {
+                            keysPressed.Remove(keyCodes[i]);
+
+                            TemporarySound ts = null;
+                            bool success = keysSound.TryGetValue(keyCodes[i], out ts);
+                            if (success)
+                            {
+                                ts.stop();
+                                keysSound.Remove(keyCodes[i]);
+                            }
                         }
                     }
                 }
             }
-		}
+        }
 	}
 
 	private IEnumerator flashText() {

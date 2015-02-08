@@ -14,9 +14,9 @@ public class AnyKeyStart : MonoBehaviour {
 	void Update () {
         if (Input.anyKey && !hasPlayedSound) 
         {
-            audio.PlayOneShot(SoundManager.soundManager.titleAcceptSound, SoundManager.soundManager.titleAcceptVolume);
+            audio.PlayOneShot(SoundManager.instance.titleAcceptSound, SoundManager.instance.titleAcceptVolume);
             hasPlayedSound = true;
-            Invoke("loadMenu", SoundManager.soundManager.titleAcceptSound.length);
+            Invoke("loadMenu", SoundManager.instance.titleAcceptSound.length);
 		}
 	}
     void loadMenu()
