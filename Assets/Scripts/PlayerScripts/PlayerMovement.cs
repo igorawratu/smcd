@@ -63,6 +63,10 @@ public class PlayerMovement : MonoBehaviour
         SpriteRenderer sr = gameObject.GetComponentInChildren<SpriteRenderer>();
         sr.color = playerColour;
         sr.sortingOrder = Random.Range(0, 10);
+
+        ParticleSystem ps = gameObject.GetComponentInChildren<ParticleSystem>();
+        ps.startColor = playerColour;
+
         powerUpSpriteRenderer.sortingOrder = Random.Range(0, 10);
         gravityScale = gameObject.rigidbody2D.gravityScale;
 	}
