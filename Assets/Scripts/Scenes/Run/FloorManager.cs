@@ -86,8 +86,9 @@ public class FloorManager : MonoBehaviour {
             sr.sprite = cloudSprite;            
 
 
-            Vector3 pos = skyOffset + new Vector3(skySize.x * i -0.1f, skyPrefab.transform.position.y, 0.0f);
+            Vector3 pos = skyOffset + new Vector3(skySize.x * i, skyPrefab.transform.position.y, 0.0f);
             skyArr[i].transform.position = pos;
+            skyArr[i].transform.localScale = new Vector3(1.01f, 1, 1);
         }
     }
 
@@ -114,6 +115,7 @@ public class FloorManager : MonoBehaviour {
         rotateArray(skyArr, skySize);
 
 	}
+
     bool rotateArray(GameObject[] arr, Vector3 tileSize)
     {
         if (arr[0].transform.position.x < Camera.main.transform.position.x)
