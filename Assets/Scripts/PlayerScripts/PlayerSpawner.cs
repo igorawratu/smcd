@@ -12,6 +12,8 @@ public class PlayerSpawner : MonoBehaviour {
     private Dictionary<KeyCode, float> enteringPlayers;
     private Dictionary<KeyCode, TemporarySound> keysSound;
 
+    private Dictionary<KeyCode, GameObject> mInactivePlayers;
+
 
 	public float timeToHold = 2;
 
@@ -20,6 +22,8 @@ public class PlayerSpawner : MonoBehaviour {
 		chosenColours = new List<int>();
         enteringPlayers = new Dictionary<KeyCode, float>();
         keysSound = new Dictionary<KeyCode, TemporarySound>();
+
+        mInactivePlayers = new Dictionary<KeyCode, GameObject>();
 
 		for (int i = 0; i < CurrentPlayerKeys.Instance.playerKeys.Count; i++) {
 			KeyCode kc = CurrentPlayerKeys.Instance.playerKeys[i];
@@ -49,6 +53,26 @@ public class PlayerSpawner : MonoBehaviour {
             player.GetComponent<PlayerMovement>().playerColour = Color.white;
         }
 	}
+
+    public void respawnPlayer(KeyCode _kc, Color _col) {
+        GameObject player = mInactivePlayers[_kc];
+        mInactivePlayers.Remove(_kc);
+        player.SetActive(true);
+
+        offset = Random.Range(-1f, 1f);
+        Vector3 spawnPos = Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, Camera.main.nearClipPlane));
+        player.transform.position = new Vector3(spawnPos.x + offset, 0.59f, 0);
+
+        player.GetComponent<PlayerMovement>().playerColour = _col;
+
+        GameObject wc = GameObject.Find("WinnerChecker");
+        WinnerChecker wcscript = wc.GetComponent<WinnerChecker>();
+        wcscript.addPlayer(player.name);
+    }
+
+    public void registerInactivePlayer(GameObject _player, KeyCode _kc) {
+        mInactivePlayers[_kc] = _player;
+    }
 	
 	// Update is called once per frame
 	void Update () {

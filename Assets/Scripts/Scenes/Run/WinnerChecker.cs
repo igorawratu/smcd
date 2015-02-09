@@ -28,6 +28,8 @@ public class WinnerChecker : MonoBehaviour {
         if(end)
             return;
 
+        Debug.Log("Alive players: " + mPlayersActive.Count);
+
         mPlayersActive.Remove(_player);
         if (mPlayersActive.Count <= 1){
             string winner;
@@ -48,6 +50,10 @@ public class WinnerChecker : MonoBehaviour {
             StartCoroutine(countDown());
             end = true;
         }
+    }
+
+    public int getNumPlayersActive(){
+        return mPlayersActive.Count;
     }
 
     private IEnumerator countDown()

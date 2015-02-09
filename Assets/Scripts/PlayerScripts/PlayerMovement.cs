@@ -56,6 +56,8 @@ public class PlayerMovement : MonoBehaviour
 	// Use this for initialization
 	void Start () 
     {
+        mLastCollidedObstacle = null;
+
         moveVel = CameraLogic.camLogic.moveVel;
         Vector3 vel = gameObject.rigidbody2D.velocity;
         vel.x += 10;
@@ -138,7 +140,8 @@ public class PlayerMovement : MonoBehaviour
             {
                 if (hitFront.collider.gameObject.tag == "obstacle" || hitFront.collider.gameObject.tag == "deadplayer")
                 {
-                
+                    mLastCollidedObstacle = hitFront.collider.gameObject;
+
                     RandomShake.randomShake.PlaySinShake();
                     Instantiate(hitEffect,
                         new Vector3(hitFront.point.x, hitFront.point.y, hitEffect.transform.position.z),
@@ -446,4 +449,10 @@ public class PlayerMovement : MonoBehaviour
 	{
 		playerKey = key;
 	}
+
+    public GameObject getLastCollidedObstacle() {
+        return mLastCollidedObstacle;
+    }
+
+    private GameObject mLastCollidedObstacle;
 }

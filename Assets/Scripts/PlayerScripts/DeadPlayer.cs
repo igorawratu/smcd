@@ -45,7 +45,13 @@ public class DeadPlayer : MonoBehaviour {
         dptScript.setName(mPKey.ToString());
     }
 
-    void jump() {
+    public void getInfo(out KeyCode _key, out Color _col) {
+        _key = mPKey;
+        SpriteRenderer sr = gameObject.GetComponent<SpriteRenderer>();
+        _col = sr.color;
+    }
+
+    private void jump() {
         if(Input.GetKey(mPKey)) {
             Vector2 position = (Vector2)gameObject.transform.position;
             float raycastLength = 0.9f;
@@ -57,7 +63,7 @@ public class DeadPlayer : MonoBehaviour {
         }
     }
 
-    void flap() {
+    private void flap() {
         Vector3 worldPos = Camera.main.ViewportToWorldPoint(new Vector3(1, 1, Camera.main.nearClipPlane));
         if(Input.GetKey(mPKey) && gameObject.transform.position.y < worldPos.y - 0.5f) {
             gameObject.rigidbody2D.velocity = new Vector2(gameObject.rigidbody2D.velocity.x, 20);

@@ -5,15 +5,20 @@ using System.Collections.Generic;
 enum ObstacleSequence{S, B, SS, BB, SBS, BSB, SBSBS, BSBSB, BSBSBSB};
 
 public class GenerateItems : MonoBehaviour {
-    private class DeadPlayerInfo{
+    private class DeadPlayerInfo : System.Object{
         public DeadPlayerInfo(KeyCode _name, Color _col){
             name = _name;
             colour = _col;
         }
         public KeyCode name;
         public Color colour;
-    }
 
+        public override bool Equals(System.Object o) {
+            DeadPlayerInfo obj = o as DeadPlayerInfo;
+            return (name == obj.name && colour == obj.colour);
+        }
+    }
+    
     private class ObstacleSequenceInfo {
         public ObstacleSequenceInfo(List<int> _types, List<Vector2> _positions) {
             types = _types;
@@ -162,10 +167,31 @@ public class GenerateItems : MonoBehaviour {
         Destroy(_obj);
     }
 
-    public void playerDied(KeyCode _tag, Color _col){
-        mDeadPlayers.Add(new DeadPlayerInfo(_tag, _col));
-        mItems.Add(deadPlayer);
-        //mItems.Add(deadPlayer);
+    public void playerDied(KeyCode _tag, Color _col, GameObject lastCollision){
+        GameObject wc = GameObject.Find("WinnerChecker");
+        WinnerChecker wcscript = wc.GetComponent<WinnerChecker>();
+
+        if(lastCollision != null && lastCollision.tag == "deadplayer" && wcscript.getNumPlayersActive() > 1) {
+            KeyCode rpk;
+            Color rpc;
+            DeadPlayer rpscript = lastCollision.GetComponent<DeadPlayer>();
+            rpscript.getInfo(out rpk, out rpc);
+            DeadPlayerInfo respawnPlayerInfo = new DeadPlayerInfo(rpk, rpc);
+            if(!mDeadPlayers.Contains(respawnPlayerInfo))
+                mItems.Add(deadPlayer);
+            else {
+                mDeadPlayers.Remove(respawnPlayerInfo);
+                GameObject ps = GameObject.Find("PlayerSpawner");
+                PlayerSpawner psscript = ps.GetComponent<PlayerSpawner>();
+                psscript.respawnPlayer(rpk, rpc);
+            }
+
+            mDeadPlayers.Add(new DeadPlayerInfo(_tag, _col)); 
+        }
+        else {
+            mDeadPlayers.Add(new DeadPlayerInfo(_tag, _col));
+            mItems.Add(deadPlayer);
+        }
     }
 
     public void smashRock(GameObject _obj){
