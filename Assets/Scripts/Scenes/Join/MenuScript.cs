@@ -57,8 +57,8 @@ public class MenuScript : MonoBehaviour {
                 if (keyTokens.Substring(0, 14) != "JoystickButton")
                 {
                     keyList.Add(keyCodes[i]);
-                    Debug.Log(keyTokens);
-                    Debug.Log("to remove");
+                    //Debug.Log(keyTokens);
+                    //Debug.Log("to remove");
                 }
             }
         }
