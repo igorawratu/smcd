@@ -22,12 +22,11 @@ public class PlayerMovement : MonoBehaviour
     public Color[] powerUpColours = new Color[4];
 
     public AnimationBoard animationBoard;
-    public SpriteRenderer playerSprite;
+    SpriteRenderer playerSprite;
 
     public float raycastLength = 3.0f;
     public float raycastLengthRight = 3.0f;
     public LayerMask mask;
-    float gravityScale = 0.0f;
     public bool canFootstep = true;
     public float jumpGlideTime = 0.4f;
     GameObject obj = null;
@@ -51,6 +50,9 @@ public class PlayerMovement : MonoBehaviour
     int smashCharges = 0;
 
 
+    public float gravityScale = 8;
+    public float lowGravityScale = 8;
+
 	// Use this for initialization
 	void Start () 
     {
@@ -60,15 +62,25 @@ public class PlayerMovement : MonoBehaviour
         gameObject.rigidbody2D.velocity = vel;
         powerUp = PowerUp.none;
         jumpDelay = true;
-        SpriteRenderer sr = gameObject.GetComponentInChildren<SpriteRenderer>();
-        sr.color = playerColour;
-        sr.sortingOrder = Random.Range(0, 10);
+        playerSprite = gameObject.GetComponentInChildren<SpriteRenderer>();
+        playerSprite.color = playerColour;
+        playerSprite.sortingOrder = Random.Range(0, 10);
 
         ParticleSystem ps = gameObject.GetComponentInChildren<ParticleSystem>();
         ps.startColor = playerColour;
 
         powerUpSpriteRenderer.sortingOrder = Random.Range(0, 10);
-        gravityScale = gameObject.rigidbody2D.gravityScale;
+
+        switch (LevelTypeManager.currentLevel)
+        {
+            case LevelTypeManager.Level.evening:
+                gameObject.rigidbody2D.gravityScale = lowGravityScale;
+                jumpVel = jumpVel/1.5f;
+                break;
+            default:
+                gameObject.rigidbody2D.gravityScale = gravityScale;
+                break;
+        }
 	}
 	void canFootstepReset()
     {
@@ -80,20 +92,44 @@ public class PlayerMovement : MonoBehaviour
         Vector3 vel = gameObject.rigidbody2D.velocity;
         vel += rightAcceleration*Time.deltaTime;
 
-        Vector2 position = (Vector2)transform.position;
-        Vector2 down = -Vector2.up * raycastLength;
-        Debug.DrawRay(transform.position, down, Color.green);
-        RaycastHit2D hit = Physics2D.Raycast(position, down, raycastLength, ~mask.value);
+        //Vector2 position = (Vector2)transform.position;
+        Vector2 position = (Vector2)playerSprite.bounds.center;
 
+        bool infront = true;
         Vector2 right = Vector2.right * raycastLengthRight;
         Debug.DrawRay(transform.position, right, Color.green);
         RaycastHit2D hitFront = Physics2D.Raycast(position, right, raycastLengthRight, ~mask.value);
 
-        bool infront = true;
         if (hitFront.collider == null)
         {
             infront = false;
         }
+
+        bool onTheGround = false;
+        Vector2 xOffset = playerSprite.bounds.size / 2;
+        xOffset.y = 0;
+
+        Vector2 down = -Vector2.up * raycastLength;
+        Debug.DrawRay(position, down, Color.red);
+        RaycastHit2D hit = Physics2D.Raycast(position, down, raycastLength, ~mask.value);
+        if (hit.collider != null)
+        {
+            onTheGround = true;
+        }
+        Debug.DrawRay(position + xOffset, down, Color.red);
+        hit = Physics2D.Raycast(position + xOffset, down, raycastLength, ~mask.value);
+        if (hit.collider != null)
+        {
+            onTheGround = true;
+        }
+        Debug.DrawRay(position - xOffset, down, Color.red);
+        hit = Physics2D.Raycast(position - xOffset, down, raycastLength, ~mask.value);
+        if (hit.collider != null)
+        {
+            onTheGround = true;
+        }
+
+
 
         if (infront)
         {
@@ -140,13 +176,7 @@ public class PlayerMovement : MonoBehaviour
             }
         }
 
-
-        bool onTheGround = true;
-        if (hit.collider == null)
-        {
-            onTheGround = false;
-        }
-
+        
 
         if (onTheGround)
         {
@@ -386,6 +416,11 @@ public class PlayerMovement : MonoBehaviour
             audio.PlayOneShot(SoundManager.instance.jumpSounds[rnd], SoundManager.instance.jumpVolume);
         }
         return vel;
+    }
+
+    void flipGravity()
+    {
+        gameObject.rigidbody2D.gravityScale = -gravityScale;
     }
 
     void resetGravity()

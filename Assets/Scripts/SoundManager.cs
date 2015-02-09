@@ -130,10 +130,10 @@ public class SoundManager : MonoBehaviour
                     newClip = 1;
                     break;
                 case LevelTypeManager.Level.sunset:
-                    newClip = 1;
+                    newClip = 2;
                     break;
                 case LevelTypeManager.Level.underground:
-                    newClip = 0;
+                    newClip = 3;
                     break;
             }
 
