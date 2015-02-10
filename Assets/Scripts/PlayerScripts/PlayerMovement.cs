@@ -58,9 +58,8 @@ public class PlayerMovement : MonoBehaviour
     {
         mLastCollidedObstacle = null;
 
-        moveVel = CameraLogic.camLogic.moveVel;
         Vector3 vel = gameObject.rigidbody2D.velocity;
-        vel.x += 10;
+        vel.x = VariableSpeed.current;
         gameObject.rigidbody2D.velocity = vel;
         powerUp = PowerUp.none;
         jumpDelay = true;
@@ -321,9 +320,7 @@ public class PlayerMovement : MonoBehaviour
         int rnd = Random.Range(0, SoundManager.instance.pickupSounds.Count - 1);
         audio.PlayOneShot(SoundManager.instance.pickupSounds[rnd], SoundManager.instance.pickupVolume);
 
-		GameObject powerupFX = (GameObject)Instantiate(powerupEffect);
-		powerupFX.transform.position = new Vector3(transform.position.x, 1, 0);
-		powerupFX.GetComponentsInChildren<SpriteRenderer>()[0].color = playerColour;
+        createPowerupEffect();
 
         switch (powerUp)
         {
@@ -341,6 +338,12 @@ public class PlayerMovement : MonoBehaviour
                 break;
         }
         //Invoke
+    }
+
+    public void createPowerupEffect() {
+        GameObject powerupFX = (GameObject)Instantiate(powerupEffect);
+        powerupFX.transform.position = new Vector3(transform.position.x, 1, 0);
+        powerupFX.GetComponentsInChildren<SpriteRenderer>()[0].color = playerColour;
     }
 
     void resetTempSpeedBoost()

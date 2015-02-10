@@ -58,12 +58,14 @@ public class PlayerSpawner : MonoBehaviour {
         GameObject player = mInactivePlayers[_kc];
         mInactivePlayers.Remove(_kc);
         player.SetActive(true);
+        player.rigidbody2D.velocity = new Vector2(VariableSpeed.current, 10);
 
         offset = Random.Range(-1f, 1f);
         Vector3 spawnPos = Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, Camera.main.nearClipPlane));
         player.transform.position = new Vector3(spawnPos.x + offset, 0.59f, 0);
 
         player.GetComponent<PlayerMovement>().playerColour = _col;
+        player.GetComponent<PlayerMovement>().createPowerupEffect();
 
         GameObject wc = GameObject.Find("WinnerChecker");
         WinnerChecker wcscript = wc.GetComponent<WinnerChecker>();
