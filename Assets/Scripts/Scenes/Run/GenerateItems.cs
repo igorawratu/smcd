@@ -2,39 +2,35 @@
 using System.Collections;
 using System.Collections.Generic;
 
-enum ObstacleSequence{S, B, SS, BB, SBS, BSB, SBSBS, BSBSB, BSBSBSB};
-
 public class GenerateItems : MonoBehaviour {
     public GameObject deadPlayer;
 
     public List<GameObject> obstaclePrefabs;
     public List<GameObject> environmentalObjectPrefabs;
     public List<GameObject> powerupPrefabs;
-    public List<List<int>> mObstacleSequences;
+    public List<int> obstacleSequences;
 
-    public float mPowerupTimeLimit;
-    public float mObstacleTimeLimit;
-    public float mEnvObjTimeLimit;
+    public float powerupTimeLimit;
+    public float obstacleTimeLimit;
+    public float envObjTimeLimit;
 
-    public float powerupYPosNearObstacleMin;
-    public float powerupYPosNearObstacleMax;
-    public float powerupYPosNotNearObstacleMin;
-    public float powerupYPosNotNearObstacleMax;
+    public float puYNearObsMin;
+    public float puYNearObsMax;
+    public float puYPosFarObsMin;
+    public float puYPosFarObsMax;
 
     public float spawnAheadDistance;
 
     public float envObjXJitter;
     public float envObjYJitter;
 
-    public int powerupProbabilityPerc;
-    public int envobjProbabilityPerc;
-    public int obstacleProbabilityPerc;
+    public int puPercChance;
+    public int envObjPercChance;
+    public int obsPercChance;
 
     public int obstacleTypeTimer;
 
-    public float obstacleSequenceSpacing;
-
-    public LevelTypeManager.Level levelType;
+    public float obsSeqSpacing;
 
     private class DeadPlayerInfo:System.Object {
         public DeadPlayerInfo(KeyCode _name, Color _col) {
@@ -71,6 +67,7 @@ public class GenerateItems : MonoBehaviour {
         mTimeSinceLastEnvObject = 0;
         mTimeSinceLastObstacle = 0;
         mSequenceTimer = 0;
+        mObstacleSequenceTypes = 1;
 	}
 	
 	// Update is called once per frame
@@ -153,12 +150,12 @@ public class GenerateItems : MonoBehaviour {
         mTimeSinceLastObstacle += Time.deltaTime;
         mSequenceTimer += Time.deltaTime;
 
-        if(mSequenceTimer > obstacleTypeTimer * mObstacleSequenceTypes && mObstacleSequenceTypes < mObstacleSequences.Count - 1) {
+        if(mSequenceTimer > obstacleTypeTimer * mObstacleSequenceTypes && mObstacleSequenceTypes < obstacleSequences.Count) {
             mSequenceTimer = 0;
             mObstacleSequenceTypes++;
         }
 
-        if(mRng.Next(0, 100) < obstacleProbabilityPerc && mTimeSinceLastObstacle > mObstacleTimeLimit) {
+        if(mRng.Next(0, 100) < obsPercChance && mTimeSinceLastObstacle > obstacleTimeLimit) {
             int itemType = mRng.Next(0, obstaclePrefabs.Count);
 
             if(obstaclePrefabs[itemType] == deadPlayer) {
@@ -187,9 +184,9 @@ public class GenerateItems : MonoBehaviour {
 
         mTimeSinceLastPowerup += Time.deltaTime;
 
-        if(mRng.Next(0, 100) < powerupProbabilityPerc && mTimeSinceLastPowerup > mPowerupTimeLimit) {
-            float max = mTimeSinceLastObstacle > 0.5 || (mObstacleTimeLimit - mTimeSinceLastObstacle) < 0.5 ? powerupYPosNearObstacleMax : powerupYPosNotNearObstacleMax;
-            float min = mTimeSinceLastObstacle > 0.5 || (mObstacleTimeLimit - mTimeSinceLastObstacle) < 0.5 ? powerupYPosNearObstacleMin : powerupYPosNotNearObstacleMin;
+        if(mRng.Next(0, 100) < puPercChance && mTimeSinceLastPowerup > powerupTimeLimit) {
+            float max = mTimeSinceLastObstacle > 0.5 || (obstacleTimeLimit - mTimeSinceLastObstacle) < 0.5 ? puYNearObsMax : puYPosFarObsMax;
+            float min = mTimeSinceLastObstacle > 0.5 || (obstacleTimeLimit - mTimeSinceLastObstacle) < 0.5 ? puYNearObsMin : puYPosFarObsMin;
             float ypos = (float)mRng.NextDouble() * (max - min) + min;
 
             int powerupType = mRng.Next(0, powerupPrefabs.Count);
@@ -212,7 +209,7 @@ public class GenerateItems : MonoBehaviour {
 
         mTimeSinceLastEnvObject += Time.deltaTime;
 
-        if(mRng.Next(0, 100) < envobjProbabilityPerc && mTimeSinceLastEnvObject > mEnvObjTimeLimit)
+        if(mRng.Next(0, 100) < envObjPercChance && mTimeSinceLastEnvObject > envObjTimeLimit)
         {
             float xJitterMax = envObjXJitter;
             float xJitterMin = -envObjXJitter;
@@ -235,32 +232,46 @@ public class GenerateItems : MonoBehaviour {
        
     }
 
+    private List<int> generateSequenceFromLong(int _inSeq) {
+        int mod = _inSeq;
+        List<int> seq = new List<int>();
+
+        while(mod != 0) {
+            int num = mod % 10;
+            seq.Insert(0, num);
+            mod /= 10;
+        }
+
+        return seq;
+    }
+
     private List<GameObject> generateObstacleSequence(){
-        List<int> obstacleSequenceInf = mObstacleSequences[mRng.Next(0, mObstacleSequenceTypes)];
+        List<int> obstacleSequenceInf = generateSequenceFromLong(obstacleSequences[mRng.Next(0, mObstacleSequenceTypes)]);
         List<GameObject> sequence = new List<GameObject>();
 
 
         float screenEndWorldPos = Camera.main.ViewportToWorldPoint(new Vector3(1, 1, Camera.main.nearClipPlane)).x;
-        float generationBox = spawnAheadDistance - screenEndWorldPos;
+        float midScreenPos = Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, Camera.main.nearClipPlane)).x;
+        float generationBox = midScreenPos + spawnAheadDistance - screenEndWorldPos;
 
         float spacing = 0;
 
         if(generationBox < 0)
             generationBox = spawnAheadDistance;
 
-        if(obstacleSequenceInf.Count * obstacleSequenceSpacing < (generationBox * 2))
-            spacing = obstacleSequenceSpacing;
+        if(obstacleSequenceInf.Count * obsSeqSpacing < (generationBox * 2))
+            spacing = obsSeqSpacing;
         else spacing = (generationBox * 2) / obstacleSequenceInf.Count;
 
         float range = spacing * obstacleSequenceInf.Count;
 
         for(int k = 0; k < obstacleSequenceInf.Count; ++k ) {
-            if(obstacleSequenceInf[k] >= obstaclePrefabs.Count)
+            if(obstacleSequenceInf[k] > obstaclePrefabs.Count)
                 continue;
 
-            float xSpawnPos = ((k * spacing + (k + 1) * spacing) / 2) + spawnAheadDistance - (range / 2);
-            GameObject newObstacle = (GameObject)GameObject.Instantiate(obstaclePrefabs[obstacleSequenceInf[k]]);
-            newObstacle.transform.position = new Vector2(xSpawnPos, obstaclePrefabs[obstacleSequenceInf[k]].transform.position.y);
+            float xSpawnPos = ((k * spacing + (k + 1) * spacing) / 2) + midScreenPos + spawnAheadDistance - (range / 2);
+            GameObject newObstacle = (GameObject)GameObject.Instantiate(obstaclePrefabs[obstacleSequenceInf[k] - 1]);
+            newObstacle.transform.position = new Vector2(xSpawnPos, obstaclePrefabs[obstacleSequenceInf[k] - 1].transform.position.y);
             sequence.Add(newObstacle);
         }
 
