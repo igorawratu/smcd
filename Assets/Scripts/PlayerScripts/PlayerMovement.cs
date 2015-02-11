@@ -147,8 +147,11 @@ public class PlayerMovement : MonoBehaviour
                         hitEffect.transform.rotation);
                     obj = hitFront.collider.gameObject;
 
-                    int rnd = Random.Range(0, SoundManager.instance.hitSounds.Count);
-                    audio.PlayOneShot(SoundManager.instance.hitSounds[rnd], SoundManager.instance.hitVolume);
+                    if (powerUp != PowerUp.smash)
+                    {
+                        int rnd = Random.Range(0, SoundManager.instance.hitSounds.Count);
+                        audio.PlayOneShot(SoundManager.instance.hitSounds[rnd], SoundManager.instance.hitVolume);
+                    }
                 }
             }
 
