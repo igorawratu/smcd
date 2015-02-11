@@ -7,11 +7,14 @@ public class CloudMovement : MonoBehaviour {
     public Vector2 speedRange = new Vector2(0.6f, 1.0f);
 	// Use this for initialization
     public List<Sprite> sprites = new List<Sprite>();
+
+    float speed = 0;
 	void Start () 
     {
         int r = Random.Range(0,3);
         SpriteRenderer sr = gameObject.GetComponent<SpriteRenderer>();
         sr.sprite = sprites[r];
+        speed = Random.Range(speedRange.x, speedRange.y);
 	}
     
 
@@ -20,7 +23,7 @@ public class CloudMovement : MonoBehaviour {
     void FixedUpdate()
     {
         Vector3 moveVel = Vector3.zero;
-        moveVel.x = VariableSpeed.currentCloudSpeed * Random.Range(speedRange.x, speedRange.y);
+        moveVel.x = VariableSpeed.currentCloudSpeed * speed;
         Vector3 currentPos = gameObject.transform.position;
         currentPos += moveVel * Time.deltaTime;
 
