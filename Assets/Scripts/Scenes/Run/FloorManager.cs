@@ -28,7 +28,7 @@ public class FloorManager : MonoBehaviour {
     private Vector3 skySize;
     public Vector3 floorOffset = new Vector3(-20, 0, 0);
     public Vector3 skyOffset = new Vector3(-20, 0, 0);
-    public Vector3 skySpeed = new Vector3(-0.2f, 0, 0);
+    //public Vector3 skySpeed = new Vector3(-0.2f, 0, 0);
 
 	// Use this for initialization
 	void Awake () {
@@ -100,11 +100,7 @@ public class FloorManager : MonoBehaviour {
     }
 	// Update is called once per frame
 	void Update () {
-        for (int i = 0; i < skyArr.Length; i++)
-        {
-            //skyArr[i].transform.position = skyArr[i].transform.position + skySpeed * Time.deltaTime;
-            skyArr[i].transform.position = skyArr[i].transform.position + skySpeed * Time.deltaTime;
-        }
+        
 		
         if (rotateArray(floorArr, floorSize))
         {
@@ -115,6 +111,15 @@ public class FloorManager : MonoBehaviour {
         rotateArray(skyArr, skySize);
 
 	}
+
+    void FixedUpdate()
+    {
+        for (int i = 0; i < skyArr.Length; i++)
+        {
+            //skyArr[i].transform.position = skyArr[i].transform.position + skySpeed * Time.deltaTime;
+            skyArr[i].transform.position = skyArr[i].transform.position + new Vector3(VariableSpeed.currentSkySpeed, 0, 0) * Time.deltaTime;
+        }
+    }
 
     bool rotateArray(GameObject[] arr, Vector3 tileSize)
     {

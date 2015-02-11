@@ -14,8 +14,11 @@ public class VariableSpeed : MonoBehaviour {
     float timeElapsed = 0.0f;
 
 
-    public Vector2 speedCloudVariable = new Vector2(0.0f, 0.0f);
+    public Vector2 cloudSpeed = new Vector2(4, 16);
     public static float currentCloudSpeed = 0.0f;
+    
+    public Vector2 skySpeed = new Vector2(6, 18);
+    public static float currentSkySpeed = 0.0f;
 
 	// Use this for initialization
 	void Start () 
@@ -23,7 +26,8 @@ public class VariableSpeed : MonoBehaviour {
         current = speedMinMax.x;
         currentBoost = speedsBoostMinMax.x;
         currentSpeedBoostTime = speedBoostTime;
-        currentCloudSpeed = speedCloudVariable.x;
+        currentCloudSpeed = cloudSpeed.x;
+        currentSkySpeed = skySpeed.x;
 
         StartCoroutine(levelSpeedController());
 	}
@@ -40,7 +44,8 @@ public class VariableSpeed : MonoBehaviour {
             {
                 current = Mathf.Lerp(speedMinMax.x, speedMinMax.y, timeElapsed / timeDelay);
                 currentBoost = Mathf.Lerp(speedsBoostMinMax.x, speedsBoostMinMax.y, timeElapsed / timeDelay);
-                currentCloudSpeed = Mathf.Lerp(speedCloudVariable.x, speedCloudVariable.y, timeElapsed / timeDelay);
+                currentCloudSpeed = Mathf.Lerp(cloudSpeed.x, cloudSpeed.y, timeElapsed / timeDelay);
+                currentSkySpeed = Mathf.Lerp(skySpeed.x, skySpeed.y, timeElapsed / timeDelay);
                 Camera.main.orthographicSize = Mathf.Lerp(cameraSizeMinMax.x, cameraSizeMinMax.y, timeElapsed / timeDelay);
                 yield return null;
             }
@@ -48,7 +53,8 @@ public class VariableSpeed : MonoBehaviour {
             {
                 current = speedMinMax.y;
                 currentBoost = speedsBoostMinMax.y;
-                currentCloudSpeed = speedCloudVariable.y;
+                currentCloudSpeed = cloudSpeed.y;
+                currentSkySpeed = skySpeed.y;
                 Camera.main.orthographicSize = cameraSizeMinMax.y;
                 canUpdate = false;
             }
