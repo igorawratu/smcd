@@ -373,7 +373,7 @@ public class PlayerMovement : MonoBehaviour
             {
                 vel.y += jumpBoostVel * Time.deltaTime;
 
-                PowerupSounds.inst.playGlide();
+                PowerupSounds.inst.playBoostJump();
             }
 
             jumpDelay = false;
