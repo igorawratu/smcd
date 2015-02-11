@@ -147,7 +147,7 @@ public class PlayerMovement : MonoBehaviour
                         hitEffect.transform.rotation);
                     obj = hitFront.collider.gameObject;
 
-                    int rnd = Random.Range(0, SoundManager.instance.hitSounds.Count-1);
+                    int rnd = Random.Range(0, SoundManager.instance.hitSounds.Count);
                     audio.PlayOneShot(SoundManager.instance.hitSounds[rnd], SoundManager.instance.hitVolume);
                 }
             }
@@ -190,7 +190,7 @@ public class PlayerMovement : MonoBehaviour
 
             if (canFootstep)
             {
-                int rnd = Random.Range(0, SoundManager.instance.footstepSounds.Count - 1);
+                int rnd = Random.Range(0, SoundManager.instance.footstepSounds.Count);
                 audio.PlayOneShot(SoundManager.instance.footstepSounds[rnd], SoundManager.instance.footstepVolume);
                 canFootstep = false;
                 Invoke("canFootstepReset", SoundManager.instance.footstepSounds[rnd].length);
@@ -318,7 +318,7 @@ public class PlayerMovement : MonoBehaviour
         tempSpeedBoost += VariableSpeed.currentBoost;
         Invoke("resetTempSpeedBoost", VariableSpeed.currentSpeedBoostTime);
 
-        int rnd = Random.Range(0, SoundManager.instance.pickupSounds.Count - 1);
+        int rnd = Random.Range(0, SoundManager.instance.pickupSounds.Count);
         audio.PlayOneShot(SoundManager.instance.pickupSounds[rnd], SoundManager.instance.pickupVolume);
 
         createPowerupEffect();
@@ -380,7 +380,7 @@ public class PlayerMovement : MonoBehaviour
 
             if (powerUp != PowerUp.jumpBoost)
             {
-                int rnd = Random.Range(0, SoundManager.instance.jumpSounds.Count - 1);
+                int rnd = Random.Range(0, SoundManager.instance.jumpSounds.Count);
                 audio.PlayOneShot(SoundManager.instance.jumpSounds[rnd], SoundManager.instance.jumpVolume);
             }
         }
