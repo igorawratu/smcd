@@ -318,8 +318,8 @@ public class PlayerMovement : MonoBehaviour
         tempSpeedBoost += VariableSpeed.currentBoost;
         Invoke("resetTempSpeedBoost", VariableSpeed.currentSpeedBoostTime);
 
-        int rnd = Random.Range(0, SoundManager.instance.pickupSounds.Count);
-        audio.PlayOneShot(SoundManager.instance.pickupSounds[rnd], SoundManager.instance.pickupVolume);
+        //int rnd = Random.Range(0, SoundManager.instance.pickupSounds.Count);
+        //audio.PlayOneShot(SoundManager.instance.pickupSounds[rnd], SoundManager.instance.pickupVolume);
 
         createPowerupEffect();
 
@@ -327,15 +327,19 @@ public class PlayerMovement : MonoBehaviour
         {
             case PowerUp.doubleJump:
                 powerUpSpriteRenderer.color = powerUpColours[0];
+                PowerupSounds.inst.playDoubleJumpPickup();
                 break;
             case PowerUp.glide:
                 powerUpSpriteRenderer.color = powerUpColours[1];
+                PowerupSounds.inst.playGlidePickup();
                 break;
             case PowerUp.jumpBoost:
                 powerUpSpriteRenderer.color = powerUpColours[2];
+                PowerupSounds.inst.playBoostJumpPickup();
                 break;
             case PowerUp.smash:
                 powerUpSpriteRenderer.color = powerUpColours[3];
+                PowerupSounds.inst.playSmashPickup();
                 break;
         }
         //Invoke

@@ -2,8 +2,9 @@
 using System.Collections;
 
 [RequireComponent(typeof(AudioSource))]
-public class PowerupSounds : MonoBehaviour 
+public class PowerupSounds : MonoBehaviour
 {
+    //activate sounds
     public AudioClip glide;
     public float glideVolume = 1.0f;
 
@@ -15,6 +16,20 @@ public class PowerupSounds : MonoBehaviour
 
     public AudioClip doubleJump;
     public float doubleJumpVolume = 1.0f;
+
+    //pickup sounds
+    public AudioClip glidePickup;
+    public float glidePickupVolume = 1.0f;
+
+    public AudioClip smashPickup;
+    public float smashPickupVolume = 1.0f;
+
+    public AudioClip boostJumpPickup;
+    public float boostJumpPickupVolume = 1.0f;
+
+    public AudioClip doubleJumpPickup;
+    public float doubleJumpPickupVolume = 1.0f;
+
 
     public static PowerupSounds inst;
     // Use this for initialization
@@ -40,5 +55,21 @@ public class PowerupSounds : MonoBehaviour
         SoundManager.instance.playTemporarySound(doubleJump, doubleJumpVolume);
     }
 
+    public void playGlidePickup()
+    {
+        SoundManager.instance.playTemporarySound(glidePickup, glidePickupVolume);
+    }
+    public void playSmashPickup()
+    {
+        SoundManager.instance.playTemporarySound(smashPickup, smashPickupVolume);
+    }
+    public void playDoubleJumpPickup()
+    {
+        SoundManager.instance.playTemporarySound(boostJumpPickup, boostJumpPickupVolume);
+    }
+    public void playBoostJumpPickup()
+    {
+        SoundManager.instance.playTemporarySound(doubleJumpPickup, doubleJumpPickupVolume);
+    }
 
 }
