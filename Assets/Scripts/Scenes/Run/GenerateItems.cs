@@ -58,8 +58,7 @@ public class GenerateItems : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        mRng = new System.Random();
-        mItems = new List<GameObject>();        
+        mRng = new System.Random();    
         mDeadPlayers = new List<DeadPlayerInfo>();
         mSpawnedItems = new List<GameObject>();
 
@@ -115,10 +114,10 @@ public class GenerateItems : MonoBehaviour {
                 psscript.respawnPlayer(rpk, rpc);
             }
 
-            mDeadPlayers.Add(new DeadPlayerInfo(_tag, _col));
+            mDeadPlayers.Add(respawnPlayerInfo);
         } else {
             mDeadPlayers.Add(new DeadPlayerInfo(_tag, _col));
-            mItems.Add(deadPlayer);
+            obstaclePrefabs.Add(deadPlayer);
         }
     }
 
@@ -163,7 +162,7 @@ public class GenerateItems : MonoBehaviour {
                 int chosenDeadPlayer = mRng.Next(0, mDeadPlayers.Count);
                 DeadPlayer deadScript = newItem.GetComponent<DeadPlayer>();
                 deadScript.setInfo(mDeadPlayers[chosenDeadPlayer].name, mDeadPlayers[chosenDeadPlayer].colour);
-                newItem.transform.position = new Vector2(Camera.main.transform.position.x + spawnAheadDistance, mItems[itemType].transform.position.y);
+                newItem.transform.position = new Vector2(Camera.main.transform.position.x + spawnAheadDistance, deadPlayer.transform.position.y);
                 mSpawnedItems.Add(newItem);
             } 
             else {
@@ -278,7 +277,6 @@ public class GenerateItems : MonoBehaviour {
         return sequence;
     }
 
-    private List<GameObject> mItems;
     private List<DeadPlayerInfo> mDeadPlayers;
     private System.Random mRng;
     
