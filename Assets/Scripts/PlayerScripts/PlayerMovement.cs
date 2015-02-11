@@ -167,6 +167,7 @@ public class PlayerMovement : MonoBehaviour
                         rockEffect.transform.rotation);
                     obj = hitFront.collider.gameObject;
                     animationBoard.Hit();
+                    PowerupSounds.inst.playSmash();
 
                     smashCharges--;
                     if (smashCharges <= 0)
@@ -215,10 +216,10 @@ public class PlayerMovement : MonoBehaviour
             }
         }
 
-        if (Input.GetKey(KeyCode.Return))
-        {
-            powerUp = PowerUp.smash;
-        }
+        //if (Input.GetKey(KeyCode.Return))
+        //{
+        //    powerUp = PowerUp.smash;
+        //}
 
         vel = jumpLogic(vel, onTheGround);
         vel = doubleJumpLogic(vel, onTheGround);
@@ -362,7 +363,11 @@ public class PlayerMovement : MonoBehaviour
             animationBoard.Jump();
 
             if (powerUp == PowerUp.jumpBoost)
+            {
                 vel.y += jumpBoostVel * Time.deltaTime;
+
+                PowerupSounds.inst.playGlide();
+            }
 
             jumpDelay = false;
             if (powerUp == PowerUp.doubleJump ||
@@ -373,9 +378,11 @@ public class PlayerMovement : MonoBehaviour
             jumpReleased = false;
             inTheAir = true;
 
-            int rnd = Random.Range(0, SoundManager.instance.jumpSounds.Count - 1);
-            //Debug.Log();
-            audio.PlayOneShot(SoundManager.instance.jumpSounds[rnd], SoundManager.instance.jumpVolume);
+            if (powerUp != PowerUp.jumpBoost)
+            {
+                int rnd = Random.Range(0, SoundManager.instance.jumpSounds.Count - 1);
+                audio.PlayOneShot(SoundManager.instance.jumpSounds[rnd], SoundManager.instance.jumpVolume);
+            }
         }
         return vel;
     }
@@ -397,8 +404,10 @@ public class PlayerMovement : MonoBehaviour
             vel.y = 0;
             vel.y += jumpVel * Time.deltaTime;
 
-            if (powerUp == PowerUp.jumpBoost)
-                vel.y += jumpBoostVel * Time.deltaTime;
+            //if (powerUp == PowerUp.jumpBoost)
+            //{
+            //    vel.y += jumpBoostVel * Time.deltaTime;
+            //}
 
             canDoubleJump = false;
             jumpDelay = false;
@@ -406,8 +415,10 @@ public class PlayerMovement : MonoBehaviour
             jumpReleased = false;
             inTheAir = true;
 
-            int rnd = Random.Range(0, SoundManager.instance.jumpSounds.Count - 1);
-            audio.PlayOneShot(SoundManager.instance.jumpSounds[rnd], SoundManager.instance.jumpVolume);
+            PowerupSounds.inst.playDoubleJump();
+
+            //int rnd = Random.Range(0, SoundManager.instance.jumpSounds.Count - 1);
+            //audio.PlayOneShot(SoundManager.instance.jumpSounds[rnd], SoundManager.instance.jumpVolume);
         }
         return vel;
     }
@@ -432,8 +443,10 @@ public class PlayerMovement : MonoBehaviour
             jumpReleased = false;
             inTheAir = true;
 
-            int rnd = Random.Range(0, SoundManager.instance.jumpSounds.Count - 1);
-            audio.PlayOneShot(SoundManager.instance.jumpSounds[rnd], SoundManager.instance.jumpVolume);
+            PowerupSounds.inst.playGlide();
+
+            //int rnd = Random.Range(0, SoundManager.instance.jumpSounds.Count - 1);
+            //audio.PlayOneShot(SoundManager.instance.jumpSounds[rnd], SoundManager.instance.jumpVolume);
         }
         return vel;
     }

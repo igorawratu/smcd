@@ -45,6 +45,8 @@ public class SoundManager : MonoBehaviour
 
     public GameObject tempSound;
 
+    public Dictionary<string, AudioClip> powerupSounds;
+
 
     private static SoundManager _instance = null;
     public static SoundManager instance
@@ -179,9 +181,10 @@ public class SoundManager : MonoBehaviour
         return lastTrackPlayed;
     }
 
-    void playTemporarySound(AudioClip clip, float volume)
+    public void playTemporarySound(AudioClip clip, float volume)
     {
         GameObject tempS = (GameObject)Instantiate(tempSound);
+        tempS.transform.position = transform.position;
         TemporarySound script = tempS.GetComponent<TemporarySound>();
         script.play(clip, volume);
     }
