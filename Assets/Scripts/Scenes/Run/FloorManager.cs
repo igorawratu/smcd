@@ -62,13 +62,13 @@ public class FloorManager : MonoBehaviour {
             case LevelTypeManager.Level.standard:
                 cloudSprite = skySprites[0];
                 break;
-            case LevelTypeManager.Level.evening:
+            case LevelTypeManager.Level.lowGravity:
                 cloudSprite = skySprites[2];
                 break;
-            case LevelTypeManager.Level.sunset:
+            case LevelTypeManager.Level.flappyBird:
                 cloudSprite = skySprites[1];
                 break;
-            case LevelTypeManager.Level.underground:
+            case LevelTypeManager.Level.gravityFlip:
                 cloudSprite = skySprites[3];
                 break;
             default:

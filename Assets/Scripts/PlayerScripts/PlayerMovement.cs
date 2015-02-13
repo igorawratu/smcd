@@ -74,7 +74,7 @@ public class PlayerMovement : MonoBehaviour
 
         switch (LevelTypeManager.currentLevel)
         {
-            case LevelTypeManager.Level.evening:
+            case LevelTypeManager.Level.lowGravity:
                 gameObject.rigidbody2D.gravityScale = lowGravityScale;
                 jumpVel = jumpVel/1.5f;
                 break;
@@ -82,7 +82,16 @@ public class PlayerMovement : MonoBehaviour
                 gameObject.rigidbody2D.gravityScale = gravityScale;
                 break;
         }
+        if (LevelTypeManager.currentLevel == LevelTypeManager.Level.flappyBird)
+        {
+            animationBoard.FlappyMode = true;
+        }
+        else
+        {
+            animationBoard.FlappyMode = false;
+        }
 	}
+
 	void canFootstepReset()
     {
         canFootstep = true;
@@ -107,7 +116,7 @@ public class PlayerMovement : MonoBehaviour
         }
 
         bool onTheGround = false;
-        Vector2 xOffset = playerSprite.bounds.size / 2;
+        Vector2 xOffset = Vector2.one / 2;
         xOffset.y = 0;
 
         Vector2 down = -Vector2.up * raycastLength;
@@ -117,20 +126,18 @@ public class PlayerMovement : MonoBehaviour
         {
             onTheGround = true;
         }
-        Debug.DrawRay(position + xOffset, down, Color.red);
+        Debug.DrawRay(position + xOffset, down, Color.yellow);
         hit = Physics2D.Raycast(position + xOffset, down, raycastLength, ~mask.value);
         if (hit.collider != null)
         {
             onTheGround = true;
         }
-        Debug.DrawRay(position - xOffset, down, Color.red);
+        Debug.DrawRay(position - xOffset, down, Color.magenta);
         hit = Physics2D.Raycast(position - xOffset, down, raycastLength, ~mask.value);
         if (hit.collider != null)
         {
             onTheGround = true;
         }
-
-
 
         if (infront)
         {
@@ -205,7 +212,12 @@ public class PlayerMovement : MonoBehaviour
                 inTheAir = false;
             }
         }
-        else if (inTheAir)
+        else
+        {
+            inTheAir = true;
+        }
+
+        if (inTheAir)
         {
             //Debug.Log(vel.y);
             if (vel.y <= 0)
@@ -218,6 +230,7 @@ public class PlayerMovement : MonoBehaviour
                 }
             }
         }
+
 
         //if (Input.GetKey(KeyCode.Return))
         //{
@@ -286,13 +299,13 @@ public class PlayerMovement : MonoBehaviour
             case LevelTypeManager.Level.standard:
                 powerUp = PowerUp.jumpBoost;
                 break;
-            case LevelTypeManager.Level.evening:
+            case LevelTypeManager.Level.lowGravity:
                 powerUp = PowerUp.doubleJump;
                 break;
-            case LevelTypeManager.Level.sunset:
+            case LevelTypeManager.Level.flappyBird:
                 powerUp = PowerUp.glide;
                 break;
-            case LevelTypeManager.Level.underground:
+            case LevelTypeManager.Level.gravityFlip:
                 powerUp = PowerUp.smash;
                 smashCharges = 3;
                 break;

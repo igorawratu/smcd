@@ -128,13 +128,13 @@ public class SoundManager : MonoBehaviour
                 case LevelTypeManager.Level.standard:
                     newClip = 0;
                     break;
-                case LevelTypeManager.Level.evening:
+                case LevelTypeManager.Level.lowGravity:
                     newClip = 1;
                     break;
-                case LevelTypeManager.Level.sunset:
+                case LevelTypeManager.Level.flappyBird:
                     newClip = 2;
                     break;
-                case LevelTypeManager.Level.underground:
+                case LevelTypeManager.Level.gravityFlip:
                     newClip = 3;
                     break;
             }
@@ -150,6 +150,7 @@ public class SoundManager : MonoBehaviour
         }
         if (!sameTrack)
         {
+            audio.
             audio.Play();
         }
         //Invoke("playNextTrack", gameMusic[rnd].length);
