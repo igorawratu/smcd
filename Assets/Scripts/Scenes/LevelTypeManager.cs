@@ -6,9 +6,9 @@ public class LevelTypeManager : MonoBehaviour {
     public enum Level
     {
         standard,
-        sunset,
-        evening,
-        underground
+        flappyBird,
+        lowGravity,
+        gravityFlip
     }
     private static Level _currentLevel = Level.standard;
     public static Level currentLevel
@@ -63,7 +63,17 @@ public class LevelTypeManager : MonoBehaviour {
         else if (Application.loadedLevelName == "EndScene")
         {
             System.Array values = Level.GetValues(typeof(Level));
-            _currentLevel = (Level)values.GetValue(Random.Range(0, values.Length));
+            Level newLevel = (Level)values.GetValue(Random.Range(0, values.Length));
+
+            Debug.Log(newLevel);
+            Debug.Log(_currentLevel);
+            while(_currentLevel == newLevel)
+            {
+                Debug.Log(newLevel);
+                Debug.Log(_currentLevel);
+                newLevel = (Level)values.GetValue(Random.Range(0, values.Length));
+            }
+            _currentLevel = newLevel;
         }
         else
         {

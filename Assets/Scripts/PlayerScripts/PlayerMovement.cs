@@ -74,7 +74,7 @@ public class PlayerMovement : MonoBehaviour
 
         switch (LevelTypeManager.currentLevel)
         {
-            case LevelTypeManager.Level.evening:
+            case LevelTypeManager.Level.lowGravity:
                 gameObject.rigidbody2D.gravityScale = lowGravityScale;
                 jumpVel = jumpVel/1.5f;
                 break;
@@ -83,6 +83,7 @@ public class PlayerMovement : MonoBehaviour
                 break;
         }
 	}
+
 	void canFootstepReset()
     {
         canFootstep = true;
@@ -286,13 +287,13 @@ public class PlayerMovement : MonoBehaviour
             case LevelTypeManager.Level.standard:
                 powerUp = PowerUp.jumpBoost;
                 break;
-            case LevelTypeManager.Level.evening:
+            case LevelTypeManager.Level.lowGravity:
                 powerUp = PowerUp.doubleJump;
                 break;
-            case LevelTypeManager.Level.sunset:
+            case LevelTypeManager.Level.flappyBird:
                 powerUp = PowerUp.glide;
                 break;
-            case LevelTypeManager.Level.underground:
+            case LevelTypeManager.Level.gravityFlip:
                 powerUp = PowerUp.smash;
                 smashCharges = 3;
                 break;
