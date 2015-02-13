@@ -150,6 +150,7 @@ public class SoundManager : MonoBehaviour
         }
         if (!sameTrack)
         {
+            audio.
             audio.Play();
         }
         //Invoke("playNextTrack", gameMusic[rnd].length);
