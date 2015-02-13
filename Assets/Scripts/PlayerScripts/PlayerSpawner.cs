@@ -58,6 +58,7 @@ public class PlayerSpawner : MonoBehaviour {
         GameObject player = mInactivePlayers[_kc];
         mInactivePlayers.Remove(_kc);
         player.SetActive(true);
+            
         player.rigidbody2D.velocity = new Vector2(VariableSpeed.current, 10);
 
         offset = Random.Range(-1f, 1f);
@@ -66,6 +67,9 @@ public class PlayerSpawner : MonoBehaviour {
 
         player.GetComponent<PlayerMovement>().playerColour = _col;
         player.GetComponent<PlayerPowerups>().createPowerupEffect();
+
+        if(LevelTypeManager.currentLevel != LevelTypeManager.Level.flappyBird)
+            player.GetComponent<PlayerMovement>().animationBoard.FlappyMode = false;
 
         GameObject wc = GameObject.Find("WinnerChecker");
         WinnerChecker wcscript = wc.GetComponent<WinnerChecker>();
