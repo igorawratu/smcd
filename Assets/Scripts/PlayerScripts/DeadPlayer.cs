@@ -16,7 +16,7 @@ public class DeadPlayer : MonoBehaviour {
         sr.color = new Color(255, 0, 0);
         mLevel = LevelTypeManager.currentLevel;
 
-        if(mLevel == LevelTypeManager.Level.evening)
+        if(mLevel == LevelTypeManager.Level.lowGravity)
             rigidbody2D.gravityScale = lowGravityScale;
         else rigidbody2D.gravityScale = normalGravityScale;
     }
@@ -37,11 +37,11 @@ public class DeadPlayer : MonoBehaviour {
             gameObject.rigidbody2D.velocity = new Vector2(gameObject.rigidbody2D.velocity.x, 0);
         }
 
-        if(mLevel == LevelTypeManager.Level.standard || mLevel == LevelTypeManager.Level.evening)
+        if(mLevel == LevelTypeManager.Level.standard || mLevel == LevelTypeManager.Level.lowGravity)
             jump();
-        else if(mLevel == LevelTypeManager.Level.underground)
+        else if(mLevel == LevelTypeManager.Level.gravityFlip)
             jump();//invertGravity();
-        else if(mLevel == LevelTypeManager.Level.sunset)
+        else if(mLevel == LevelTypeManager.Level.flappyBird)
             flap();
     }
 
