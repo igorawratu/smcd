@@ -65,7 +65,7 @@ public class PlayerSpawner : MonoBehaviour {
         player.transform.position = new Vector3(spawnPos.x + offset, 0.59f, 0);
 
         player.GetComponent<PlayerMovement>().playerColour = _col;
-        player.GetComponent<PlayerMovement>().createPowerupEffect();
+        player.GetComponent<PlayerPowerups>().createPowerupEffect();
 
         GameObject wc = GameObject.Find("WinnerChecker");
         WinnerChecker wcscript = wc.GetComponent<WinnerChecker>();

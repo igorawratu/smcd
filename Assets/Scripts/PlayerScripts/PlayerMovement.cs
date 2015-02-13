@@ -19,7 +19,6 @@ public class PlayerMovement : MonoBehaviour
     public KeyCode playerKey;
     public Color playerColour;
 
-    public Color[] powerUpColours = new Color[4];
 
     public AnimationBoard animationBoard;
     SpriteRenderer playerSprite;
@@ -34,25 +33,10 @@ public class PlayerMovement : MonoBehaviour
 
     public GameObject hitEffect;
     public GameObject rockEffect;
-	public GameObject powerupEffect;
-
-    public enum PowerUp
-    {
-        none,
-        speedUp,
-        doubleJump,
-        jumpBoost,
-        glide,
-        smash
-    };
-    public PowerUp powerUp;
-    public SpriteRenderer powerUpSpriteRenderer;
-    int smashCharges = 0;
-
 
     public float gravityScale = 8;
     public float lowGravityScale = 8;
-
+    PlayerPowerups powerUps;
 	// Use this for initialization
 	void Start () 
     {
@@ -61,16 +45,16 @@ public class PlayerMovement : MonoBehaviour
         Vector3 vel = gameObject.rigidbody2D.velocity;
         vel.x = VariableSpeed.current;
         gameObject.rigidbody2D.velocity = vel;
-        powerUp = PowerUp.none;
         jumpDelay = true;
         playerSprite = gameObject.GetComponentInChildren<SpriteRenderer>();
         playerSprite.color = playerColour;
         playerSprite.sortingOrder = Random.Range(0, 10);
 
+        powerUps = gameObject.GetComponent<PlayerPowerups>();
+
         ParticleSystem ps = gameObject.GetComponentInChildren<ParticleSystem>();
         ps.startColor = playerColour;
 
-        powerUpSpriteRenderer.sortingOrder = Random.Range(0, 10);
 
         switch (LevelTypeManager.currentLevel)
         {
@@ -105,14 +89,14 @@ public class PlayerMovement : MonoBehaviour
         //Vector2 position = (Vector2)transform.position;
         Vector2 position = (Vector2)playerSprite.bounds.center;
 
-        bool infront = true;
+        bool infront = false;
         Vector2 right = Vector2.right * raycastLengthRight;
         Debug.DrawRay(transform.position, right, Color.green);
         RaycastHit2D hitFront = Physics2D.Raycast(position, right, raycastLengthRight, ~mask.value);
 
-        if (hitFront.collider == null)
+        if (hitFront.collider != null)
         {
-            infront = false;
+            infront = true;
         }
 
         bool onTheGround = false;
@@ -154,7 +138,7 @@ public class PlayerMovement : MonoBehaviour
                         hitEffect.transform.rotation);
                     obj = hitFront.collider.gameObject;
 
-                    if (powerUp != PowerUp.smash)
+                    if (powerUps.currentPowerUp != PlayerPowerups.PowerUp.smash)
                     {
                         int rnd = Random.Range(0, SoundManager.instance.hitSounds.Count);
                         audio.PlayOneShot(SoundManager.instance.hitSounds[rnd], SoundManager.instance.hitVolume);
@@ -162,7 +146,7 @@ public class PlayerMovement : MonoBehaviour
                 }
             }
 
-            if (powerUp == PowerUp.smash)
+            if (powerUps.currentPowerUp == PlayerPowerups.PowerUp.smash)
             {
                 //Debug.Log("obstacle1");
                 if (hitFront.collider.gameObject.tag == "obstacle")
@@ -178,13 +162,7 @@ public class PlayerMovement : MonoBehaviour
                     obj = hitFront.collider.gameObject;
                     animationBoard.Hit();
                     PowerupSounds.inst.playSmash();
-
-                    smashCharges--;
-                    if (smashCharges <= 0)
-                    {
-                        powerUp = PowerUp.none;
-                        //gameObject.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
-                    }
+                    powerUps.decrementCharges();
                 }
             }
         }
@@ -281,91 +259,16 @@ public class PlayerMovement : MonoBehaviour
     }
     public void Update()
     {
-        if (powerUp == PowerUp.none)
-        {
-            powerUpSpriteRenderer.gameObject.SetActive(false);
-        }
-        else
-        {
-            powerUpSpriteRenderer.gameObject.SetActive(true);
-        }
+        
     }
-    public void ActivatePowerUp(string tag)
+
+    public void speedBoost()
     {
-        //gameObject.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
-
-        switch(LevelTypeManager.currentLevel)
-        {
-            case LevelTypeManager.Level.standard:
-                powerUp = PowerUp.jumpBoost;
-                break;
-            case LevelTypeManager.Level.lowGravity:
-                powerUp = PowerUp.doubleJump;
-                break;
-            case LevelTypeManager.Level.flappyBird:
-                powerUp = PowerUp.glide;
-                break;
-            case LevelTypeManager.Level.gravityFlip:
-                powerUp = PowerUp.smash;
-                smashCharges = 3;
-                break;
-        }
-
-        //if (tag == "jumpBoost")
-        //{
-        //    powerUp = PowerUp.jumpBoost;
-        //}
-        //else if (tag == "doubleJump")
-        //{
-        //    powerUp = PowerUp.doubleJump;
-        //}
-        //else if (tag == "glide")
-        //{
-        //    powerUp = PowerUp.glide;
-        //}
-        //else if (tag == "smash")
-        //{
-        //    powerUp = PowerUp.smash;
-        //    //transform.localScale += new Vector3(0.3f, 0.3f, 0.0f);
-        //    //.transform.position = gameObject.transform.position + new Vector3(0.0f, 1.0f, 0.0f);
-        //    smashCharges=3;
-        //}
-
         tempSpeedBoost += VariableSpeed.currentBoost;
         Invoke("resetTempSpeedBoost", VariableSpeed.currentSpeedBoostTime);
-
-        //int rnd = Random.Range(0, SoundManager.instance.pickupSounds.Count);
-        //audio.PlayOneShot(SoundManager.instance.pickupSounds[rnd], SoundManager.instance.pickupVolume);
-
-        createPowerupEffect();
-
-        switch (powerUp)
-        {
-            case PowerUp.doubleJump:
-                powerUpSpriteRenderer.color = powerUpColours[0];
-                PowerupSounds.inst.playDoubleJumpPickup();
-                break;
-            case PowerUp.glide:
-                powerUpSpriteRenderer.color = powerUpColours[1];
-                PowerupSounds.inst.playGlidePickup();
-                break;
-            case PowerUp.jumpBoost:
-                powerUpSpriteRenderer.color = powerUpColours[2];
-                PowerupSounds.inst.playBoostJumpPickup();
-                break;
-            case PowerUp.smash:
-                powerUpSpriteRenderer.color = powerUpColours[3];
-                PowerupSounds.inst.playSmashPickup();
-                break;
-        }
-        //Invoke
     }
-
-    public void createPowerupEffect() {
-        GameObject powerupFX = (GameObject)Instantiate(powerupEffect);
-        powerupFX.transform.position = new Vector3(transform.position.x, 1, 0);
-        powerupFX.GetComponentsInChildren<SpriteRenderer>()[0].color = playerColour;
-    }
+    
+    
 
     void resetTempSpeedBoost()
     {
@@ -382,7 +285,7 @@ public class PlayerMovement : MonoBehaviour
             vel.y += jumpVel * Time.deltaTime;
             animationBoard.Jump();
 
-            if (powerUp == PowerUp.jumpBoost)
+            if (powerUps.currentPowerUp == PlayerPowerups.PowerUp.jumpBoost)
             {
                 vel.y += jumpBoostVel * Time.deltaTime;
 
@@ -390,15 +293,15 @@ public class PlayerMovement : MonoBehaviour
             }
 
             jumpDelay = false;
-            if (powerUp == PowerUp.doubleJump ||
-                powerUp == PowerUp.glide)
+            if (powerUps.currentPowerUp == PlayerPowerups.PowerUp.doubleJump ||
+                powerUps.currentPowerUp == PlayerPowerups.PowerUp.glide)
                 Invoke("resetJumpTImer", jumpTimeDelay / 4);
             else
                 Invoke("resetJumpTImer", jumpTimeDelay);
             jumpReleased = false;
             inTheAir = true;
 
-            if (powerUp != PowerUp.jumpBoost)
+            if (powerUps.currentPowerUp != PlayerPowerups.PowerUp.jumpBoost)
             {
                 int rnd = Random.Range(0, SoundManager.instance.jumpSounds.Count);
                 audio.PlayOneShot(SoundManager.instance.jumpSounds[rnd], SoundManager.instance.jumpVolume);
@@ -416,7 +319,7 @@ public class PlayerMovement : MonoBehaviour
             //Debug.Log(jumpReleased);
         }
         if (Input.GetKey(playerKey) &&
-            powerUp == PowerUp.doubleJump &&
+            powerUps.currentPowerUp == PlayerPowerups.PowerUp.doubleJump &&
             canDoubleJump &&
             jumpDelay &&
             jumpReleased)
@@ -446,7 +349,7 @@ public class PlayerMovement : MonoBehaviour
     Vector3 glideJumpLogic(Vector3 vel, bool onTheGround)
     {
         if (Input.GetKey(playerKey) &&
-            powerUp == PowerUp.glide &&
+            powerUps.currentPowerUp == PlayerPowerups.PowerUp.glide &&
             canDoubleJump &&
             jumpDelay &&
             jumpReleased)
