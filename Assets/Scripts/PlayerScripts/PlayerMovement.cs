@@ -14,7 +14,9 @@ public class PlayerMovement : MonoBehaviour
     bool jumpDelay = true;
     bool canDoubleJump = false;
     bool jumpReleased = false;
-    bool inTheAir = false;
+    bool onTheGroundLast = false;
+    bool onTheGround = false;
+    //bool inTheAir = false;
     bool calledFalling = false;
     public KeyCode playerKey;
     public Color playerColour;
@@ -52,27 +54,20 @@ public class PlayerMovement : MonoBehaviour
 
         powerUps = gameObject.GetComponent<PlayerPowerups>();
 
-        ParticleSystem ps = gameObject.GetComponentInChildren<ParticleSystem>();
-        ps.startColor = playerColour;
-
-
+        animationBoard.FlappyMode = false;
         switch (LevelTypeManager.currentLevel)
         {
             case LevelTypeManager.Level.lowGravity:
                 gameObject.rigidbody2D.gravityScale = lowGravityScale;
                 jumpVel = jumpVel/1.5f;
                 break;
+            case LevelTypeManager.Level.flappyBird:
+                gameObject.rigidbody2D.gravityScale = gravityScale;
+                animationBoard.FlappyMode = true;
+                break;
             default:
                 gameObject.rigidbody2D.gravityScale = gravityScale;
                 break;
-        }
-        if (LevelTypeManager.currentLevel == LevelTypeManager.Level.flappyBird)
-        {
-            animationBoard.FlappyMode = true;
-        }
-        else
-        {
-            animationBoard.FlappyMode = false;
         }
 	}
 
@@ -80,6 +75,39 @@ public class PlayerMovement : MonoBehaviour
     {
         canFootstep = true;
     }
+
+    bool rayCastDown()
+    {
+        return rayCastDown(Vector2.zero);
+    }
+
+    bool rayCastDown(Vector2 offset)
+    {
+        Vector2 dir = -Vector2.up;
+        return rayCastFromPlayer(offset, dir, raycastLength);
+    }
+
+    bool rayCastForward()
+    {
+        return rayCastForward(Vector2.zero);
+    }
+    bool rayCastForward(Vector2 offset)
+    {
+        Vector2 dir = Vector2.right;
+        return rayCastFromPlayer(offset, dir, raycastLength);
+    }
+    bool rayCastFromPlayer(Vector2 offset, Vector2 dir, float rayLength)
+    {
+        Vector2 position = (Vector2)playerSprite.bounds.center;
+        Debug.DrawRay(position, dir * rayLength, Color.red);
+        RaycastHit2D hit = Physics2D.Raycast(position, dir, rayLength, ~mask.value);
+        if (hit.collider != null)
+        {
+            return true;
+        }
+        return false;
+    }
+
 	// Update is called once per frame
 	void FixedUpdate () 
     {
@@ -99,26 +127,19 @@ public class PlayerMovement : MonoBehaviour
             infront = true;
         }
 
-        bool onTheGround = false;
+        onTheGround = false;
         Vector2 xOffset = Vector2.one / 2;
         xOffset.y = 0;
 
-        Vector2 down = -Vector2.up * raycastLength;
-        Debug.DrawRay(position, down, Color.red);
-        RaycastHit2D hit = Physics2D.Raycast(position, down, raycastLength, ~mask.value);
-        if (hit.collider != null)
+        if(rayCastDown())
         {
             onTheGround = true;
         }
-        Debug.DrawRay(position + xOffset, down, Color.yellow);
-        hit = Physics2D.Raycast(position + xOffset, down, raycastLength, ~mask.value);
-        if (hit.collider != null)
+        else if (rayCastDown(xOffset))
         {
             onTheGround = true;
         }
-        Debug.DrawRay(position - xOffset, down, Color.magenta);
-        hit = Physics2D.Raycast(position - xOffset, down, raycastLength, ~mask.value);
-        if (hit.collider != null)
+        else if (rayCastDown(-xOffset))
         {
             onTheGround = true;
         }
@@ -167,11 +188,10 @@ public class PlayerMovement : MonoBehaviour
             }
         }
 
-        
+
 
         if (onTheGround)
         {
-            //print("There is something below the object!");
             canDoubleJump = true;
             jumpReleased = false;
             calledFalling = false;
@@ -184,23 +204,20 @@ public class PlayerMovement : MonoBehaviour
                 Invoke("canFootstepReset", SoundManager.instance.footstepSounds[rnd].length);
             }
 
-            if (inTheAir)
+            if (!onTheGroundLast)
             {
                 animationBoard.Land();
-                inTheAir = false;
+                calledFalling = false;
             }
         }
         else
         {
-            inTheAir = true;
-        }
-
-        if (inTheAir)
-        {
-            //Debug.Log(vel.y);
+            //if (onTheGroundLast)
+            //{
+            //    animationBoard.Jump(); 
+            //}
             if (vel.y <= 0)
             {
-                //Debug.Log("falling");
                 if (!calledFalling)
                 {
                     animationBoard.Fall();
@@ -208,12 +225,6 @@ public class PlayerMovement : MonoBehaviour
                 }
             }
         }
-
-
-        //if (Input.GetKey(KeyCode.Return))
-        //{
-        //    powerUp = PowerUp.smash;
-        //}
 
         vel = jumpLogic(vel, onTheGround);
         vel = doubleJumpLogic(vel, onTheGround);
@@ -299,7 +310,6 @@ public class PlayerMovement : MonoBehaviour
             else
                 Invoke("resetJumpTImer", jumpTimeDelay);
             jumpReleased = false;
-            inTheAir = true;
 
             if (powerUps.currentPowerUp != PlayerPowerups.PowerUp.jumpBoost)
             {
@@ -312,11 +322,9 @@ public class PlayerMovement : MonoBehaviour
     
     Vector3 doubleJumpLogic(Vector3 vel, bool onTheGround)
     {
-
         if (!onTheGround && !Input.GetKey(playerKey))
         {
             jumpReleased = true;
-            //Debug.Log(jumpReleased);
         }
         if (Input.GetKey(playerKey) &&
             powerUps.currentPowerUp == PlayerPowerups.PowerUp.doubleJump &&
@@ -326,20 +334,14 @@ public class PlayerMovement : MonoBehaviour
         {
             vel.y = 0;
             vel.y += jumpVel * Time.deltaTime;
-
-            //if (powerUp == PowerUp.jumpBoost)
-            //{
-            //    vel.y += jumpBoostVel * Time.deltaTime;
-            //}
-
+            
             canDoubleJump = false;
             jumpDelay = false;
             Invoke("resetJumpTImer", jumpTimeDelay);
             jumpReleased = false;
-            inTheAir = true;
 
             PowerupSounds.inst.playDoubleJump();
-
+            animationBoard.Jump();
             //int rnd = Random.Range(0, SoundManager.instance.jumpSounds.Count - 1);
             //audio.PlayOneShot(SoundManager.instance.jumpSounds[rnd], SoundManager.instance.jumpVolume);
         }
@@ -364,7 +366,6 @@ public class PlayerMovement : MonoBehaviour
             gameObject.rigidbody2D.gravityScale = 0;
             Invoke("resetJumpTImer", jumpTimeDelay);
             jumpReleased = false;
-            inTheAir = true;
 
             PowerupSounds.inst.playGlide();
 
