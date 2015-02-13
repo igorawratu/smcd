@@ -114,7 +114,7 @@ public class GenerateItems : MonoBehaviour {
                 psscript.respawnPlayer(rpk, rpc);
             }
 
-            mDeadPlayers.Add(respawnPlayerInfo);
+            mDeadPlayers.Add(new DeadPlayerInfo(_tag, _col));
         } else {
             mDeadPlayers.Add(new DeadPlayerInfo(_tag, _col));
             obstaclePrefabs.Add(deadPlayer);

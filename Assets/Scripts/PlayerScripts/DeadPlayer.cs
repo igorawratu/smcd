@@ -5,6 +5,8 @@ public class DeadPlayer : MonoBehaviour {
     private KeyCode mPKey;
     public LayerMask mask;
     public Font font;
+    public float lowGravityScale;
+    public float normalGravityScale;
 
 	// Use this for initialization
     void Awake()
@@ -12,7 +14,11 @@ public class DeadPlayer : MonoBehaviour {
         mPKey = KeyCode.A;
         SpriteRenderer sr = gameObject.GetComponent<SpriteRenderer>();
         sr.color = new Color(255, 0, 0);
-        
+        mLevel = LevelTypeManager.currentLevel;
+
+        if(mLevel == LevelTypeManager.Level.lowGravity)
+            rigidbody2D.gravityScale = lowGravityScale;
+        else rigidbody2D.gravityScale = normalGravityScale;
     }
 
 	void Start () {
@@ -31,7 +37,12 @@ public class DeadPlayer : MonoBehaviour {
             gameObject.rigidbody2D.velocity = new Vector2(gameObject.rigidbody2D.velocity.x, 0);
         }
 
-        jump();
+        if(mLevel == LevelTypeManager.Level.standard || mLevel == LevelTypeManager.Level.lowGravity)
+            jump();
+        else if(mLevel == LevelTypeManager.Level.gravityFlip)
+            jump();//invertGravity();
+        else if(mLevel == LevelTypeManager.Level.flappyBird)
+            flap();
     }
 
     public void setInfo(KeyCode _key, Color _col){
@@ -87,7 +98,9 @@ public class DeadPlayer : MonoBehaviour {
             bool onTheGround = Physics2D.Raycast(position, down, raycastLength, ~mask.value);
             bool onTheCeiling = Physics2D.Raycast(position, up, raycastLength, ~mask.value);
             if(onTheGround || onTheCeiling)
-                rigidbody2D.gravityScale *= -1;
+                gameObject.rigidbody2D.gravityScale *= -1;
         }
     }
+
+    private LevelTypeManager.Level mLevel;
 }
