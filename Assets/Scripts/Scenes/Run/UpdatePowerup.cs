@@ -62,8 +62,8 @@ public class UpdatePowerup : MonoBehaviour {
             igScript.removeGameObject(gameObject);
 
             GameObject player = GameObject.Find(_collider.name);
-            PlayerMovement pmScript = player.GetComponent<PlayerMovement>();
-            pmScript.ActivatePowerUp(gameObject.tag);
+            PlayerPowerups powerupScript = player.GetComponent<PlayerPowerups>();
+            powerupScript.ActivatePowerUp(gameObject.tag);
         }
     }
     private PowerupPattern mPattern;
