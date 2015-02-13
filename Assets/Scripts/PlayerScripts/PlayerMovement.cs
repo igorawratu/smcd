@@ -82,6 +82,14 @@ public class PlayerMovement : MonoBehaviour
                 gameObject.rigidbody2D.gravityScale = gravityScale;
                 break;
         }
+        if (LevelTypeManager.currentLevel == LevelTypeManager.Level.flappyBird)
+        {
+            animationBoard.FlappyMode = true;
+        }
+        else
+        {
+            animationBoard.FlappyMode = false;
+        }
 	}
 
 	void canFootstepReset()
@@ -108,7 +116,7 @@ public class PlayerMovement : MonoBehaviour
         }
 
         bool onTheGround = false;
-        Vector2 xOffset = playerSprite.bounds.size / 2;
+        Vector2 xOffset = Vector2.one / 2;
         xOffset.y = 0;
 
         Vector2 down = -Vector2.up * raycastLength;
@@ -118,20 +126,18 @@ public class PlayerMovement : MonoBehaviour
         {
             onTheGround = true;
         }
-        Debug.DrawRay(position + xOffset, down, Color.red);
+        Debug.DrawRay(position + xOffset, down, Color.yellow);
         hit = Physics2D.Raycast(position + xOffset, down, raycastLength, ~mask.value);
         if (hit.collider != null)
         {
             onTheGround = true;
         }
-        Debug.DrawRay(position - xOffset, down, Color.red);
+        Debug.DrawRay(position - xOffset, down, Color.magenta);
         hit = Physics2D.Raycast(position - xOffset, down, raycastLength, ~mask.value);
         if (hit.collider != null)
         {
             onTheGround = true;
         }
-
-
 
         if (infront)
         {
@@ -206,7 +212,12 @@ public class PlayerMovement : MonoBehaviour
                 inTheAir = false;
             }
         }
-        else if (inTheAir)
+        else
+        {
+            inTheAir = true;
+        }
+
+        if (inTheAir)
         {
             //Debug.Log(vel.y);
             if (vel.y <= 0)
@@ -219,6 +230,7 @@ public class PlayerMovement : MonoBehaviour
                 }
             }
         }
+
 
         //if (Input.GetKey(KeyCode.Return))
         //{
