@@ -1,36 +1,36 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 [RequireComponent(typeof(AudioSource))]
 public class PowerupSounds : MonoBehaviour
 {
     //activate sounds
-    public AudioClip glide;
+    public List<AudioClip> glide = new List<AudioClip>(1);
     public float glideVolume = 1.0f;
 
-    public AudioClip smash;
+    public List<AudioClip> smash = new List<AudioClip>(1);
     public float smashVolume = 1.0f;
 
-    public AudioClip boostJump;
+    public List<AudioClip> boostJump = new List<AudioClip>(1);
     public float boostJumpVolume = 1.0f;
 
-    public AudioClip doubleJump;
+    public List<AudioClip> doubleJump = new List<AudioClip>(1);
     public float doubleJumpVolume = 1.0f;
 
     //pickup sounds
-    public AudioClip glidePickup;
+    public List<AudioClip> glidePickup = new List<AudioClip>(1);
     public float glidePickupVolume = 1.0f;
 
-    public AudioClip smashPickup;
+    public List<AudioClip> smashPickup = new List<AudioClip>(1);
     public float smashPickupVolume = 1.0f;
 
-    public AudioClip boostJumpPickup;
+    public List<AudioClip> boostJumpPickup = new List<AudioClip>(1);
     public float boostJumpPickupVolume = 1.0f;
 
-    public AudioClip doubleJumpPickup;
+    public List<AudioClip> doubleJumpPickup = new List<AudioClip>(1);
     public float doubleJumpPickupVolume = 1.0f;
-
-
+    
     public static PowerupSounds inst;
     // Use this for initialization
     void Start () 
@@ -40,36 +40,44 @@ public class PowerupSounds : MonoBehaviour
 
     public void playGlide()
     {
-        SoundManager.instance.playTemporarySound(glide, glideVolume);
+        int rnd = Random.Range(0, glide.Count);
+        SoundManager.instance.playTemporarySound(glide[rnd], glideVolume);
     }
     public void playSmash()
     {
-        SoundManager.instance.playTemporarySound(smash, smashVolume);
+        int rnd = Random.Range(0, smash.Count);
+        SoundManager.instance.playTemporarySound(smash[rnd], smashVolume);
     }
     public void playDoubleJump()
     {
-        SoundManager.instance.playTemporarySound(boostJump, boostJumpVolume);
+        int rnd = Random.Range(0, boostJump.Count);
+        SoundManager.instance.playTemporarySound(boostJump[rnd], boostJumpVolume);
     }
     public void playBoostJump()
     {
-        SoundManager.instance.playTemporarySound(doubleJump, doubleJumpVolume);
+        int rnd = Random.Range(0, doubleJump.Count);
+        SoundManager.instance.playTemporarySound(doubleJump[rnd], doubleJumpVolume);
     }
 
     public void playGlidePickup()
     {
-        SoundManager.instance.playTemporarySound(glidePickup, glidePickupVolume);
+        int rnd = Random.Range(0, glidePickup.Count);
+        SoundManager.instance.playTemporarySound(glidePickup[rnd], glidePickupVolume);
     }
     public void playSmashPickup()
     {
-        SoundManager.instance.playTemporarySound(smashPickup, smashPickupVolume);
+        int rnd = Random.Range(0, smashPickup.Count);
+        SoundManager.instance.playTemporarySound(smashPickup[rnd], smashPickupVolume);
     }
     public void playDoubleJumpPickup()
     {
-        SoundManager.instance.playTemporarySound(boostJumpPickup, boostJumpPickupVolume);
+        int rnd = Random.Range(0, boostJumpPickup.Count);
+        SoundManager.instance.playTemporarySound(boostJumpPickup[rnd], boostJumpPickupVolume);
     }
     public void playBoostJumpPickup()
     {
-        SoundManager.instance.playTemporarySound(doubleJumpPickup, doubleJumpPickupVolume);
+        int rnd = Random.Range(0, doubleJumpPickup.Count);
+        SoundManager.instance.playTemporarySound(doubleJumpPickup[rnd], doubleJumpPickupVolume);
     }
 
 }
