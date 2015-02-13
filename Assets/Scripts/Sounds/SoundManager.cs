@@ -80,10 +80,6 @@ public class SoundManager : MonoBehaviour
             audio.loop = true;
             audio.Play();
         }
-        else if (Application.loadedLevelName == "RunScene")
-        {
-            playLevelTrack();
-        }
         else if (Application.loadedLevelName == "TitleScreen")
         {
             //GameObject tempSound = (GameObject)Instantiate(SoundManager.instance.tempSound);

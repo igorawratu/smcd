@@ -53,9 +53,6 @@ public class LevelTypeManager : MonoBehaviour {
             System.Array values = Level.GetValues(typeof(Level));
             _currentLevel = (Level)values.GetValue(Random.Range(0, values.Length));
         }
-        else if (Application.loadedLevelName == "RunScene")
-        {
-        }
         else if (Application.loadedLevelName == "TitleScreen")
         {
 
@@ -65,12 +62,12 @@ public class LevelTypeManager : MonoBehaviour {
             System.Array values = Level.GetValues(typeof(Level));
             Level newLevel = (Level)values.GetValue(Random.Range(0, values.Length));
 
-            Debug.Log(newLevel);
-            Debug.Log(_currentLevel);
+            //Debug.Log(newLevel);
+            //Debug.Log(_currentLevel);
             while(_currentLevel == newLevel)
             {
-                Debug.Log(newLevel);
-                Debug.Log(_currentLevel);
+                //Debug.Log(newLevel);
+                //Debug.Log(_currentLevel);
                 newLevel = (Level)values.GetValue(Random.Range(0, values.Length));
             }
             _currentLevel = newLevel;
@@ -90,4 +87,22 @@ public class LevelTypeManager : MonoBehaviour {
             sceneChanged();
         }
 	}
+    public static void loadLevel()
+    {
+        switch (_currentLevel)
+        {
+            case Level.flappyBird:
+                Application.LoadLevel("FlappyBirdScene");
+                break;
+            case Level.gravityFlip:
+                Application.LoadLevel("GravityFlipScene");
+                break;
+            case Level.lowGravity:
+                Application.LoadLevel("LowGravityScene");
+                break;
+            case Level.standard:
+                Application.LoadLevel("StandardScene");
+                break;
+        }
+    }
 }

@@ -44,8 +44,11 @@ public class EndScreenScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if(Input.anyKey)
-            Application.LoadLevel("RunScene");
+        if (Input.anyKey)
+        {
+            //Application.LoadLevel("RunScene");
+            LevelTypeManager.loadLevel();
+        }
 	}
 
     private IEnumerator countDown()

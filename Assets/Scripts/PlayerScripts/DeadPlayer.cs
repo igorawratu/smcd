@@ -37,7 +37,7 @@ public class DeadPlayer : MonoBehaviour {
 	}
 
     void FixedUpdate(){
-        Debug.Log(gameObject.rigidbody2D.velocity.y);
+        //Debug.Log(gameObject.rigidbody2D.velocity.y);
         if (gameObject.transform.position.y < 0)
         {
             gameObject.transform.position = new Vector2(gameObject.transform.position.x, 0);

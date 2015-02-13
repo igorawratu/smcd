@@ -76,20 +76,20 @@ public class FloorManager : MonoBehaviour {
                 break;
         }
 
-        skySize = cloudSprite.bounds.max - cloudSprite.bounds.min;
-        //skySize = skyArr[i].transform.renderer.bounds.max - skyArr[i].transform.renderer.bounds.min;
-        for (int i = 0; i < skyArr.Length; i++)
-        {
-            skyArr[i] = (GameObject)Instantiate(skyPrefab);
+        //skySize = cloudSprite.bounds.max - cloudSprite.bounds.min;
+        ////skySize = skyArr[i].transform.renderer.bounds.max - skyArr[i].transform.renderer.bounds.min;
+        //for (int i = 0; i < skyArr.Length; i++)
+        //{
+        //    skyArr[i] = (GameObject)Instantiate(skyPrefab);
 
-            SpriteRenderer sr = skyArr[i].GetComponent<SpriteRenderer>();
-            sr.sprite = cloudSprite;            
+        //    SpriteRenderer sr = skyArr[i].GetComponent<SpriteRenderer>();
+        //    sr.sprite = cloudSprite;            
 
 
-            Vector3 pos = skyOffset + new Vector3(skySize.x * i, skyPrefab.transform.position.y, 0.0f);
-            skyArr[i].transform.position = pos;
-            skyArr[i].transform.localScale = new Vector3(1.01f, 1, 1);
-        }
+        //    Vector3 pos = skyOffset + new Vector3(skySize.x * i, skyPrefab.transform.position.y, 0.0f);
+        //    skyArr[i].transform.position = pos;
+        //    skyArr[i].transform.localScale = new Vector3(1.01f, 1, 1);
+        //}
     }
 
     void setFloorSprite(GameObject gObj)
@@ -108,17 +108,17 @@ public class FloorManager : MonoBehaviour {
         }
         //this.
         rotateArray(groundArr, groundSize);
-        rotateArray(skyArr, skySize);
+        //rotateArray(skyArr, skySize);
 
 	}
 
     void FixedUpdate()
     {
-        for (int i = 0; i < skyArr.Length; i++)
-        {
-            //skyArr[i].transform.position = skyArr[i].transform.position + skySpeed * Time.deltaTime;
-            skyArr[i].transform.position = skyArr[i].transform.position + new Vector3(VariableSpeed.currentSkySpeed, 0, 0) * Time.deltaTime;
-        }
+        //for (int i = 0; i < skyArr.Length; i++)
+        //{
+        //    //skyArr[i].transform.position = skyArr[i].transform.position + skySpeed * Time.deltaTime;
+        //    skyArr[i].transform.position = skyArr[i].transform.position + new Vector3(VariableSpeed.currentSkySpeed, 0, 0) * Time.deltaTime;
+        //}
     }
 
     bool rotateArray(GameObject[] arr, Vector3 tileSize)

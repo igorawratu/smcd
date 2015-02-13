@@ -236,7 +236,8 @@ public class MenuScript : MonoBehaviour {
 		}
 
 		if (CurrentPlayerKeys.Instance.playerKeys.Count > 0) {
-			Application.LoadLevel("RunScene");
+            LevelTypeManager.loadLevel();
+            //Application.LoadLevel("RunScene");
 		}
 		else {
 			Application.LoadLevel("JoinScene");

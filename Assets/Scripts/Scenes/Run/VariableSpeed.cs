@@ -11,6 +11,7 @@ public class VariableSpeed : MonoBehaviour {
     public float speedBoostTime = 0.0f;
     public static float currentSpeedBoostTime = 0.0f;
     public float timeDelay = 20.0f;
+    public static float speedUpDuration = 20.0f;
     float timeElapsed = 0.0f;
 
 
@@ -28,6 +29,7 @@ public class VariableSpeed : MonoBehaviour {
         currentSpeedBoostTime = speedBoostTime;
         currentCloudSpeed = cloudSpeed.x;
         currentSkySpeed = skySpeed.x;
+        speedUpDuration = timeDelay;
 
         StartCoroutine(levelSpeedController());
 	}
