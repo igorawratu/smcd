@@ -40,7 +40,6 @@ public class AnimationBoard : MonoBehaviour
     public void Land()
     {
         animator.SetBool(grounded, true);
-        FlappyMode = false;
     }
     public void Hit()
     {
