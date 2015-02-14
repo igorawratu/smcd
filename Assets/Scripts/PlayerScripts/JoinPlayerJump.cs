@@ -51,6 +51,7 @@ public class JoinPlayerJump : MonoBehaviour {
                 {
                     vel = new Vector2(0, jumpVel);
                     canJump = false;
+                    PowerupSounds.inst.playDoubleJump();
                     Invoke("setCanJump", jumpDelay);
                 }
             }

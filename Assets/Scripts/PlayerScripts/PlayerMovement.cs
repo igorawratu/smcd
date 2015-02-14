@@ -7,16 +7,15 @@ public class PlayerMovement : MonoBehaviour
     Vector3 moveVel = Vector3.zero;
     public Vector3 rightAcceleration = Vector3.zero;
     public Vector3 maxVel = Vector3.zero;
-    public float jumpVel = 0.0f;
     public float jumpBoostVel = 0.0f;
     public float jumpTimeDelay = 0.4f;
+    public float flappyJumpTimeDelay = 0.4f;
     float tempSpeedBoost = 0.0f;
     bool jumpDelay = true;
     bool canDoubleJump = false;
     bool jumpReleased = false;
     bool onTheGroundLast = false;
     bool onTheGround = false;
-    //bool inTheAir = false;
     bool calledFalling = false;
     public KeyCode playerKey;
     public Color playerColour;
@@ -26,23 +25,25 @@ public class PlayerMovement : MonoBehaviour
     SpriteRenderer playerSprite;
 
     public float raycastLength = 3.0f;
-    public float raycastLengthRight = 3.0f;
     public LayerMask mask;
     public bool canFootstep = true;
     public float jumpGlideTime = 0.4f;
-    GameObject obj = null;
 
-
-    public GameObject hitEffect;
-    public GameObject rockEffect;
 
     public float gravityScale = 8;
     public float lowGravityScale = 8;
+    public float flappyGravityScale = 8;
+    public float flipGravityScale = 8;
+
+    public float jumpVel = 0.0f;
+    public float flappyJumpVel = 0.0f;
+    public float lowGravityJumpVel = 0.0f;
+    public float gravFlipJumpVel = 0.0f;
+
     PlayerPowerups powerUps;
 	// Use this for initialization
 	void Start () 
     {
-        mLastCollidedObstacle = null;
 
         Vector3 vel = gameObject.rigidbody2D.velocity;
         vel.x = VariableSpeed.current;
@@ -59,18 +60,26 @@ public class PlayerMovement : MonoBehaviour
         {
             case LevelTypeManager.Level.lowGravity:
                 gameObject.rigidbody2D.gravityScale = lowGravityScale;
-                jumpVel = jumpVel/1.5f;
+                jumpVel = lowGravityJumpVel;
                 break;
             case LevelTypeManager.Level.flappyBird:
-                gameObject.rigidbody2D.gravityScale = gravityScale;
+                gameObject.rigidbody2D.gravityScale = flappyGravityScale;
                 animationBoard.FlappyMode = true;
+                jumpTimeDelay = flappyJumpTimeDelay;
+                jumpVel = flappyJumpVel;
+                break;
+            case LevelTypeManager.Level.gravityFlip:
+                gameObject.rigidbody2D.gravityScale = flipGravityScale;
+                animationBoard.FlappyMode = false;
+                jumpVel = gravFlipJumpVel;
                 break;
             default:
                 gameObject.rigidbody2D.gravityScale = gravityScale;
                 break;
         }
 	}
-
+    Vector2 rayDownDir = -Vector2.up;
+    float flipAngle = 180;
 	void canFootstepReset()
     {
         canFootstep = true;
@@ -80,23 +89,12 @@ public class PlayerMovement : MonoBehaviour
     {
         return rayCastDown(Vector2.zero);
     }
-
     bool rayCastDown(Vector2 offset)
     {
-        Vector2 dir = -Vector2.up;
+        Vector2 dir = rayDownDir;
         return rayCastFromPlayer(offset, dir, raycastLength);
     }
-
-    bool rayCastForward()
-    {
-        return rayCastForward(Vector2.zero);
-    }
-    bool rayCastForward(Vector2 offset)
-    {
-        Vector2 dir = Vector2.right;
-        return rayCastFromPlayer(offset, dir, raycastLength);
-    }
-    bool rayCastFromPlayer(Vector2 offset, Vector2 dir, float rayLength)
+    public bool rayCastFromPlayer(Vector2 offset, Vector2 dir, float rayLength)
     {
         Vector2 position = (Vector2)playerSprite.bounds.center;
         Debug.DrawRay(position, dir * rayLength, Color.red);
@@ -117,79 +115,19 @@ public class PlayerMovement : MonoBehaviour
         //Vector2 position = (Vector2)transform.position;
         Vector2 position = (Vector2)playerSprite.bounds.center;
 
-        bool infront = false;
-        Vector2 right = Vector2.right * raycastLengthRight;
-        Debug.DrawRay(transform.position, right, Color.green);
-        RaycastHit2D hitFront = Physics2D.Raycast(position, right, raycastLengthRight, ~mask.value);
-
-        if (hitFront.collider != null)
-        {
-            infront = true;
-        }
-
         onTheGround = false;
         Vector2 xOffset = Vector2.one / 2;
         xOffset.y = 0;
 
-        if(rayCastDown())
+        for (int i = -1; i < 2;i++)
         {
-            onTheGround = true;
-        }
-        else if (rayCastDown(xOffset))
-        {
-            onTheGround = true;
-        }
-        else if (rayCastDown(-xOffset))
-        {
-            onTheGround = true;
-        }
-
-        if (infront)
-        {
-            //Debug.Log(hitFront.collider.gameObject.tag);
-            if( obj != hitFront.collider.gameObject)
+            if (rayCastDown(xOffset*i))
             {
-                if (hitFront.collider.gameObject.tag == "obstacle" || hitFront.collider.gameObject.tag == "deadplayer")
-                {
-                    mLastCollidedObstacle = hitFront.collider.gameObject;
-
-                    RandomShake.randomShake.PlaySinShake();
-                    Instantiate(hitEffect,
-                        new Vector3(hitFront.point.x, hitFront.point.y, hitEffect.transform.position.z),
-                        hitEffect.transform.rotation);
-                    obj = hitFront.collider.gameObject;
-
-                    if (powerUps.currentPowerUp != PlayerPowerups.PowerUp.smash)
-                    {
-                        int rnd = Random.Range(0, SoundManager.instance.hitSounds.Count);
-                        audio.PlayOneShot(SoundManager.instance.hitSounds[rnd], SoundManager.instance.hitVolume);
-                    }
-                }
-            }
-
-            if (powerUps.currentPowerUp == PlayerPowerups.PowerUp.smash)
-            {
-                //Debug.Log("obstacle1");
-                if (hitFront.collider.gameObject.tag == "obstacle")
-                {
-                    //Debug.Log("obstacle2");
-                    GameObject itemGenerator = GameObject.Find("ItemGenerator");
-                    GenerateItems igScript = itemGenerator.GetComponent<GenerateItems>();
-                    igScript.smashRock(hitFront.collider.gameObject);
-
-                    Instantiate(rockEffect,
-                        new Vector3(hitFront.point.x, hitFront.point.y, hitEffect.transform.position.z),
-                        rockEffect.transform.rotation);
-                    obj = hitFront.collider.gameObject;
-                    animationBoard.Hit();
-                    PowerupSounds.inst.playSmash();
-                    powerUps.decrementCharges();
-                }
+                onTheGround = true;
+                break;
             }
         }
-
-
-
+        
         if (onTheGround)
         {
             canDoubleJump = true;
@@ -212,11 +150,11 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
-            //if (onTheGroundLast)
-            //{
-            //    animationBoard.Jump(); 
-            //}
-            if (vel.y <= 0)
+            if (LevelTypeManager.currentLevel==LevelTypeManager.Level.gravityFlip)
+            {
+                animationBoard.Fall();
+            }
+            else if (vel.y <= 0)
             {
                 if (!calledFalling)
                 {
@@ -225,29 +163,18 @@ public class PlayerMovement : MonoBehaviour
                 }
             }
         }
-
         vel = jumpLogic(vel, onTheGround);
         vel = doubleJumpLogic(vel, onTheGround);
-        vel = glideJumpLogic(vel, onTheGround);
 
-        //if (vel.x >=   maxVel.x)
-        //{
-        //    vel.x = maxVel.x;
-        //}
         if (vel.x >= VariableSpeed.current + tempSpeedBoost)
         {
             vel.x = VariableSpeed.current + tempSpeedBoost;
         }
-
-        
+                
         gameObject.rigidbody2D.velocity = vel;
-
-
+        
         if (transform.position.x > Camera.main.transform.position.x)
         {
-            //Debug.Log(transform.position.x);
-            //Debug.Log(Camera.main.transform.position.x);
-
             SpriteRenderer sr = gameObject.GetComponentInChildren<SpriteRenderer>();
 
             Vector3 worldPos = Camera.main.ScreenToWorldPoint(new Vector3(Camera.main.pixelWidth, 0.0f, 0.0f));
@@ -261,7 +188,7 @@ public class PlayerMovement : MonoBehaviour
                 transform.position = worldPos;
             }
         }
-
+        onTheGroundLast = onTheGround;
 	}
 
     void resetJumpTImer()
@@ -279,8 +206,6 @@ public class PlayerMovement : MonoBehaviour
         Invoke("resetTempSpeedBoost", VariableSpeed.currentSpeedBoostTime);
     }
     
-    
-
     void resetTempSpeedBoost()
     {
         tempSpeedBoost = 0.0f;
@@ -292,14 +217,12 @@ public class PlayerMovement : MonoBehaviour
             onTheGround &&
             jumpDelay)
         {
-
             vel.y += jumpVel * Time.deltaTime;
             animationBoard.Jump();
 
             if (powerUps.currentPowerUp == PlayerPowerups.PowerUp.jumpBoost)
             {
                 vel.y += jumpBoostVel * Time.deltaTime;
-
                 PowerupSounds.inst.playBoostJump();
             }
 
@@ -316,6 +239,24 @@ public class PlayerMovement : MonoBehaviour
                 int rnd = Random.Range(0, SoundManager.instance.jumpSounds.Count);
                 audio.PlayOneShot(SoundManager.instance.jumpSounds[rnd], SoundManager.instance.jumpVolume);
             }
+
+            if (LevelTypeManager.currentLevel == LevelTypeManager.Level.gravityFlip)
+            {
+                Debug.Log("Flip gravity");
+                flipGravity();
+            }
+        }
+        else if (Input.GetKey(playerKey) &&
+            jumpDelay &&
+            LevelTypeManager.currentLevel == LevelTypeManager.Level.flappyBird)
+        {
+            vel.y = 0;
+            vel.y += jumpVel * Time.deltaTime;
+            animationBoard.Jump();
+            Invoke("resetJumpTImer", jumpTimeDelay);
+            jumpDelay = false;
+            int rnd = Random.Range(0, SoundManager.instance.jumpSounds.Count);
+            audio.PlayOneShot(SoundManager.instance.jumpSounds[rnd], SoundManager.instance.jumpVolume);
         }
         return vel;
     }
@@ -327,57 +268,52 @@ public class PlayerMovement : MonoBehaviour
             jumpReleased = true;
         }
         if (Input.GetKey(playerKey) &&
-            powerUps.currentPowerUp == PlayerPowerups.PowerUp.doubleJump &&
             canDoubleJump &&
             jumpDelay &&
             jumpReleased)
         {
             vel.y = 0;
-            vel.y += jumpVel * Time.deltaTime;
+            if (powerUps.currentPowerUp == PlayerPowerups.PowerUp.doubleJump)
+            {
+                vel.y += jumpVel * Time.deltaTime;
+                PowerupSounds.inst.playGlide();
+                PowerupSounds.inst.playDoubleJump();
+                animationBoard.Jump();
+            }
+            else if (powerUps.currentPowerUp == PlayerPowerups.PowerUp.glide)
+            {
+                Invoke("resetGravity", jumpGlideTime);
+                gameObject.rigidbody2D.gravityScale = 0;
+            }
+
             
             canDoubleJump = false;
             jumpDelay = false;
             Invoke("resetJumpTImer", jumpTimeDelay);
             jumpReleased = false;
 
-            PowerupSounds.inst.playDoubleJump();
-            animationBoard.Jump();
             //int rnd = Random.Range(0, SoundManager.instance.jumpSounds.Count - 1);
             //audio.PlayOneShot(SoundManager.instance.jumpSounds[rnd], SoundManager.instance.jumpVolume);
         }
         return vel;
     }
-
-    Vector3 glideJumpLogic(Vector3 vel, bool onTheGround)
-    {
-        if (Input.GetKey(playerKey) &&
-            powerUps.currentPowerUp == PlayerPowerups.PowerUp.glide &&
-            canDoubleJump &&
-            jumpDelay &&
-            jumpReleased)
-        {
-            //Debug.Log("Glide!");
-            vel.y = 0;
-
-            canDoubleJump = false;
-            jumpDelay = false;
-
-            Invoke("resetGravity", jumpGlideTime);
-            gameObject.rigidbody2D.gravityScale = 0;
-            Invoke("resetJumpTImer", jumpTimeDelay);
-            jumpReleased = false;
-
-            PowerupSounds.inst.playGlide();
-
-            //int rnd = Random.Range(0, SoundManager.instance.jumpSounds.Count - 1);
-            //audio.PlayOneShot(SoundManager.instance.jumpSounds[rnd], SoundManager.instance.jumpVolume);
-        }
-        return vel;
-    }
-
+    
     void flipGravity()
     {
-        gameObject.rigidbody2D.gravityScale = -gravityScale;
+        flipGravityScale = -flipGravityScale;
+        gameObject.rigidbody2D.gravityScale = flipGravityScale;
+        jumpVel = -jumpVel;
+        rayDownDir = -rayDownDir;
+
+        transform.rotation = Quaternion.AngleAxis(flipAngle, Vector3.forward);
+        if (flipAngle == 180)
+        {
+            flipAngle = 0;
+        }
+        else
+        {
+            flipAngle = 180;
+        }
     }
 
     void resetGravity()
@@ -390,9 +326,4 @@ public class PlayerMovement : MonoBehaviour
 		playerKey = key;
 	}
 
-    public GameObject getLastCollidedObstacle() {
-        return mLastCollidedObstacle;
-    }
-
-    private GameObject mLastCollidedObstacle;
 }
