@@ -64,7 +64,7 @@ public class WinnerChecker : MonoBehaviour {
         gameOver.color = player.GetComponent<PlayerMovement>().playerColour;
         yield return new WaitForSeconds(2);
 
-        Application.LoadLevel("EndScene");
+        //Application.LoadLevel("EndScene");
     }
 
     private List<string> mPlayersActive;
