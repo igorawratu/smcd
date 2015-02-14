@@ -213,11 +213,11 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
-            //if (onTheGroundLast)
-            //{
-            //    animationBoard.Jump(); 
-            //}
-            if (vel.y <= 0)
+            if (LevelTypeManager.currentLevel==LevelTypeManager.Level.gravityFlip)
+            {
+                animationBoard.Fall();
+            }
+            else if (vel.y <= 0)
             {
                 if (!calledFalling)
                 {
