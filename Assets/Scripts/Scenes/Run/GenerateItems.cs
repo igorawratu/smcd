@@ -8,7 +8,7 @@ public class GenerateItems : MonoBehaviour {
     public List<GameObject> obstaclePrefabs;
     public List<GameObject> environmentalObjectPrefabs;
     public List<GameObject> powerupPrefabs;
-    public List<int> obstacleSequences;
+    public List<ObstacleSequenceInfo> obstacleSequences;
 
     public float powerupTimeLimit;
     public float obstacleTimeLimit;
@@ -32,6 +32,8 @@ public class GenerateItems : MonoBehaviour {
 
     public float obsSeqSpacing;
 
+    
+
     private class DeadPlayerInfo:System.Object {
         public DeadPlayerInfo(KeyCode _name, Color _col) {
             name = _name;
@@ -46,14 +48,10 @@ public class GenerateItems : MonoBehaviour {
         }
     }
 
-    private class ObstacleSequenceInfo {
-        public ObstacleSequenceInfo(List<int> _types, List<Vector2> _positions) {
-            types = _types;
-            positions = _positions;
-        }
-
+    [System.Serializable]
+    public class ObstacleSequenceInfo {
         public List<int> types;
-        public List<Vector2> positions;
+        public List<float> yoffset;
     }
 
 	// Use this for initialization
@@ -245,7 +243,9 @@ public class GenerateItems : MonoBehaviour {
     }
 
     private List<GameObject> generateObstacleSequence(){
-        List<int> obstacleSequenceInf = generateSequenceFromLong(obstacleSequences[mRng.Next(0, mObstacleSequenceTypes)]);
+        ObstacleSequenceInfo sInf = obstacleSequences[mRng.Next(0, mObstacleSequenceTypes)];
+        List<int> obstacleSequenceInf = sInf.types;
+        List<float> yOffsets = sInf.yoffset;
         List<GameObject> sequence = new List<GameObject>();
 
 
@@ -269,8 +269,8 @@ public class GenerateItems : MonoBehaviour {
                 continue;
 
             float xSpawnPos = ((k * spacing + (k + 1) * spacing) / 2) + midScreenPos + spawnAheadDistance - (range / 2);
-            GameObject newObstacle = (GameObject)GameObject.Instantiate(obstaclePrefabs[obstacleSequenceInf[k] - 1]);
-            newObstacle.transform.position = new Vector2(xSpawnPos, obstaclePrefabs[obstacleSequenceInf[k] - 1].transform.position.y);
+            GameObject newObstacle = (GameObject)GameObject.Instantiate(obstaclePrefabs[obstacleSequenceInf[k]]);
+            newObstacle.transform.position = new Vector2(xSpawnPos, obstaclePrefabs[obstacleSequenceInf[k]].transform.position.y + yOffsets[k]);
             sequence.Add(newObstacle);
         }
 
