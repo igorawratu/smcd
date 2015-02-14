@@ -37,13 +37,6 @@ public class DeadPlayer : MonoBehaviour {
 	}
 
     void FixedUpdate(){
-        //Debug.Log(gameObject.rigidbody2D.velocity.y);
-        if (gameObject.transform.position.y < 0)
-        {
-            gameObject.transform.position = new Vector2(gameObject.transform.position.x, 0);
-            gameObject.rigidbody2D.velocity = new Vector2(gameObject.rigidbody2D.velocity.x, 0);
-        }
-
         if(mLevel == LevelTypeManager.Level.standard || mLevel == LevelTypeManager.Level.lowGravity)
             jump();
         else if(mLevel == LevelTypeManager.Level.gravityFlip) {
