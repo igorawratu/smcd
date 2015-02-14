@@ -80,10 +80,10 @@ public class PlayerPowerups : MonoBehaviour {
                 powerup = PowerUp.doubleJump;
                 break;
             case LevelTypeManager.Level.flappyBird:
-                powerup = PowerUp.glide;
+                powerup = PowerUp.smash;
                 break;
             case LevelTypeManager.Level.gravityFlip:
-                powerup = PowerUp.smash;
+                powerup = PowerUp.glide;
                 charges = 3;
                 break;
         }
