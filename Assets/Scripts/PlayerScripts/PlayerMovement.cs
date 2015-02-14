@@ -65,6 +65,11 @@ public class PlayerMovement : MonoBehaviour
                 gameObject.rigidbody2D.gravityScale = gravityScale;
                 animationBoard.FlappyMode = true;
                 break;
+            case LevelTypeManager.Level.gravityFlip:
+                gameObject.rigidbody2D.gravityScale = gravityScale;
+                animationBoard.FlappyMode = false;
+                jumpVel = jumpVel/8;
+                break;
             default:
                 gameObject.rigidbody2D.gravityScale = gravityScale;
                 break;
@@ -261,7 +266,7 @@ public class PlayerMovement : MonoBehaviour
                 transform.position = worldPos;
             }
         }
-
+        onTheGroundLast = onTheGround;
 	}
 
     void resetJumpTImer()
@@ -382,7 +387,8 @@ public class PlayerMovement : MonoBehaviour
 
     void flipGravity()
     {
-        gameObject.rigidbody2D.gravityScale = -gameObject.rigidbody2D.gravityScale;
+        gravityScale = -gravityScale;
+        gameObject.rigidbody2D.gravityScale = gravityScale;
         jumpVel = -jumpVel;
         rayDownDir = -rayDownDir;
 
