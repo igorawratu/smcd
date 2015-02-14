@@ -7,9 +7,9 @@ public class PlayerMovement : MonoBehaviour
     Vector3 moveVel = Vector3.zero;
     public Vector3 rightAcceleration = Vector3.zero;
     public Vector3 maxVel = Vector3.zero;
-    public float jumpVel = 0.0f;
     public float jumpBoostVel = 0.0f;
     public float jumpTimeDelay = 0.4f;
+    public float flappyJumpTimeDelay = 0.4f;
     float tempSpeedBoost = 0.0f;
     bool jumpDelay = true;
     bool canDoubleJump = false;
@@ -32,6 +32,14 @@ public class PlayerMovement : MonoBehaviour
 
     public float gravityScale = 8;
     public float lowGravityScale = 8;
+    public float flappyGravityScale = 8;
+    public float flipGravityScale = 8;
+
+    public float jumpVel = 0.0f;
+    public float flappyJumpVel = 0.0f;
+    public float lowGravityJumpVel = 0.0f;
+    public float gravFlipJumpVel = 0.0f;
+
     PlayerPowerups powerUps;
 	// Use this for initialization
 	void Start () 
@@ -52,18 +60,18 @@ public class PlayerMovement : MonoBehaviour
         {
             case LevelTypeManager.Level.lowGravity:
                 gameObject.rigidbody2D.gravityScale = lowGravityScale;
-                jumpVel = jumpVel/1.5f;
+                jumpVel = lowGravityJumpVel;
                 break;
             case LevelTypeManager.Level.flappyBird:
-                gameObject.rigidbody2D.gravityScale = lowGravityScale;
+                gameObject.rigidbody2D.gravityScale = flappyGravityScale;
                 animationBoard.FlappyMode = true;
-                jumpTimeDelay = jumpTimeDelay / 2.0f;
-                jumpVel = jumpVel/2;
+                jumpTimeDelay = flappyJumpTimeDelay;
+                jumpVel = flappyJumpVel;
                 break;
             case LevelTypeManager.Level.gravityFlip:
-                gameObject.rigidbody2D.gravityScale = gravityScale;
+                gameObject.rigidbody2D.gravityScale = flipGravityScale;
                 animationBoard.FlappyMode = false;
-                jumpVel = jumpVel/8;
+                jumpVel = gravFlipJumpVel;
                 break;
             default:
                 gameObject.rigidbody2D.gravityScale = gravityScale;
@@ -215,7 +223,6 @@ public class PlayerMovement : MonoBehaviour
             if (powerUps.currentPowerUp == PlayerPowerups.PowerUp.jumpBoost)
             {
                 vel.y += jumpBoostVel * Time.deltaTime;
-
                 PowerupSounds.inst.playBoostJump();
             }
 
@@ -268,13 +275,12 @@ public class PlayerMovement : MonoBehaviour
             vel.y = 0;
             if (powerUps.currentPowerUp == PlayerPowerups.PowerUp.doubleJump)
             {
-
                 vel.y += jumpVel * Time.deltaTime;
                 PowerupSounds.inst.playGlide();
                 PowerupSounds.inst.playDoubleJump();
                 animationBoard.Jump();
             }
-            else if (powerUps.currentPowerUp == PlayerPowerups.PowerUp.doubleJump)
+            else if (powerUps.currentPowerUp == PlayerPowerups.PowerUp.glide)
             {
                 Invoke("resetGravity", jumpGlideTime);
                 gameObject.rigidbody2D.gravityScale = 0;
@@ -294,12 +300,13 @@ public class PlayerMovement : MonoBehaviour
     
     void flipGravity()
     {
-        gravityScale = -gravityScale;
-        gameObject.rigidbody2D.gravityScale = gravityScale;
+        flipGravityScale = -flipGravityScale;
+        gameObject.rigidbody2D.gravityScale = flipGravityScale;
         jumpVel = -jumpVel;
         rayDownDir = -rayDownDir;
 
         transform.rotation = Quaternion.AngleAxis(flipAngle, Vector3.forward);
+        transform.localScale = new Vector3(-transform.localScale.x,transform.localScale.y,transform.localScale.z);
         if (flipAngle == 180)
         {
             flipAngle = 0;
