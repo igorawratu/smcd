@@ -70,7 +70,8 @@ public class PlayerMovement : MonoBehaviour
                 break;
         }
 	}
-
+    Vector2 rayDownDir = -Vector2.up;
+    float flipAngle = 180;
 	void canFootstepReset()
     {
         canFootstep = true;
@@ -83,7 +84,7 @@ public class PlayerMovement : MonoBehaviour
 
     bool rayCastDown(Vector2 offset)
     {
-        Vector2 dir = -Vector2.up;
+        Vector2 dir = rayDownDir;
         return rayCastFromPlayer(offset, dir, raycastLength);
     }
 
@@ -225,7 +226,6 @@ public class PlayerMovement : MonoBehaviour
                 }
             }
         }
-
         vel = jumpLogic(vel, onTheGround);
         vel = doubleJumpLogic(vel, onTheGround);
         vel = glideJumpLogic(vel, onTheGround);
@@ -292,7 +292,6 @@ public class PlayerMovement : MonoBehaviour
             onTheGround &&
             jumpDelay)
         {
-
             vel.y += jumpVel * Time.deltaTime;
             animationBoard.Jump();
 
@@ -315,6 +314,12 @@ public class PlayerMovement : MonoBehaviour
             {
                 int rnd = Random.Range(0, SoundManager.instance.jumpSounds.Count);
                 audio.PlayOneShot(SoundManager.instance.jumpSounds[rnd], SoundManager.instance.jumpVolume);
+            }
+
+            if (LevelTypeManager.currentLevel == LevelTypeManager.Level.gravityFlip)
+            {
+                Debug.Log("Flip gravity");
+                flipGravity();
             }
         }
         return vel;
@@ -377,7 +382,19 @@ public class PlayerMovement : MonoBehaviour
 
     void flipGravity()
     {
-        gameObject.rigidbody2D.gravityScale = -gravityScale;
+        gameObject.rigidbody2D.gravityScale = -gameObject.rigidbody2D.gravityScale;
+        jumpVel = -jumpVel;
+        rayDownDir = -rayDownDir;
+
+        transform.rotation = Quaternion.AngleAxis(flipAngle, Vector3.forward);
+        if (flipAngle == 180)
+        {
+            flipAngle = 0;
+        }
+        else
+        {
+            flipAngle = 180;
+        }
     }
 
     void resetGravity()
