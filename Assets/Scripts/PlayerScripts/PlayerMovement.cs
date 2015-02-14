@@ -306,6 +306,7 @@ public class PlayerMovement : MonoBehaviour
         rayDownDir = -rayDownDir;
 
         transform.rotation = Quaternion.AngleAxis(flipAngle, Vector3.forward);
+        transform.localScale = new Vector3(-transform.localScale.x,transform.localScale.y,transform.localScale.z);
         if (flipAngle == 180)
         {
             flipAngle = 0;
