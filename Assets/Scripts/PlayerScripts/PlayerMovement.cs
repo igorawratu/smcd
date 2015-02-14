@@ -55,8 +55,10 @@ public class PlayerMovement : MonoBehaviour
                 jumpVel = jumpVel/1.5f;
                 break;
             case LevelTypeManager.Level.flappyBird:
-                gameObject.rigidbody2D.gravityScale = gravityScale;
+                gameObject.rigidbody2D.gravityScale = lowGravityScale;
                 animationBoard.FlappyMode = true;
+                jumpTimeDelay = jumpTimeDelay / 2.0f;
+                jumpVel = jumpVel/2;
                 break;
             case LevelTypeManager.Level.gravityFlip:
                 gameObject.rigidbody2D.gravityScale = gravityScale;
@@ -236,6 +238,18 @@ public class PlayerMovement : MonoBehaviour
                 Debug.Log("Flip gravity");
                 flipGravity();
             }
+        }
+        else if (Input.GetKey(playerKey) &&
+            jumpDelay &&
+            LevelTypeManager.currentLevel == LevelTypeManager.Level.flappyBird)
+        {
+            vel.y = 0;
+            vel.y += jumpVel * Time.deltaTime;
+            animationBoard.Jump();
+            Invoke("resetJumpTImer", jumpTimeDelay);
+            jumpDelay = false;
+            int rnd = Random.Range(0, SoundManager.instance.jumpSounds.Count);
+            audio.PlayOneShot(SoundManager.instance.jumpSounds[rnd], SoundManager.instance.jumpVolume);
         }
         return vel;
     }
