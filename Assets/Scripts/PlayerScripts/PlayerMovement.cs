@@ -16,7 +16,6 @@ public class PlayerMovement : MonoBehaviour
     bool jumpReleased = false;
     bool onTheGroundLast = false;
     bool onTheGround = false;
-    //bool inTheAir = false;
     bool calledFalling = false;
     public KeyCode playerKey;
     public Color playerColour;
@@ -80,23 +79,12 @@ public class PlayerMovement : MonoBehaviour
     {
         return rayCastDown(Vector2.zero);
     }
-
     bool rayCastDown(Vector2 offset)
     {
         Vector2 dir = rayDownDir;
         return rayCastFromPlayer(offset, dir, raycastLength);
     }
-
-    bool rayCastForward()
-    {
-        return rayCastForward(Vector2.zero);
-    }
-    bool rayCastForward(Vector2 offset)
-    {
-        Vector2 dir = Vector2.right;
-        return rayCastFromPlayer(offset, dir, raycastLength);
-    }
-    bool rayCastFromPlayer(Vector2 offset, Vector2 dir, float rayLength)
+    public bool rayCastFromPlayer(Vector2 offset, Vector2 dir, float rayLength)
     {
         Vector2 position = (Vector2)playerSprite.bounds.center;
         Debug.DrawRay(position, dir * rayLength, Color.red);
@@ -117,25 +105,18 @@ public class PlayerMovement : MonoBehaviour
         //Vector2 position = (Vector2)transform.position;
         Vector2 position = (Vector2)playerSprite.bounds.center;
 
-        
-
         onTheGround = false;
         Vector2 xOffset = Vector2.one / 2;
         xOffset.y = 0;
 
-        if(rayCastDown())
+        for (int i = -1; i < 2;i++)
         {
-            onTheGround = true;
+            if (rayCastDown(xOffset*i))
+            {
+                onTheGround = true;
+                break;
+            }
         }
-        else if (rayCastDown(xOffset))
-        {
-            onTheGround = true;
-        }
-        else if (rayCastDown(-xOffset))
-        {
-            onTheGround = true;
-        }
-
         
         if (onTheGround)
         {
@@ -174,26 +155,16 @@ public class PlayerMovement : MonoBehaviour
         }
         vel = jumpLogic(vel, onTheGround);
         vel = doubleJumpLogic(vel, onTheGround);
-        vel = glideJumpLogic(vel, onTheGround);
 
-        //if (vel.x >=   maxVel.x)
-        //{
-        //    vel.x = maxVel.x;
-        //}
         if (vel.x >= VariableSpeed.current + tempSpeedBoost)
         {
             vel.x = VariableSpeed.current + tempSpeedBoost;
         }
-
-        
+                
         gameObject.rigidbody2D.velocity = vel;
-
-
+        
         if (transform.position.x > Camera.main.transform.position.x)
         {
-            //Debug.Log(transform.position.x);
-            //Debug.Log(Camera.main.transform.position.x);
-
             SpriteRenderer sr = gameObject.GetComponentInChildren<SpriteRenderer>();
 
             Vector3 worldPos = Camera.main.ScreenToWorldPoint(new Vector3(Camera.main.pixelWidth, 0.0f, 0.0f));
@@ -225,8 +196,6 @@ public class PlayerMovement : MonoBehaviour
         Invoke("resetTempSpeedBoost", VariableSpeed.currentSpeedBoostTime);
     }
     
-    
-
     void resetTempSpeedBoost()
     {
         tempSpeedBoost = 0.0f;
@@ -278,54 +247,37 @@ public class PlayerMovement : MonoBehaviour
             jumpReleased = true;
         }
         if (Input.GetKey(playerKey) &&
-            powerUps.currentPowerUp == PlayerPowerups.PowerUp.doubleJump &&
             canDoubleJump &&
             jumpDelay &&
             jumpReleased)
         {
             vel.y = 0;
-            vel.y += jumpVel * Time.deltaTime;
+            if (powerUps.currentPowerUp == PlayerPowerups.PowerUp.doubleJump)
+            {
+
+                vel.y += jumpVel * Time.deltaTime;
+                PowerupSounds.inst.playGlide();
+                PowerupSounds.inst.playDoubleJump();
+                animationBoard.Jump();
+            }
+            else if (powerUps.currentPowerUp == PlayerPowerups.PowerUp.doubleJump)
+            {
+                Invoke("resetGravity", jumpGlideTime);
+                gameObject.rigidbody2D.gravityScale = 0;
+            }
+
             
             canDoubleJump = false;
             jumpDelay = false;
             Invoke("resetJumpTImer", jumpTimeDelay);
             jumpReleased = false;
 
-            PowerupSounds.inst.playDoubleJump();
-            animationBoard.Jump();
             //int rnd = Random.Range(0, SoundManager.instance.jumpSounds.Count - 1);
             //audio.PlayOneShot(SoundManager.instance.jumpSounds[rnd], SoundManager.instance.jumpVolume);
         }
         return vel;
     }
-
-    Vector3 glideJumpLogic(Vector3 vel, bool onTheGround)
-    {
-        if (Input.GetKey(playerKey) &&
-            powerUps.currentPowerUp == PlayerPowerups.PowerUp.glide &&
-            canDoubleJump &&
-            jumpDelay &&
-            jumpReleased)
-        {
-            //Debug.Log("Glide!");
-            vel.y = 0;
-
-            canDoubleJump = false;
-            jumpDelay = false;
-
-            Invoke("resetGravity", jumpGlideTime);
-            gameObject.rigidbody2D.gravityScale = 0;
-            Invoke("resetJumpTImer", jumpTimeDelay);
-            jumpReleased = false;
-
-            PowerupSounds.inst.playGlide();
-
-            //int rnd = Random.Range(0, SoundManager.instance.jumpSounds.Count - 1);
-            //audio.PlayOneShot(SoundManager.instance.jumpSounds[rnd], SoundManager.instance.jumpVolume);
-        }
-        return vel;
-    }
-
+    
     void flipGravity()
     {
         gravityScale = -gravityScale;
