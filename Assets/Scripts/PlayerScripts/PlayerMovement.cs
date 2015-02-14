@@ -276,14 +276,14 @@ public class PlayerMovement : MonoBehaviour
             if (powerUps.currentPowerUp == PlayerPowerups.PowerUp.doubleJump)
             {
                 vel.y += jumpVel * Time.deltaTime;
-                PowerupSounds.inst.playGlide();
                 PowerupSounds.inst.playDoubleJump();
                 animationBoard.Jump();
             }
             else if (powerUps.currentPowerUp == PlayerPowerups.PowerUp.glide)
             {
-                Invoke("resetGravity", jumpGlideTime);
                 gameObject.rigidbody2D.gravityScale = 0;
+                Invoke("resetGravity", jumpGlideTime);
+                PowerupSounds.inst.playGlide();
             }
 
             
@@ -319,7 +319,7 @@ public class PlayerMovement : MonoBehaviour
 
     void resetGravity()
     {
-        gameObject.rigidbody2D.gravityScale = gravityScale;
+        gameObject.rigidbody2D.gravityScale = flipGravityScale;
     }
 
 	public void setJumpKey(KeyCode key)
