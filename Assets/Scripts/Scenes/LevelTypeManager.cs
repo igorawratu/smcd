@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class LevelTypeManager : MonoBehaviour {
 
@@ -29,6 +30,8 @@ public class LevelTypeManager : MonoBehaviour {
             return _instance;
         }
     }
+    private List<Level> levelList;
+
     void Awake()
     {
         if (_instance != null && _instance != this)
@@ -40,6 +43,24 @@ public class LevelTypeManager : MonoBehaviour {
             _instance = this;
         }
         DontDestroyOnLoad(gameObject);
+        levelList = new List<Level>();
+    }
+    void fillLevelList()
+    {
+        foreach(Level l in Level.GetValues(typeof(Level)))
+        {
+            levelList.Add(l);
+        }
+    }
+    void setNextLevel()
+    {
+        if(levelList.Count<=0)
+        {
+            fillLevelList();
+        }
+        int index = Random.Range(0, levelList.Count);
+        _currentLevel = levelList[index];
+        levelList.RemoveAt(index);
     }
 	// Use this for initialization
 	void Start () 
@@ -50,8 +71,7 @@ public class LevelTypeManager : MonoBehaviour {
     {
         if (Application.loadedLevelName == "JoinScene")
         {
-            System.Array values = Level.GetValues(typeof(Level));
-            _currentLevel = (Level)values.GetValue(Random.Range(0, values.Length));
+           setNextLevel();
         }
         else if (Application.loadedLevelName == "TitleScreen")
         {
@@ -59,18 +79,17 @@ public class LevelTypeManager : MonoBehaviour {
         }
         else if (Application.loadedLevelName == "EndScene")
         {
-            System.Array values = Level.GetValues(typeof(Level));
-            Level newLevel = (Level)values.GetValue(Random.Range(0, values.Length));
+            setNextLevel();
+            //System.Array values = Level.GetValues(typeof(Level));
+            //Level newLevel = (Level)values.GetValue(Random.Range(0, values.Length));
 
-            //Debug.Log(newLevel);
-            //Debug.Log(_currentLevel);
-            while(_currentLevel == newLevel)
-            {
-                //Debug.Log(newLevel);
-                //Debug.Log(_currentLevel);
-                newLevel = (Level)values.GetValue(Random.Range(0, values.Length));
-            }
-            _currentLevel = newLevel;
+            //while(_currentLevel == newLevel)
+            //{
+            //    //Debug.Log(newLevel);
+            //    //Debug.Log(_currentLevel);
+            //    newLevel = (Level)values.GetValue(Random.Range(0, values.Length));
+            //}
+            //_currentLevel = newLevel;
         }
         else
         {
