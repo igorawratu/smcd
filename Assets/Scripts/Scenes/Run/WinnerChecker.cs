@@ -44,8 +44,9 @@ public class WinnerChecker : MonoBehaviour {
             else CurrentPlayerKeys.Instance.playerScores[winner] = 1;
 
             CurrentPlayerKeys.Instance.lastWinner = winner;
-            
-            audio.PlayOneShot(SoundManager.instance.winSound, SoundManager.instance.winVolume);
+
+            LevelSounds.inst.playWinSound(transform.position);
+            //audio.PlayOneShot(SoundManager.instance.winSound, SoundManager.instance.winVolume);
 
             StartCoroutine(countDown());
             end = true;
