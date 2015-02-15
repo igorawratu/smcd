@@ -57,6 +57,8 @@ public class PlayerMovement : MonoBehaviour
 
         animationBoard.Fall();
         animationBoard.FlappyMode = false;
+	    animationBoard.IntroMode = false;
+
         switch (LevelTypeManager.currentLevel)
         {
             case LevelTypeManager.Level.lowGravity:
