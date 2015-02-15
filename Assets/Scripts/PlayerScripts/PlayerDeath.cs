@@ -4,7 +4,7 @@ using System.Collections;
 public class PlayerDeath : MonoBehaviour {
 
     public GameObject bloodEffect;
-    public GameObject deathSoundObject;
+    //public GameObject deathSoundObject;
 	// Use this for initialization
 	void Start () 
     {
@@ -41,8 +41,8 @@ public class PlayerDeath : MonoBehaviour {
                 bloodEffect.transform.rotation);
             RandomShake.randomShake.PlayShakeX();
 
-            Instantiate(deathSoundObject,transform.position,transform.rotation);
-
+            //Instantiate(deathSoundObject,transform.position,transform.rotation);
+            LevelSounds.inst.playDeath(gameObject.transform.position);
         }
 	}
 }

@@ -137,10 +137,10 @@ public class PlayerMovement : MonoBehaviour
 
             if (canFootstep)
             {
-                int rnd = Random.Range(0, SoundManager.instance.footstepSounds.Count);
-                audio.PlayOneShot(SoundManager.instance.footstepSounds[rnd], SoundManager.instance.footstepVolume);
+                float length = LevelSounds.inst.playFootstep(gameObject.transform.position);
+                
                 canFootstep = false;
-                Invoke("canFootstepReset", SoundManager.instance.footstepSounds[rnd].length);
+                Invoke("canFootstepReset", length);
             }
 
             if (!onTheGroundLast)
@@ -224,7 +224,8 @@ public class PlayerMovement : MonoBehaviour
             if (powerUps.currentPowerUp == PlayerPowerups.PowerUp.jumpBoost)
             {
                 vel.y += jumpBoostVel * Time.deltaTime;
-                PowerupSounds.inst.playBoostJump();
+                //PowerupSounds.inst.playBoostJump();
+                LevelSounds.inst.playPowerup(transform.position);
             }
 
             jumpDelay = false;
@@ -237,8 +238,7 @@ public class PlayerMovement : MonoBehaviour
 
             if (powerUps.currentPowerUp != PlayerPowerups.PowerUp.jumpBoost)
             {
-                int rnd = Random.Range(0, SoundManager.instance.jumpSounds.Count);
-                audio.PlayOneShot(SoundManager.instance.jumpSounds[rnd], SoundManager.instance.jumpVolume);
+                LevelSounds.inst.playJump(transform.position);
             }
 
             if (LevelTypeManager.currentLevel == LevelTypeManager.Level.gravityFlip)
@@ -256,8 +256,7 @@ public class PlayerMovement : MonoBehaviour
             animationBoard.Jump();
             Invoke("resetJumpTImer", jumpTimeDelay);
             jumpDelay = false;
-            int rnd = Random.Range(0, SoundManager.instance.jumpSounds.Count);
-            audio.PlayOneShot(SoundManager.instance.jumpSounds[rnd], SoundManager.instance.jumpVolume);
+            LevelSounds.inst.playJump(transform.position);
         }
         return vel;
     }
@@ -277,17 +276,18 @@ public class PlayerMovement : MonoBehaviour
             if (powerUps.currentPowerUp == PlayerPowerups.PowerUp.doubleJump)
             {
                 vel.y += jumpVel * Time.deltaTime;
-                PowerupSounds.inst.playDoubleJump();
+                //PowerupSounds.inst.playDoubleJump();
                 animationBoard.Jump();
             }
             else if (powerUps.currentPowerUp == PlayerPowerups.PowerUp.glide)
             {
                 gameObject.rigidbody2D.gravityScale = 0;
                 Invoke("resetGravity", jumpGlideTime);
-                PowerupSounds.inst.playGlide();
+                //PowerupSounds.inst.playGlide();
             }
 
-            
+            LevelSounds.inst.playPowerup(transform.position);
+
             canDoubleJump = false;
             jumpDelay = false;
             Invoke("resetJumpTImer", jumpTimeDelay);
