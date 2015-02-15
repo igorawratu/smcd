@@ -78,8 +78,13 @@ public class CritterBehaviour : MonoBehaviour
         if (other.GetComponent<Rigidbody2D>().velocity.y < 0)
             return;
 
-        Instantiate(SplatEffect, transform.position, Quaternion.identity);
-        Destroy(this.gameObject);
+        GameObject splatEffect = (GameObject)Instantiate(SplatEffect, transform.position, Quaternion.identity);
+        splatEffect.SetActive(true);
+
+        GameObject itemGenerator = GameObject.Find("ItemGenerator");
+        GenerateItems igScript = itemGenerator.GetComponent<GenerateItems>();
+        igScript.removeGameObject(gameObject);
+        //Destroy(this.gameObject);
         
     }
 

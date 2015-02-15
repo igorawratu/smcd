@@ -11,7 +11,8 @@ public class AnyKeyStart : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void Update () 
+    {
         if (Input.anyKey && !hasPlayedSound) 
         {
             audio.PlayOneShot(SoundManager.instance.titleAcceptSound, SoundManager.instance.titleAcceptVolume);
