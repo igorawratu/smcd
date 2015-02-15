@@ -11,6 +11,7 @@ public class AnimationBoard : MonoBehaviour
     private int stumble = Animator.StringToHash("stumble");
     private int jump = Animator.StringToHash("jump");
     private int flappyMode = Animator.StringToHash("FlappyMode");
+    private int introMode = Animator.StringToHash("IntroMode");
 
     private void Awake()
     {
@@ -25,6 +26,15 @@ public class AnimationBoard : MonoBehaviour
             animator.SetBool(flappyMode, value);
         }
     }
+
+    public bool IntroMode
+    {
+        set
+        {
+            animator.SetBool(introMode, value);
+        }
+    }
+    
 
     //Trigger Animations
     public void Jump()

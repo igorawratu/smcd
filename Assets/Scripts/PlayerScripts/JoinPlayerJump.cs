@@ -13,27 +13,8 @@ public class JoinPlayerJump : MonoBehaviour {
     public float jumpDelay = 0.3f;
     bool canJump = true;
     public Animator animator;
-
-    private int grounded = Animator.StringToHash("grounded");   
-    //private int idle = Animator.StringToHash("idle");
-    private int falling = Animator.StringToHash("falling");
-    //private int land = Animator.StringToHash("land");
-    private int jump = Animator.StringToHash("jump");
-    
-    //Trigger Animations
-    public void playJump()
-    {
-        animator.SetTrigger(jump);
-        animator.SetBool(grounded, false);
-    }
-    public void playFall()
-    {
-        animator.SetTrigger(falling);
-    }
-    public void playLand()
-    {
-        animator.SetBool(grounded, true);
-    }
+    public AnimationBoard animation;
+   
     //public void playIdle()
     //{
     //    animator.SetTrigger(idle);
@@ -43,10 +24,14 @@ public class JoinPlayerJump : MonoBehaviour {
     {
         mPKey = KeyCode.A;
         vel = Vector2.zero;
+        animation = GetComponentInChildren<AnimationBoard>();
+
     }
 	// Use this for initialization
 	void Start () 
     {
+        animation.IntroMode = true;
+        animation.FlappyMode = false;
 	}
 	
     //// Update is called once per frame
@@ -70,7 +55,7 @@ public class JoinPlayerJump : MonoBehaviour {
             {
                 if (!onTheGroundLast)
                 {
-                    playLand();
+                    animation.Land();
                     calledFalling = false;
                 }
 
@@ -78,7 +63,7 @@ public class JoinPlayerJump : MonoBehaviour {
                 if (Input.GetKey(mPKey) && canJump)
                 {
                     vel = new Vector2(0, jumpVel);
-                    playJump();
+                    animation.Jump();
                     calledFalling = false;
                     canJump = false;
                     //PowerupSounds.inst.playDoubleJump();
@@ -90,7 +75,7 @@ public class JoinPlayerJump : MonoBehaviour {
             {
                 if (!calledFalling && vel.y < 0)
                 {
-                    playFall();
+                    animation.Fall();
                     calledFalling = true;
                 }
             }

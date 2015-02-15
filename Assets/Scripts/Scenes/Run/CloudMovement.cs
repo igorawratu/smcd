@@ -15,6 +15,10 @@ public class CloudMovement : MonoBehaviour {
         SpriteRenderer sr = gameObject.GetComponent<SpriteRenderer>();
         sr.sprite = sprites[r];
         speed = Random.Range(speedRange.x, speedRange.y);
+        //Vector3 pos = gameObject.transform.position;
+        //pos.y += Random.Range(-1.0f, 1.0f);
+        //gameObject.transform.position = pos;
+
 	}
     
 
