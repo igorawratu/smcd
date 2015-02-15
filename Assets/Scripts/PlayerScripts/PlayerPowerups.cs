@@ -28,6 +28,7 @@ public class PlayerPowerups : MonoBehaviour {
     private PowerUp powerup;
     PlayerMovement playerMovement;
     int charges = 0;
+    public int numSmashCharges =1;
 
     public GameObject powerupEffect;
 
@@ -67,6 +68,7 @@ public class PlayerPowerups : MonoBehaviour {
         if (charges <= 0)
         {
             powerup = PowerUp.none;
+            charges = 0;
         }
     }
     public void ActivatePowerUp(string tag)
@@ -81,7 +83,7 @@ public class PlayerPowerups : MonoBehaviour {
                 break;
             case LevelTypeManager.Level.flappyBird:
                 powerup = PowerUp.smash;
-                charges = 3;
+                charges += numSmashCharges;
                 break;
             case LevelTypeManager.Level.gravityFlip:
                 powerup = PowerUp.glide;
