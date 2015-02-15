@@ -55,6 +55,7 @@ public class PlayerMovement : MonoBehaviour
 
         powerUps = gameObject.GetComponent<PlayerPowerups>();
 
+        animationBoard.Fall();
         animationBoard.FlappyMode = false;
         switch (LevelTypeManager.currentLevel)
         {
