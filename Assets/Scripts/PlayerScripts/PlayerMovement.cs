@@ -137,10 +137,10 @@ public class PlayerMovement : MonoBehaviour
 
             if (canFootstep)
             {
-                int rnd = Random.Range(0, SoundManager.instance.footstepSounds.Count);
-                audio.PlayOneShot(SoundManager.instance.footstepSounds[rnd], SoundManager.instance.footstepVolume);
+                float length = LevelSounds.inst.playFootstep(gameObject.transform.position);
+                
                 canFootstep = false;
-                Invoke("canFootstepReset", SoundManager.instance.footstepSounds[rnd].length);
+                Invoke("canFootstepReset", length);
             }
 
             if (!onTheGroundLast)
@@ -238,8 +238,7 @@ public class PlayerMovement : MonoBehaviour
 
             if (powerUps.currentPowerUp != PlayerPowerups.PowerUp.jumpBoost)
             {
-                int rnd = Random.Range(0, SoundManager.instance.jumpSounds.Count);
-                audio.PlayOneShot(SoundManager.instance.jumpSounds[rnd], SoundManager.instance.jumpVolume);
+                LevelSounds.inst.playJump(transform.position);
             }
 
             if (LevelTypeManager.currentLevel == LevelTypeManager.Level.gravityFlip)
@@ -257,8 +256,7 @@ public class PlayerMovement : MonoBehaviour
             animationBoard.Jump();
             Invoke("resetJumpTImer", jumpTimeDelay);
             jumpDelay = false;
-            int rnd = Random.Range(0, SoundManager.instance.jumpSounds.Count);
-            audio.PlayOneShot(SoundManager.instance.jumpSounds[rnd], SoundManager.instance.jumpVolume);
+            LevelSounds.inst.playJump(transform.position);
         }
         return vel;
     }

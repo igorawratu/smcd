@@ -19,6 +19,7 @@ public class Pot : MonoBehaviour
     {
         PotSmashEffect.SetActive(true);
         sr.enabled = false;
+        LevelSounds.inst.playBreakableObject(transform.position);
     }
 
 

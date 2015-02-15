@@ -56,49 +56,58 @@ public class LevelSounds : MonoBehaviour
 	
     //}
 
-    public void playDeath(Vector3 position)
+    public float playDeath(Vector3 position)
     {
         int rnd = Random.Range(0, deathSounds.Count);
         SoundManager.instance.playTemporarySound(deathSounds[rnd], deathVolume, position);
+        return deathSounds[rnd].length;
     }
-    public void playFootstep(Vector3 position)
+    public float playFootstep(Vector3 position)
     {
         int rnd = Random.Range(0, footstepSounds.Count);
         SoundManager.instance.playTemporarySound(footstepSounds[rnd], footstepVolume, position);
+        return footstepSounds[rnd].length;
     }
-    public void playHit(Vector3 position)
+    public float playHit(Vector3 position)
     {
         int rnd = Random.Range(0, hitSounds.Count);
         SoundManager.instance.playTemporarySound(hitSounds[rnd], hitVolume, position);
+        return hitSounds[rnd].length;
     }
-    public void playJump(Vector3 position)
+    public float playJump(Vector3 position)
     {
         int rnd = Random.Range(0, jumpSounds.Count);
         SoundManager.instance.playTemporarySound(jumpSounds[rnd], jumpVolume, position);
+        return jumpSounds[rnd].length;
     }
 
-    public void playPowerup(Vector3 position)
+    public float playPowerup(Vector3 position)
     {
         int rnd = Random.Range(0, powerupSounds.Count);
         SoundManager.instance.playTemporarySound(powerupSounds[rnd], powerupVolume, position);
+        return powerupSounds[rnd].length;
     }
-    public void playPickup(Vector3 position)
+    public float playPickup(Vector3 position)
     {
         int rnd = Random.Range(0, pickupSounds.Count);
         SoundManager.instance.playTemporarySound(pickupSounds[rnd], pickupVolume, position);
+        return pickupSounds[rnd].length;
     }
-    public void playSpawn(Vector3 position)
+    public float playSpawn(Vector3 position)
     {
         int rnd = Random.Range(0, spawnSounds.Count);
         SoundManager.instance.playTemporarySound(spawnSounds[rnd], spawnVolume, position);
+        return spawnSounds[rnd].length;
     }
-    public void playBreakableObject(Vector3 position)
+    public float playBreakableObject(Vector3 position)
     {
         int rnd = Random.Range(0, breakableObjectSounds.Count);
         SoundManager.instance.playTemporarySound(breakableObjectSounds[rnd], breakableObjectVolume, position);
+        return breakableObjectSounds[rnd].length;
     }
-    public void playWinSound(Vector3 position)
+    public float playWinSound(Vector3 position)
     {
         SoundManager.instance.playTemporarySound(winSound, winVolume, position);
+        return winSound.length;
     }
 }
