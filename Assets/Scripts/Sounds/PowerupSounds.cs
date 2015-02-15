@@ -38,46 +38,46 @@ public class PowerupSounds : MonoBehaviour
         inst = this;
     }
 
-    public void playGlide()
-    {
-        int rnd = Random.Range(0, glide.Count);
-        SoundManager.instance.playTemporarySound(glide[rnd], glideVolume);
-    }
-    public void playSmash()
-    {
-        int rnd = Random.Range(0, smash.Count);
-        SoundManager.instance.playTemporarySound(smash[rnd], smashVolume);
-    }
-    public void playDoubleJump()
-    {
-        int rnd = Random.Range(0, boostJump.Count);
-        SoundManager.instance.playTemporarySound(boostJump[rnd], boostJumpVolume);
-    }
-    public void playBoostJump()
-    {
-        int rnd = Random.Range(0, doubleJump.Count);
-        SoundManager.instance.playTemporarySound(doubleJump[rnd], doubleJumpVolume);
-    }
+    //public void playGlide()
+    //{
+    //    int rnd = Random.Range(0, glide.Count);
+    //    SoundManager.instance.playTemporarySound(glide[rnd], glideVolume);
+    //}
+    //public void playSmash()
+    //{
+    //    int rnd = Random.Range(0, smash.Count);
+    //    SoundManager.instance.playTemporarySound(smash[rnd], smashVolume);
+    //}
+    //public void playDoubleJump()
+    //{
+    //    int rnd = Random.Range(0, boostJump.Count);
+    //    SoundManager.instance.playTemporarySound(boostJump[rnd], boostJumpVolume);
+    //}
+    //public void playBoostJump()
+    //{
+    //    int rnd = Random.Range(0, doubleJump.Count);
+    //    SoundManager.instance.playTemporarySound(doubleJump[rnd], doubleJumpVolume);
+    //}
 
-    public void playGlidePickup()
-    {
-        int rnd = Random.Range(0, glidePickup.Count);
-        SoundManager.instance.playTemporarySound(glidePickup[rnd], glidePickupVolume);
-    }
-    public void playSmashPickup()
-    {
-        int rnd = Random.Range(0, smashPickup.Count);
-        SoundManager.instance.playTemporarySound(smashPickup[rnd], smashPickupVolume);
-    }
-    public void playDoubleJumpPickup()
-    {
-        int rnd = Random.Range(0, boostJumpPickup.Count);
-        SoundManager.instance.playTemporarySound(boostJumpPickup[rnd], boostJumpPickupVolume);
-    }
-    public void playBoostJumpPickup()
-    {
-        int rnd = Random.Range(0, doubleJumpPickup.Count);
-        SoundManager.instance.playTemporarySound(doubleJumpPickup[rnd], doubleJumpPickupVolume);
-    }
+    //public void playGlidePickup()
+    //{
+    //    int rnd = Random.Range(0, glidePickup.Count);
+    //    SoundManager.instance.playTemporarySound(glidePickup[rnd], glidePickupVolume);
+    //}
+    //public void playSmashPickup()
+    //{
+    //    int rnd = Random.Range(0, smashPickup.Count);
+    //    SoundManager.instance.playTemporarySound(smashPickup[rnd], smashPickupVolume);
+    //}
+    //public void playDoubleJumpPickup()
+    //{
+    //    int rnd = Random.Range(0, boostJumpPickup.Count);
+    //    SoundManager.instance.playTemporarySound(boostJumpPickup[rnd], boostJumpPickupVolume);
+    //}
+    //public void playBoostJumpPickup()
+    //{
+    //    int rnd = Random.Range(0, doubleJumpPickup.Count);
+    //    SoundManager.instance.playTemporarySound(doubleJumpPickup[rnd], doubleJumpPickupVolume);
+    //}
 
 }

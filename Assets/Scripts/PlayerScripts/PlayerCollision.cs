@@ -74,7 +74,8 @@ public class PlayerCollision : MonoBehaviour
                         rockEffect.transform.rotation);
                     obj = hitFront.collider.gameObject;
                     playerMovement.animationBoard.Hit();
-                    PowerupSounds.inst.playSmash();
+                    //PowerupSounds.inst.playSmash();
+                    LevelSounds.inst.playPowerup(transform.position);
                     powerUps.decrementCharges();
                 }
             }

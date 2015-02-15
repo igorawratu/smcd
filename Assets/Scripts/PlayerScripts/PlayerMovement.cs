@@ -224,7 +224,8 @@ public class PlayerMovement : MonoBehaviour
             if (powerUps.currentPowerUp == PlayerPowerups.PowerUp.jumpBoost)
             {
                 vel.y += jumpBoostVel * Time.deltaTime;
-                PowerupSounds.inst.playBoostJump();
+                //PowerupSounds.inst.playBoostJump();
+                LevelSounds.inst.playPowerup(transform.position);
             }
 
             jumpDelay = false;
@@ -277,17 +278,18 @@ public class PlayerMovement : MonoBehaviour
             if (powerUps.currentPowerUp == PlayerPowerups.PowerUp.doubleJump)
             {
                 vel.y += jumpVel * Time.deltaTime;
-                PowerupSounds.inst.playDoubleJump();
+                //PowerupSounds.inst.playDoubleJump();
                 animationBoard.Jump();
             }
             else if (powerUps.currentPowerUp == PlayerPowerups.PowerUp.glide)
             {
                 gameObject.rigidbody2D.gravityScale = 0;
                 Invoke("resetGravity", jumpGlideTime);
-                PowerupSounds.inst.playGlide();
+                //PowerupSounds.inst.playGlide();
             }
 
-            
+            LevelSounds.inst.playPowerup(transform.position);
+
             canDoubleJump = false;
             jumpDelay = false;
             Invoke("resetJumpTImer", jumpTimeDelay);
