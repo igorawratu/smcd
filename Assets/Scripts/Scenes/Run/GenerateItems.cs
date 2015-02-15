@@ -136,16 +136,20 @@ public class GenerateItems : MonoBehaviour {
         List<GameObject> tempItemList = new List<GameObject>();
         List<GameObject> destroyList = new List<GameObject>();
         foreach(GameObject item in mSpawnedItems) {
+            if(item == null)
+                continue;
             float difx = Camera.main.transform.position.x - item.transform.position.x;
             if(difx < spawnAheadDistance)
                 tempItemList.Add(item);
             else destroyList.Add(item);
 
-            mSpawnedItems = tempItemList;
+            
         }
+        mSpawnedItems = tempItemList;
 
-        foreach(GameObject item in destroyList)
+        foreach(GameObject item in destroyList) {
             Destroy(item);
+        }
     }
 
     private bool spawnObstacle() {
