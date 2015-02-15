@@ -13,6 +13,31 @@ public class JoinPlayerJump : MonoBehaviour {
     public float jumpDelay = 0.3f;
     bool canJump = true;
     public Animator animator;
+
+    private int grounded = Animator.StringToHash("grounded");   
+    //private int idle = Animator.StringToHash("idle");
+    private int falling = Animator.StringToHash("falling");
+    //private int land = Animator.StringToHash("land");
+    private int jump = Animator.StringToHash("jump");
+    
+    //Trigger Animations
+    public void playJump()
+    {
+        animator.SetTrigger(jump);
+        animator.SetBool(grounded, false);
+    }
+    public void playFall()
+    {
+        animator.SetTrigger(falling);
+    }
+    public void playLand()
+    {
+        animator.SetBool(grounded, true);
+    }
+    //public void playIdle()
+    //{
+    //    animator.SetTrigger(idle);
+    //}
     // Use this for initialization
     void Awake()
     {
@@ -22,17 +47,17 @@ public class JoinPlayerJump : MonoBehaviour {
 	// Use this for initialization
 	void Start () 
     {
-
 	}
 	
     //// Update is called once per frame
     //void Update () {
-	
+    bool calledFalling = false;
+    bool onTheGroundLast = false;
     //}
     void FixedUpdate()
     {
         //Debug.Log(animator.GetCurrentAnimatorStateInfo(0).IsName("idle"));
-        if (animator.GetCurrentAnimatorStateInfo(0).IsName("idle"))
+        if (!animator.GetCurrentAnimatorStateInfo(0).IsName("intro"))
         {
             Vector2 position = (Vector2)gameObject.transform.position;
             float raycastLength = 0.5f;
@@ -43,26 +68,42 @@ public class JoinPlayerJump : MonoBehaviour {
 
             if (onTheGround)
             {
+                if (!onTheGroundLast)
+                {
+                    playLand();
+                    calledFalling = false;
+                }
+
                 vel = new Vector2(0, 0);
-            }
-            if (Input.GetKey(mPKey)&&canJump)
-            {
-                if (onTheGround)
+                if (Input.GetKey(mPKey) && canJump)
                 {
                     vel = new Vector2(0, jumpVel);
+                    playJump();
+                    calledFalling = false;
                     canJump = false;
                     //PowerupSounds.inst.playDoubleJump();
                     SoundManager.instance.playMenuJump(transform.position);
                     Invoke("setCanJump", jumpDelay);
                 }
             }
+            else
+            {
+                if (!calledFalling && vel.y < 0)
+                {
+                    playFall();
+                    calledFalling = true;
+                }
+            }
+
             gameObject.transform.position = position + vel*Time.deltaTime;
 
             if (gameObject.transform.position.y < 1)
             {
                 gameObject.transform.position = new Vector2(gameObject.transform.position.x, 1);
             }
+            onTheGroundLast = onTheGround;
         }
+        
     }
     public void setCanJump()
     {
