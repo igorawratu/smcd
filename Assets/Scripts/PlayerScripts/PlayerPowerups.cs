@@ -94,25 +94,28 @@ public class PlayerPowerups : MonoBehaviour {
 
         createPowerupEffect();
 
-        switch (powerup)
-        {
-            case PowerUp.doubleJump:
-                powerUpSpriteRenderer.color = powerUpColours[0];
-                PowerupSounds.inst.playDoubleJumpPickup();
-                break;
-            case PowerUp.glide:
-                powerUpSpriteRenderer.color = powerUpColours[1];
-                PowerupSounds.inst.playGlidePickup();
-                break;
-            case PowerUp.jumpBoost:
-                powerUpSpriteRenderer.color = powerUpColours[2];
-                PowerupSounds.inst.playBoostJumpPickup();
-                break;
-            case PowerUp.smash:
-                powerUpSpriteRenderer.color = powerUpColours[3];
-                PowerupSounds.inst.playSmashPickup();
-                break;
-        }
+        powerUpSpriteRenderer.color = powerUpColours[0];
+        LevelSounds.inst.playPickup(transform.position);
+
+        //switch (powerup)
+        //{
+        //    case PowerUp.doubleJump:
+        //        powerUpSpriteRenderer.color = powerUpColours[0];
+        //        PowerupSounds.inst.playDoubleJumpPickup();
+        //        break;
+        //    case PowerUp.glide:
+        //        powerUpSpriteRenderer.color = powerUpColours[1];
+        //        PowerupSounds.inst.playGlidePickup();
+        //        break;
+        //    case PowerUp.jumpBoost:
+        //        powerUpSpriteRenderer.color = powerUpColours[2];
+        //        PowerupSounds.inst.playBoostJumpPickup();
+        //        break;
+        //    case PowerUp.smash:
+        //        powerUpSpriteRenderer.color = powerUpColours[3];
+        //        PowerupSounds.inst.playSmashPickup();
+        //        break;
+        //}
     }
 
 

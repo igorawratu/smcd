@@ -5,8 +5,6 @@ using System.Collections.Generic;
 [RequireComponent(typeof(AudioSource))]
 public class SoundManager : MonoBehaviour 
 {
-    //public static SoundManager soundManager;
-
     public List<AudioClip> hitSounds;
     public float hitVolume = 1.0f;
 
@@ -101,13 +99,19 @@ public class SoundManager : MonoBehaviour
             playLevelTrack();
         }
 	}
-
+    public void playMusic(AudioClip music,float musicVolume)
+    {
+        audio.loop = true;
+        audio.clip = music;
+        audio.volume = musicVolume;
+        audio.Play();
+    }
     void playLevelTrack()
     {
         //int rnd = getNewTrack();
         //audio.clip = gameMusic[rnd];
         audio.loop = true;
-        bool sameTrack = false;
+        //bool sameTrack = false;
         if (Application.loadedLevelName == "TitleScreen")
         {
             audio.clip = gameMusic[0];
@@ -118,84 +122,58 @@ public class SoundManager : MonoBehaviour
         }
         else
         {
-            int newClip = 0;
-            switch (LevelTypeManager.currentLevel)
-            {
-                case LevelTypeManager.Level.standard:
-                    newClip = 0;
-                    break;
-                case LevelTypeManager.Level.lowGravity:
-                    newClip = 1;
-                    break;
-                case LevelTypeManager.Level.flappyBird:
-                    newClip = 2;
-                    break;
-                case LevelTypeManager.Level.gravityFlip:
-                    newClip = 3;
-                    break;
-            }
+            //int newClip = 0;
+            //switch (LevelTypeManager.currentLevel)
+            //{
+            //    case LevelTypeManager.Level.standard:
+            //        newClip = 0;
+            //        break;
+            //    case LevelTypeManager.Level.lowGravity:
+            //        newClip = 1;
+            //        break;
+            //    case LevelTypeManager.Level.flappyBird:
+            //        newClip = 2;
+            //        break;
+            //    case LevelTypeManager.Level.gravityFlip:
+            //        newClip = 3;
+            //        break;
+            //}
 
-            if (audio.clip != gameMusic[newClip])
-            {
-                audio.clip = gameMusic[newClip];
-            }
-            else
-            {
-                sameTrack = true;
-            }
+            //if (audio.clip != gameMusic[newClip])
+            //{
+            //    audio.clip = gameMusic[newClip];
+            //}
+            //else
+            //{
+            //    sameTrack = true;
+            //}
         }
-        if (!sameTrack)
-        {
-            audio.
-            audio.Play();
-        }
+        audio.Play();
+        //if (!sameTrack)
+        //{
+        //    //audio.
+        //    audio.Play();
+        //}
         //Invoke("playNextTrack", gameMusic[rnd].length);
     }
-    int getNewTrack()
-    {
-        if (firstTrack)
-        {
-            int rnd = Random.Range(0, gameMusic.Count);
-            lastTrackPlayed = rnd;
-            return lastTrackPlayed;
-        }
-
-        if (gameMusic.Count <= 1)
-        {
-            lastTrackPlayed = 1;
-        }
-        else
-        {
-            int rnd = Random.Range(0, gameMusic.Count);
-            while (rnd == lastTrackPlayed)
-            {
-                rnd = Random.Range(0, gameMusic.Count);
-            }
-            lastTrackPlayed = rnd;
-        }
-
-        firstTrack = false;
-        return lastTrackPlayed;
-    }
-
-    public void playTemporarySound(AudioClip clip, float volume)
+    
+    public void playTemporarySound(AudioClip clip, float volume, Vector3 position)
     {
         GameObject tempS = (GameObject)Instantiate(tempSound);
-        tempS.transform.position = transform.position;
+        tempS.transform.position = position;
         TemporarySound script = tempS.GetComponent<TemporarySound>();
         script.play(clip, volume);
     }
     public void sceneChanged()
     {
-        //Debug.Log("scene changed");
         Start();
     }
-	// Update is called once per frame
-	void Update () 
+     //Update is called once per frame
+    void Update () 
     {
         if (!audio.isPlaying)
         {
             playLevelTrack();
         }
-	}
+    }
 }

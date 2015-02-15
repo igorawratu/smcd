@@ -17,8 +17,8 @@ public class EndScreenScript : MonoBehaviour {
         title.text = "GAME OVER:";
         string win = CurrentPlayerKeys.Instance.lastWinner;
         winner.text = "PLAYER " + win + " WINS";
-        record.text = "RECORD:";
-        float offSetNum = 30;
+        record.text = "TOP 5 PLAYERS:";
+        float offSetNum = -50;
 
         List<KeyValuePair<string, int>> sortedScores = new List<KeyValuePair<string, int>>();
         foreach (KeyValuePair<string, int> player in CurrentPlayerKeys.Instance.playerScores){
@@ -26,7 +26,13 @@ public class EndScreenScript : MonoBehaviour {
         }
         sortedScores.Sort((x, y) => y.Value.CompareTo(x.Value));
 
+        int counter = 0;
+
         foreach (KeyValuePair<string, int> player in sortedScores){
+            if(counter >= 5)
+                break;
+            else ++counter;
+
             GameObject canvas = GameObject.Find("Canvas");
             GameObject scoreObj = (GameObject)Instantiate(textPrefab);
             scoreObj.transform.SetParent(canvas.transform);
@@ -34,7 +40,7 @@ public class EndScreenScript : MonoBehaviour {
             //Debug.Log(record.rectTransform.position.x);
             //Debug.Log(record.rectTransform.position.y - 30);
             score.rectTransform.position = new Vector3(record.rectTransform.position.x - 15, record.rectTransform.position.y - offSetNum, 0);
-            offSetNum += 30;
+            offSetNum += 25;
             string pname = player.Key.Contains("Arrow") ? player.Key.Substring(0, player.Key.Length - 5) : player.Key;
             score.text = "PLAYER " + pname + ": " + player.Value;
         }
