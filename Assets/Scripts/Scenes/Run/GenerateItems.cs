@@ -6,7 +6,7 @@ public class GenerateItems : MonoBehaviour {
     public GameObject deadPlayer;
 
     public List<GameObject> obstaclePrefabs;
-    public List<GameObject> environmentalObjectPrefabs;
+    public List<EnvironmentObject> environmentalObjectPrefabs;
     public List<GameObject> powerupPrefabs;
     public List<ObstacleSequenceInfo> obstacleSequences;
     public List<GameObject> consistentObjects;
@@ -22,9 +22,6 @@ public class GenerateItems : MonoBehaviour {
     public float puYPosFarObsMax;
 
     public float spawnAheadDistance;
-
-    public float envObjXJitter;
-    public float envObjYJitter;
 
     public int puPercChance;
     public int envObjPercChance;
@@ -56,6 +53,13 @@ public class GenerateItems : MonoBehaviour {
     public class ObstacleSequenceInfo {
         public List<int> types;
         public List<float> yoffset;
+    }
+
+    [System.Serializable]
+    public class EnvironmentObject {
+        public GameObject envObj;
+        public float envObjXJitter;
+        public float envObjYJitter;
     }
 
 	// Use this for initialization
@@ -220,16 +224,17 @@ public class GenerateItems : MonoBehaviour {
 
         if(mRng.Next(0, 100) < envObjPercChance && mTimeSinceLastEnvObject > envObjTimeLimit)
         {
-            float xJitterMax = envObjXJitter;
-            float xJitterMin = -envObjXJitter;
-            float yJitterMax = envObjYJitter;
-            float yJitterMin = -envObjYJitter;
+            int envObjType = mRng.Next(0, environmentalObjectPrefabs.Count);
+
+            float xJitterMax = environmentalObjectPrefabs[envObjType].envObjXJitter;
+            float xJitterMin = -environmentalObjectPrefabs[envObjType].envObjXJitter;
+            float yJitterMax = environmentalObjectPrefabs[envObjType].envObjYJitter;
+            float yJitterMin = -environmentalObjectPrefabs[envObjType].envObjYJitter;
 
             float ypos = (float)mRng.NextDouble() * (yJitterMax - yJitterMin) + yJitterMin;
             float xpos = (float)mRng.NextDouble() * (xJitterMax - xJitterMin) + xJitterMin;
 
-            int envObjType = mRng.Next(0, environmentalObjectPrefabs.Count);
-            GameObject newEnvObj = (GameObject)Instantiate(environmentalObjectPrefabs[envObjType]);
+            GameObject newEnvObj = (GameObject)Instantiate(environmentalObjectPrefabs[envObjType].envObj);
 
             newEnvObj.transform.position = new Vector2(Camera.main.transform.position.x + spawnAheadDistance + xpos, newEnvObj.transform.position.y + ypos);
             mSpawnedItems.Add(newEnvObj);
