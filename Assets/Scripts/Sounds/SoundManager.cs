@@ -33,6 +33,9 @@ public class SoundManager : MonoBehaviour
     public AudioClip gameOverSound;
     public float gameOverVolume = 1.0f;
 
+    public AudioClip pressStartBuzz;
+    public float pressStartBuzzVolume = 1.0f;
+
     public GameObject tempSound;
 
     public Dictionary<string, AudioClip> powerupSounds;
@@ -98,7 +101,11 @@ public class SoundManager : MonoBehaviour
         playTemporarySound(menuJumpSounds[rnd], menuJumpVolume, position);
         return menuJumpSounds[rnd].length;
     }
-
+    public float playPressStartBuzz(Vector3 position)
+    {
+        playTemporarySound(pressStartBuzz, pressStartBuzzVolume, position);
+        return pressStartBuzz.length;
+    }
     void playLevelTrack()
     {
         audio.loop = true;
