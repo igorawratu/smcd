@@ -57,9 +57,9 @@ public class UpdatePowerup : MonoBehaviour {
 
     void OnTriggerEnter2D(Collider2D _collider){
         if (_collider.tag == "Player"){
-            GameObject itemGenerator = GameObject.Find("ItemGenerator");
+            /*GameObject itemGenerator = GameObject.Find("ItemGenerator");
             GenerateItems igScript = itemGenerator.GetComponent<GenerateItems>();
-            igScript.removeGameObject(gameObject);
+            igScript.removeGameObject(gameObject);*/
 
             GameObject player = GameObject.Find(_collider.name);
             PlayerPowerups powerupScript = player.GetComponent<PlayerPowerups>();
