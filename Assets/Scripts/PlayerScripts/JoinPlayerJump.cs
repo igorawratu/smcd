@@ -25,12 +25,13 @@ public class JoinPlayerJump : MonoBehaviour {
         mPKey = KeyCode.A;
         vel = Vector2.zero;
         animation = GetComponentInChildren<AnimationBoard>();
-        animation.IntroMode = true;
-        animation.FlappyMode = false;
+
     }
 	// Use this for initialization
 	void Start () 
     {
+        animation.IntroMode = true;
+        animation.FlappyMode = false;
 	}
 	
     //// Update is called once per frame
