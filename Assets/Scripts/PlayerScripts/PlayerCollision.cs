@@ -5,6 +5,7 @@ public class PlayerCollision : MonoBehaviour
 {
     public GameObject hitEffect;
     public GameObject rockEffect;
+    public GameObject plankEffect;
 
     public float raycastLengthRight = 0.4f;
     private GameObject mLastCollidedObstacle;
@@ -68,9 +69,16 @@ public class PlayerCollision : MonoBehaviour
                     GenerateItems igScript = itemGenerator.GetComponent<GenerateItems>();
                     igScript.smashRock(hitFront.collider.gameObject);
 
-                    Instantiate(rockEffect,
-                        new Vector3(hitFront.point.x, hitFront.point.y, hitEffect.transform.position.z),
-                        rockEffect.transform.rotation);
+                    if(LevelTypeManager.currentLevel == LevelTypeManager.Level.flappyBird) {
+                        Instantiate(plankEffect,
+                            new Vector3(hitFront.point.x, hitFront.point.y, hitEffect.transform.position.z),
+                            plankEffect.transform.rotation);
+                    }
+                    else {
+                        Instantiate(rockEffect,
+                            new Vector3(hitFront.point.x, hitFront.point.y, hitEffect.transform.position.z),
+                            rockEffect.transform.rotation);
+                    }
                     obj = hitFront.collider.gameObject;
                     playerMovement.animationBoard.Hit();
                     //PowerupSounds.inst.playSmash();
