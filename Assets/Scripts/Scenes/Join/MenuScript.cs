@@ -170,8 +170,7 @@ public class MenuScript : MonoBehaviour {
                             Vector3 newXPt = Camera.main.ScreenToWorldPoint(xPt);
                             player.transform.position = new Vector3(newXPt.x, 1, 0);
                                 
-                            GameObject spacerObject = player.transform.FindChild("spacer").gameObject;
-                            GameObject keyText = spacerObject.transform.FindChild("KeyText").gameObject;
+                            GameObject keyText = player.transform.FindChild("KeyText").gameObject;
 
                             TextMesh tm = keyText.GetComponent<TextMesh>();
                             tm.text = keyCodes[i].ToString();
