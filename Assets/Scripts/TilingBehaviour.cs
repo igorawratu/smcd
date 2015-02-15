@@ -34,7 +34,7 @@ public class TilingBehaviour : MonoBehaviour
                 setSprite(tileArr[i, j]);
 
                 Vector3 pos;
-                if (tilingYFlipped)
+                if (!tilingYFlipped)
                 {
                     pos = transform.position + new Vector3(tileSize.x * i, tileSize.y * -j, 0.0f);
                 }
