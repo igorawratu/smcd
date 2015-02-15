@@ -147,20 +147,24 @@ public class PlayerMovement : MonoBehaviour
 
             if (!onTheGroundLast)
             {
+                Debug.Log("landed");
                 animationBoard.Land();
-                calledFalling = false;
+                //calledFalling = false;
             }
         }
         else
         {
+            Debug.Log(vel.y);
             if (LevelTypeManager.currentLevel==LevelTypeManager.Level.gravityFlip)
             {
                 animationBoard.Fall();
+                Debug.Log("falling");
             }
-            else if (vel.y <= 0)
+            else if (vel.y < 0)
             {
                 if (!calledFalling)
                 {
+                    Debug.Log("falling");
                     animationBoard.Fall();
                     calledFalling = true;
                 }
