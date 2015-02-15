@@ -9,10 +9,12 @@ public class GenerateItems : MonoBehaviour {
     public List<GameObject> environmentalObjectPrefabs;
     public List<GameObject> powerupPrefabs;
     public List<ObstacleSequenceInfo> obstacleSequences;
+    public List<GameObject> consistentObjects;
 
     public float powerupTimeLimit;
     public float obstacleTimeLimit;
     public float envObjTimeLimit;
+    public float cObjTimeLimit;
 
     public float puYNearObsMin;
     public float puYNearObsMax;
@@ -31,6 +33,8 @@ public class GenerateItems : MonoBehaviour {
     public int obstacleTypeTimer;
 
     public float obsSeqSpacing;
+
+    public float consistentObjDistance;
 
     
 
@@ -65,6 +69,7 @@ public class GenerateItems : MonoBehaviour {
         mTimeSinceLastObstacle = 0;
         mSequenceTimer = 0;
         mObstacleSequenceTypes = 1;
+        mTimeSinceLastConsObj = 0;
 	}
 	
 	// Update is called once per frame
@@ -82,6 +87,9 @@ public class GenerateItems : MonoBehaviour {
             itemCreated = true;
 
         if(spawnPowerup())
+            itemCreated = true;
+
+        if(spawnConsistenObject())
             itemCreated = true;
 
         if(itemCreated)
@@ -229,6 +237,39 @@ public class GenerateItems : MonoBehaviour {
        
     }
 
+    private bool spawnConsistenObject() {
+        if(consistentObjects.Count == 0)
+            return false;
+
+        mTimeSinceLastConsObj += Time.deltaTime;
+
+        if(mTimeSinceLastConsObj > cObjTimeLimit) {
+            int objToSpawn = mRng.Next(0, consistentObjects.Count);
+
+            Vector2 rayFrom = new Vector2(Camera.main.transform.position.x + spawnAheadDistance, consistentObjects[objToSpawn].transform.position.y + 1);
+            Vector2 rayDir = new Vector2(1, 0);
+
+            bool obsToLeft = Physics2D.Raycast(rayFrom, -rayDir, consistentObjDistance);
+            bool obsToRight = Physics2D.Raycast(rayFrom, rayDir, consistentObjDistance);
+
+            if(!(obsToLeft || obsToRight)) {
+                GameObject newConsObj = (GameObject)Instantiate(consistentObjects[objToSpawn]);
+
+                newConsObj.transform.position = new Vector2(Camera.main.transform.position.x + spawnAheadDistance, consistentObjects[objToSpawn].transform.position.y);
+                mSpawnedItems.Add(newConsObj);
+
+                mTimeSinceLastConsObj = 0;
+
+                return true;
+            }
+            
+            return false;
+        }
+        
+        return false;
+
+    }
+
     private List<int> generateSequenceFromLong(int _inSeq) {
         int mod = _inSeq;
         List<int> seq = new List<int>();
@@ -287,4 +328,5 @@ public class GenerateItems : MonoBehaviour {
     private float mTimeSinceLastEnvObject;
     private List<GameObject> mSpawnedItems;
     private int mObstacleSequenceTypes;
+    private float mTimeSinceLastConsObj;
 }
