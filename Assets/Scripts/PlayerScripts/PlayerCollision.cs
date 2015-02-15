@@ -53,8 +53,7 @@ public class PlayerCollision : MonoBehaviour
 
                     if (powerUps.currentPowerUp != PlayerPowerups.PowerUp.smash)
                     {
-                        int rnd = Random.Range(0, SoundManager.instance.hitSounds.Count);
-                        audio.PlayOneShot(SoundManager.instance.hitSounds[rnd], SoundManager.instance.hitVolume);
+                        LevelSounds.inst.playHit(gameObject.transform.position);
                     }
                 }
             }
