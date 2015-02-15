@@ -111,21 +111,21 @@ public class MenuScript : MonoBehaviour {
             floorSize = floorPrefab.transform.renderer.bounds.max - floorPrefab.transform.renderer.bounds.min;
 		groundSize = groundPrefab.transform.renderer.bounds.max - groundPrefab.transform.renderer.bounds.min;
 
-		for (int i = 0; i < floorArr.Length; i++)
-		{
-			floorArr[i] = (GameObject)Instantiate(floorPrefab);
-			setFloorSprite(floorArr[i]);
+        //for (int i = 0; i < floorArr.Length; i++)
+        //{
+        //    floorArr[i] = (GameObject)Instantiate(floorPrefab);
+        //    setFloorSprite(floorArr[i]);
 			
-			Vector3 pos = floorOffset + new Vector3(floorSize.x * i, 0.0f, 0.0f);
-			floorArr[i].transform.position = pos;
-		}
+        //    Vector3 pos = floorOffset + new Vector3(floorSize.x * i, 0.0f, 0.0f);
+        //    floorArr[i].transform.position = pos;
+        //}
 
-		for (int i = 0; i < floorArr.Length; i++)
-		{
-			groundArr[i] = (GameObject)Instantiate(groundPrefab);
-			Vector3 pos = floorOffset + new Vector3(groundSize.x * i, -floorSize.y, 0.0f);
-			groundArr[i].transform.position = pos;
-		}
+        //for (int i = 0; i < floorArr.Length; i++)
+        //{
+        //    groundArr[i] = (GameObject)Instantiate(groundPrefab);
+        //    Vector3 pos = floorOffset + new Vector3(groundSize.x * i, -floorSize.y, 0.0f);
+        //    groundArr[i].transform.position = pos;
+        //}
         CurrentPlayerKeys.Instance.playerKeys.Clear();
 	}
 	

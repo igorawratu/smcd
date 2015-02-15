@@ -25,6 +25,8 @@ public class PlayerSpawner : MonoBehaviour {
 
         mInactivePlayers = new Dictionary<KeyCode, GameObject>();
 
+        startPoint = Camera.main.transform.position.x;
+
 		for (int i = 0; i < CurrentPlayerKeys.Instance.playerKeys.Count; i++) {
 			KeyCode kc = CurrentPlayerKeys.Instance.playerKeys[i];
 			GameObject player = (GameObject) Instantiate(playerPrefab);
