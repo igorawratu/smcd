@@ -75,11 +75,12 @@ public class CritterBehaviour : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.GetComponent<Rigidbody2D>().velocity.y < 0)
-            return;
+        //if (other.GetComponent<Rigidbody2D>().velocity.y < 0)
+        //    return;
 
         GameObject splatEffect = (GameObject)Instantiate(SplatEffect, transform.position, Quaternion.identity);
         splatEffect.SetActive(true);
+        LevelSounds.inst.playBreakableObject(transform.position);
 
         GameObject itemGenerator = GameObject.Find("ItemGenerator");
         GenerateItems igScript = itemGenerator.GetComponent<GenerateItems>();
