@@ -220,7 +220,10 @@ public class PlayerMovement : MonoBehaviour
 
     Vector3 jumpLogic(Vector3 vel, bool onTheGround)
     {
-        if (Input.GetKey(playerKey) &&
+        if(Input.GetKeyUp(playerKey)){
+            jumpDelay = true;
+        }
+        else if (Input.GetKey(playerKey) &&
             onTheGround &&
             jumpDelay)
         {
