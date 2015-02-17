@@ -41,6 +41,10 @@ public class PlayerMovement : MonoBehaviour
     public float gravFlipJumpVel = 0.0f;
 
     PlayerPowerups powerUps;
+    void Awake()
+    {
+        powerUps = gameObject.GetComponent<PlayerPowerups>();
+    }
 	// Use this for initialization
 	void Start () 
     {
@@ -53,7 +57,7 @@ public class PlayerMovement : MonoBehaviour
         playerSprite.color = playerColour;
         playerSprite.sortingOrder = Random.Range(0, 10);
 
-        powerUps = gameObject.GetComponent<PlayerPowerups>();
+        powerUps.createPowerupEffect();
 
         animationBoard.Fall();
         animationBoard.FlappyMode = false;
