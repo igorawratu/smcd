@@ -6,6 +6,7 @@ using UnityEngine.UI;
 [RequireComponent(typeof(AudioSource))]
 public class WinnerChecker : MonoBehaviour {
     public Text gameOver;
+    public Text distanceText;
 
 	// Use this for initialization
 	void Start () {
@@ -18,6 +19,7 @@ public class WinnerChecker : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        distanceText.text = "Distance travelled: " + (int)Camera.main.transform.position.x + "m";
 	}
 
     public void addPlayer(string _player){
