@@ -126,7 +126,8 @@ public class MenuScript : MonoBehaviour {
         //    Vector3 pos = floorOffset + new Vector3(groundSize.x * i, -floorSize.y, 0.0f);
         //    groundArr[i].transform.position = pos;
         //}
-        CurrentPlayerKeys.Instance.playerKeys.Clear();
+        CurrentPlayerKeys.Instance.players.Clear();
+        CurrentPlayerKeys.Instance.playerScores.Clear();
 	}
 	
 	// Update is called once per frame
@@ -136,7 +137,7 @@ public class MenuScript : MonoBehaviour {
             for (int i = 0; i < keyCodes.Length; i++)
             {
                 if (Input.GetKey(keyCodes[i]) &&
-                    !CurrentPlayerKeys.Instance.playerKeys.Contains(MenuScript.keyCodes[i]))
+                    !CurrentPlayerKeys.Instance.playerExists(MenuScript.keyCodes[i]))
                 {
                     float temp = 0;
                     if (keysPressed.TryGetValue(keyCodes[i], out temp))
@@ -144,9 +145,6 @@ public class MenuScript : MonoBehaviour {
                         keysPressed[keyCodes[i]] += Time.deltaTime;
                         if (keysPressed[keyCodes[i]] >= timeToHold)
                         {
-
-                            CurrentPlayerKeys.Instance.playerKeys.Add(keyCodes[i]);
-
                             //Spawn stuff here
                             GameObject canvas = GameObject.Find("Canvas");
                             float xSpawn = Random.Range(45, 100);
@@ -159,7 +157,7 @@ public class MenuScript : MonoBehaviour {
 
                             //Assign player color
                             int colourIndex = CurrentPlayerKeys.Instance.colourNumbers.Pop();
-                            CurrentPlayerKeys.Instance.playerColors.Add(CurrentPlayerKeys.Instance.possibleColors[colourIndex]);
+                            CurrentPlayerKeys.Instance.players.Add(new KeyValuePair<KeyCode, Color>(keyCodes[i], CurrentPlayerKeys.Instance.possibleColors[colourIndex]));
                                 
                             Transform spacer = player.GetComponentInChildren<Transform>();
                             spacer.GetComponentInChildren<SpriteRenderer>().color = CurrentPlayerKeys.Instance.possibleColors[colourIndex];
@@ -197,7 +195,7 @@ public class MenuScript : MonoBehaviour {
                     }
                 }
                 if (Input.GetKeyUp(keyCodes[i]) &&
-                    !CurrentPlayerKeys.Instance.playerKeys.Contains(MenuScript.keyCodes[i]))
+                    !CurrentPlayerKeys.Instance.playerExists(MenuScript.keyCodes[i]))
                 {
                     float temp = -1000;
                     if (keysPressed.TryGetValue(keyCodes[i], out temp))
@@ -235,7 +233,7 @@ public class MenuScript : MonoBehaviour {
 			yield return new WaitForSeconds(1);
 		}
 
-		if (CurrentPlayerKeys.Instance.playerKeys.Count > 0) {
+		if (CurrentPlayerKeys.Instance.players.Count > 0) {
             LevelTypeManager.loadLevel();
             //Application.LoadLevel("RunScene");
 		}

@@ -11,8 +11,8 @@ public class WinnerChecker : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         mPlayersActive = new List<string>();
-        foreach (KeyCode player in CurrentPlayerKeys.Instance.playerKeys){
-            mPlayersActive.Add(player.ToString());
+        foreach (KeyValuePair<KeyCode, Color> player in CurrentPlayerKeys.Instance.players){
+            mPlayersActive.Add(player.Key.ToString());
         }
         end = false;
 	}

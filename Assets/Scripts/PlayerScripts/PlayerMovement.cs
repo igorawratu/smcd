@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 [RequireComponent(typeof(AudioSource))]
 public class PlayerMovement : MonoBehaviour 
@@ -39,6 +40,8 @@ public class PlayerMovement : MonoBehaviour
     public float flappyJumpVel = 0.0f;
     public float lowGravityJumpVel = 0.0f;
     public float gravFlipJumpVel = 0.0f;
+
+    private bool mBtnPressed = false;
 
     PlayerPowerups powerUps;
     void Awake()
@@ -224,6 +227,9 @@ public class PlayerMovement : MonoBehaviour
 
     Vector3 jumpLogic(Vector3 vel, bool onTheGround)
     {
+        if(Input.GetKey(playerKey))
+            mBtnPressed = true;
+
         if(Input.GetKeyUp(playerKey)){
             jumpDelay = true;
         }
@@ -341,4 +347,9 @@ public class PlayerMovement : MonoBehaviour
 		playerKey = key;
 	}
 
+    void OnDestroy() {
+        if(!mBtnPressed) {
+            CurrentPlayerKeys.Instance.removePlayer(new KeyValuePair<KeyCode, Color>(playerKey, playerColour));
+        }
+    }
 }
