@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class WinnerChecker : MonoBehaviour {
     public Text gameOver;
     public Text distanceText;
+    public Text pauseText;
 
 	// Use this for initialization
 	void Start () {
@@ -14,11 +15,25 @@ public class WinnerChecker : MonoBehaviour {
         foreach (KeyValuePair<KeyCode, Color> player in CurrentPlayerKeys.Instance.players){
             mPlayersActive.Add(player.Key.ToString());
         }
-        end = false;
+        mEnd = false;
+        mIsPaused = false;
 	}
 	
 	// Update is called once per frame
 	void Update () {
+        if(Input.GetKeyDown(KeyCode.Escape)){
+            if(!mIsPaused){
+                pauseText.text = "PAUSED";
+                mIsPaused = true;
+                Time.timeScale = 0;
+            }
+            else{
+                pauseText.text = "";
+                mIsPaused = false;
+                Time.timeScale = 1;
+            }
+
+        }
         distanceText.text = "Distance travelled: " + (int)Camera.main.transform.position.x + "m";
 	}
 
@@ -27,7 +42,7 @@ public class WinnerChecker : MonoBehaviour {
     }
 
     public void removePlayer(string _player){
-        if(end)
+        if(mEnd)
             return;
 
         Debug.Log("Alive players: " + mPlayersActive.Count);
@@ -51,7 +66,7 @@ public class WinnerChecker : MonoBehaviour {
             //audio.PlayOneShot(SoundManager.instance.winSound, SoundManager.instance.winVolume);
 
             StartCoroutine(countDown());
-            end = true;
+            mEnd = true;
         }
     }
 
@@ -71,5 +86,6 @@ public class WinnerChecker : MonoBehaviour {
     }
 
     private List<string> mPlayersActive;
-    private bool end;
+    private bool mEnd;
+    private bool mIsPaused;
 }
