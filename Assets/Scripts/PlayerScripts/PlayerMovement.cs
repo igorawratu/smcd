@@ -206,10 +206,10 @@ public class PlayerMovement : MonoBehaviour
     {
         jumpDelay = true;
     }
-    public void Update()
-    {
+    //public void Update()
+    //{
         
-    }
+    //}
 
     public void speedBoost()
     {
