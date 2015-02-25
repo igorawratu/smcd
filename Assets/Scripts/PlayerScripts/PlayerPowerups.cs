@@ -39,7 +39,6 @@ public class PlayerPowerups : MonoBehaviour {
     public Color[] powerUpColours = new Color[4];
     void Awake()
     {
-
         playerMovement = gameObject.GetComponent<PlayerMovement>();
     }
 	// Use this for initialization

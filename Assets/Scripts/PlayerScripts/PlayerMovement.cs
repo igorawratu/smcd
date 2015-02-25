@@ -62,7 +62,6 @@ public class PlayerMovement : MonoBehaviour
 
         powerUps.createPowerupEffect();
 
-        animationBoard.Fall();
         animationBoard.FlappyMode = false;
 	    animationBoard.IntroMode = false;
 
@@ -87,7 +86,10 @@ public class PlayerMovement : MonoBehaviour
                 gameObject.rigidbody2D.gravityScale = gravityScale;
                 break;
         }
+        animationBoard.Fall();
+
 	}
+    
     Vector2 rayDownDir = -Vector2.up;
     float flipAngle = 180;
 	void canFootstepReset()
