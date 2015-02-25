@@ -35,8 +35,28 @@ public class MenuScript : MonoBehaviour {
 
 	public GameObject headTextPrefab;
 
+    bool canAddKey(KeyCode key)
+    {
+        string keyTokens = key.ToString();
+        if (keyTokens == "Escape")
+        {
+            return false;
+        }
+
+        if(keyTokens.Length >= 14)
+        {
+            if (keyTokens.Substring(0, 14) == "JoystickButton")
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
 	// Use this for initialization
-	void Start () {
+	void Start () 
+    {
 		keysPressed = new Dictionary<KeyCode, float>();
         keysSound = new Dictionary<KeyCode, TemporarySound>();
 
@@ -46,35 +66,14 @@ public class MenuScript : MonoBehaviour {
         List<int> numsToDelete = new List<int>();
         for(int i = 0;i< keyCodes.Length ;i++)
         {
-            string keyTokens = keyCodes[i].ToString();
-
-            if (keyTokens.Length < 14)
+            if (canAddKey(keyCodes[i]))
             {
                 keyList.Add(keyCodes[i]);
-            }
-            else
-            {
-                if (keyTokens.Substring(0, 14) != "JoystickButton")
-                {
-                    keyList.Add(keyCodes[i]);
-                    //Debug.Log(keyTokens);
-                    //Debug.Log("to remove");
-                }
+                //Debug.Log(keyCodes[i]);
             }
         }
 
         keyCodes = keyList.ToArray();
-        //for (int i = 0; i < keyCodes.Length; i++)
-        //{
-        //    string keyTokens = keyCodes[i].ToString();
-        //    if (keyTokens.Length >= 8)
-        //    {
-        //        if (keyTokens.Substring(0, 8) == "Joystick")
-        //        {
-        //            Debug.Log(keyTokens);
-        //        }
-        //    }
-        //}
 
 		StartCoroutine(flashText());
 		StartCoroutine(countDown());
