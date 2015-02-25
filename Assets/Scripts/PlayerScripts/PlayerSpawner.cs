@@ -17,6 +17,9 @@ public class PlayerSpawner : MonoBehaviour {
 
 	public float timeToHold = 2;
 
+    float lastFrameTime = 0.0f;
+
+
 	// Use this for initialization
 	void Start () {
 		chosenColours = new List<int>();
@@ -83,7 +86,15 @@ public class PlayerSpawner : MonoBehaviour {
     }
 	
 	// Update is called once per frame
-	void Update () {
+	void Update () 
+    {
+        float realDeltaTime = Time.realtimeSinceStartup - lastFrameTime;
+        lastFrameTime = Time.realtimeSinceStartup;
+        //Debug.Log(realDeltaTime);
+        //Debug.Log(Time.timeSinceLevelLoad);
+        //Debug.Log(Time.time);
+        //Debug.Log(Time.realtimeSinceStartup);
+
         if (CurrentPlayerKeys.Instance.colourNumbers.Count > 0)
         {
             for (int i = 0; i < MenuScript.keyCodes.Length; i++)
@@ -94,7 +105,12 @@ public class PlayerSpawner : MonoBehaviour {
                     float temp = 0;
                     if (enteringPlayers.TryGetValue(MenuScript.keyCodes[i], out temp))
                     {
-                        enteringPlayers[MenuScript.keyCodes[i]] += Time.deltaTime;
+
+                        //Debug.Log(enteringPlayers[MenuScript.keyCodes[i]]);
+                        //Debug.Log(Time.deltaTime);
+                        //enteringPlayers[MenuScript.keyCodes[i]] += Time.deltaTime;
+                        enteringPlayers[MenuScript.keyCodes[i]] += realDeltaTime;
+
                         if (enteringPlayers[MenuScript.keyCodes[i]] >= timeToHold)
                         {
                             Debug.Log("Adding player " + MenuScript.keyCodes[i].ToString());
@@ -108,6 +124,7 @@ public class PlayerSpawner : MonoBehaviour {
                             offset = Random.Range(-1, 1);
                             player.transform.position = new Vector3(startPoint + offset, 0.59f, 0);
                             Debug.Log("Added player " + player.name);
+                            Debug.Log(player.transform.position);
 
                             GameObject wc = GameObject.Find("WinnerChecker");
                             WinnerChecker wcscript = wc.GetComponent<WinnerChecker>();
