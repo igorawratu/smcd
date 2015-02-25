@@ -77,7 +77,10 @@ public class FontLoader : Editor
         int numChars = 0;
         int imgWidth = 0;
         int imgHeight = 0;
-        Stack stringStack = new Stack();
+        int lineHeight = 0;
+        //Stack stringStack = new Stack();
+        List<Dictionary<string, string>> stringList = new List<Dictionary<string,string>>();
+
         foreach (string str in textAsset.text.Split(new char[] { '\n' }, System.StringSplitOptions.RemoveEmptyEntries))
         {
             string s = str.Replace("\" \"", "\"\"");
@@ -89,7 +92,7 @@ public class FontLoader : Editor
                 
                 imgWidth = int.Parse(vars["scaleW"]);
                 imgHeight = int.Parse(vars["scaleH"]);
-
+                lineHeight = int.Parse(vars["lineHeight"]);
             }
             else if (tokens[0] == "chars")
             {
@@ -101,22 +104,84 @@ public class FontLoader : Editor
             {
                 string subStr = s.Substring(tokens[0].Length);
                 Dictionary<string, string> vars = getVariables(subStr);
-                stringStack.Push(vars);
+                //stringStack.Push(vars);
+                stringList.Add(vars);
+            }
+        }
+        int largestCharacterSize = 0;
+        for (int i = 0; i < stringList.Count; i++)
+        {
+            Dictionary<string, string> vars = stringList[i];
+            int newHeight = int.Parse(vars["height"]);
+            if (i == 0)
+            {
+                largestCharacterSize = newHeight;
+            }
+            else
+            {
+                if (newHeight > largestCharacterSize)
+                {
+                    largestCharacterSize = newHeight;
+                }
             }
         }
 
-        CharacterInfo[] chrInfos = new CharacterInfo[stringStack.Count];
+        CharacterInfo[] chrInfos = new CharacterInfo[stringList.Count];
         for (int i = 0; i < chrInfos.Length; i++)
         {
-            Dictionary<string, string> vars = (Dictionary<string, string>)stringStack.Pop();
+            Dictionary<string, string> vars = stringList[i];
 
             chrInfos[i].flipped = false;
             chrInfos[i].index = int.Parse(vars["id"]);
             chrInfos[i].style = FontStyle.Normal;
             chrInfos[i].width = int.Parse(vars["xadvance"]);
             chrInfos[i].size = 0;
-            chrInfos[i].vert = new Rect(int.Parse(vars["xoffset"]), -int.Parse(vars["yoffset"]), int.Parse(vars["width"]), -int.Parse(vars["height"]));
-            chrInfos[i].uv = new Rect(float.Parse(vars["x"]) / imgWidth, 1 - (float.Parse(vars["y"]) + int.Parse(vars["height"])) / imgHeight, float.Parse(vars["width"]) / imgWidth, float.Parse(vars["height"]) / imgWidth);
+            //chrInfos[i].vert = new Rect(int.Parse(vars["xoffset"]), 
+            //    -int.Parse(vars["yoffset"]), 
+            //    int.Parse(vars["width"]), 
+            //    -int.Parse(vars["height"]));
+            //chrInfos[i].uv = new Rect(float.Parse(vars["x"]) / imgWidth, 
+            //    1 - (float.Parse(vars["y"]) + int.Parse(vars["height"])) / imgHeight, 
+            //    float.Parse(vars["width"]) / imgWidth, 
+            //    float.Parse(vars["height"]) / imgWidth);
+
+            //chrInfos[i].vert = new Rect(int.Parse(vars["xoffset"]),
+            //    int.Parse(vars["yoffset"]),
+            //    int.Parse(vars["width"]),
+            //    int.Parse(vars["height"]));
+            //chrInfos[i].uv = new Rect(float.Parse(vars["x"]) / imgWidth,
+            //    1 - (float.Parse(vars["y"]) + int.Parse(vars["height"])) / imgHeight,
+            //    float.Parse(vars["width"]) / imgWidth,
+            //    float.Parse(vars["height"]) / imgHeight);
+
+
+            //Debug.Log(int.Parse(vars["xoffset"]));
+            //Debug.Log(int.Parse(vars["yoffset"]));
+            //Debug.Log(int.Parse(vars["width"]));
+            //Debug.Log(int.Parse(vars["height"]));
+
+            chrInfos[i].vert = new Rect(0,
+                -largestCharacterSize,
+                int.Parse(vars["width"]),
+                int.Parse(vars["height"]));
+            chrInfos[i].uv = new Rect(float.Parse(vars["x"]) / imgWidth,
+                1 - (float.Parse(vars["y"]) + int.Parse(vars["height"])) / imgHeight + float.Parse(vars["height"]) / imgHeight,
+                float.Parse(vars["width"]) / imgWidth,
+                -float.Parse(vars["height"]) / imgHeight);
+
+
+
+            //chrInfos[i].vert = new Rect(int.Parse(vars["xoffset"]), -int.Parse(vars["yoffset"]), int.Parse(vars["width"]), int.Parse(vars["height"]));
+            //chrInfos[i].uv = new Rect(float.Parse(vars["x"]) / imgWidth,
+            //    1 - (float.Parse(vars["y"]) + int.Parse(vars["height"])) / imgHeight,
+            //    float.Parse(vars["width"]) / imgWidth,
+            //    -float.Parse(vars["height"]) / imgHeight);
+            ////chrInfos[i].uv = new Rect(float.Parse(vars["x"]) / imgWidth, 
+            ////    (float.Parse(vars["y"]) + int.Parse(vars["height"])) / imgHeight, 
+            ////    float.Parse(vars["width"]) / imgWidth, 
+            ////    float.Parse(vars["height"]) / imgWidth);
+        
+        
         }
 
         Font font = (Font)serializedFont.objectReferenceValue;

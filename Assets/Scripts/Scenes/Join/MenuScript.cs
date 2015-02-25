@@ -172,6 +172,9 @@ public class MenuScript : MonoBehaviour {
 
                             TextMesh tm = keyText.GetComponent<TextMesh>();
                             tm.text = keyCodes[i].ToString();
+
+                            tm.color = CurrentPlayerKeys.Instance.possibleColors[colourIndex];
+
                             if (tm.text.Contains("Arrow"))
                             {
                                 tm.text = tm.text.Substring(0, tm.text.Length - 5);

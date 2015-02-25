@@ -34,7 +34,8 @@ public class WinnerChecker : MonoBehaviour {
             }
 
         }
-        distanceText.text = "Distance travelled: " + (int)Camera.main.transform.position.x + "m";
+        //distanceText.text = "Distance travelled: " + (int)Camera.main.transform.position.x + "m";
+        distanceText.text = (int)Camera.main.transform.position.x + "m";
 	}
 
     public void addPlayer(string _player){
