@@ -27,8 +27,8 @@ public class PlayerSpawner : MonoBehaviour {
 
         startPoint = Camera.main.transform.position.x;
 
-		for (int i = 0; i < CurrentPlayerKeys.Instance.playerKeys.Count; i++) {
-			KeyCode kc = CurrentPlayerKeys.Instance.playerKeys[i];
+		for (int i = 0; i < CurrentPlayerKeys.Instance.players.Count; i++) {
+			KeyCode kc = CurrentPlayerKeys.Instance.players[i].Key;
 			GameObject player = (GameObject) Instantiate(playerPrefab);
 			player.name = kc.ToString();
 			player.GetComponent<PlayerMovement>().setJumpKey(kc);
@@ -37,10 +37,10 @@ public class PlayerSpawner : MonoBehaviour {
             offset = Random.Range(-2.5f, 2.5f);
             player.transform.position = new Vector3(startPoint + offset, 0.59f, 0);
 
-			player.GetComponent<PlayerMovement>().playerColour = CurrentPlayerKeys.Instance.playerColors[i];
+			player.GetComponent<PlayerMovement>().playerColour = CurrentPlayerKeys.Instance.players[i].Value;
 		}
 
-        if (CurrentPlayerKeys.Instance.playerKeys.Count==0)
+        if (CurrentPlayerKeys.Instance.players.Count==0)
         {
             KeyCode kc = KeyCode.UpArrow;
             GameObject player = (GameObject)Instantiate(playerPrefab);
@@ -89,7 +89,7 @@ public class PlayerSpawner : MonoBehaviour {
             for (int i = 0; i < MenuScript.keyCodes.Length; i++)
             {
                 if (Input.GetKey(MenuScript.keyCodes[i]) &&
-                    !CurrentPlayerKeys.Instance.playerKeys.Contains(MenuScript.keyCodes[i]))
+                    !CurrentPlayerKeys.Instance.playerExists(MenuScript.keyCodes[i]))
                 {
                     float temp = 0;
                     if (enteringPlayers.TryGetValue(MenuScript.keyCodes[i], out temp))
@@ -97,8 +97,6 @@ public class PlayerSpawner : MonoBehaviour {
                         enteringPlayers[MenuScript.keyCodes[i]] += Time.deltaTime;
                         if (enteringPlayers[MenuScript.keyCodes[i]] >= timeToHold)
                         {
-                            CurrentPlayerKeys.Instance.playerKeys.Add(MenuScript.keyCodes[i]);
-
                             Debug.Log("Adding player " + MenuScript.keyCodes[i].ToString());
                             //Spawn stuff here								
                             GameObject player = (GameObject)Instantiate(playerPrefab);
@@ -117,7 +115,7 @@ public class PlayerSpawner : MonoBehaviour {
 
                             //Assign player color
                             int colourIndex = CurrentPlayerKeys.Instance.colourNumbers.Pop();
-                            CurrentPlayerKeys.Instance.playerColors.Add(CurrentPlayerKeys.Instance.possibleColors[colourIndex]);
+                            CurrentPlayerKeys.Instance.players.Add(new KeyValuePair<KeyCode, Color>(MenuScript.keyCodes[i], CurrentPlayerKeys.Instance.possibleColors[colourIndex]));
 
                             player.GetComponent<PlayerMovement>().playerColour = CurrentPlayerKeys.Instance.possibleColors[colourIndex];
 
@@ -139,7 +137,7 @@ public class PlayerSpawner : MonoBehaviour {
                 }
 
                 if (Input.GetKeyUp(MenuScript.keyCodes[i]) &&
-                    !CurrentPlayerKeys.Instance.playerKeys.Contains(MenuScript.keyCodes[i]))
+                    !CurrentPlayerKeys.Instance.playerExists(MenuScript.keyCodes[i]))
                 {
                     
                     float temp = -1000;
