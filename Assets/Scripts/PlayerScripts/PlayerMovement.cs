@@ -286,11 +286,17 @@ public class PlayerMovement : MonoBehaviour
         {
             jumpReleased = true;
         }
+        if (powerUps.currentPowerUp != PlayerPowerups.PowerUp.doubleJump &&
+            powerUps.currentPowerUp != PlayerPowerups.PowerUp.doubleJump)
+            return vel;
+
         if (Input.GetKey(playerKey) &&
             canDoubleJump &&
             jumpDelay &&
-            jumpReleased)
+            jumpReleased
+            )
         {
+
             vel.y = 0;
             if (powerUps.currentPowerUp == PlayerPowerups.PowerUp.doubleJump)
             {
