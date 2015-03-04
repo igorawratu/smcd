@@ -22,11 +22,11 @@ public class UpdatePowerup : MonoBehaviour {
         origin = 0;
 
         if (mPattern == PowerupPattern.LR){
-            gameObject.rigidbody2D.velocity = new Vector2(4, 0);
+            gameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(4, 0);
         }
         else if (mPattern == PowerupPattern.UD)
         {
-            gameObject.rigidbody2D.velocity = new Vector2(0, 2);
+            gameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(0, 2);
         }
         else if (mPattern == PowerupPattern.CIRCLE)
         {
@@ -42,12 +42,12 @@ public class UpdatePowerup : MonoBehaviour {
 	void FixedUpdate(){
         if (mPattern == PowerupPattern.LR){
             if (gameObject.transform.position.x < center.x - 3 || gameObject.transform.position.x > center.x + 3)
-                gameObject.rigidbody2D.velocity = -gameObject.rigidbody2D.velocity;
+                gameObject.GetComponent<Rigidbody2D>().velocity = -gameObject.GetComponent<Rigidbody2D>().velocity;
         }
         else if (mPattern == PowerupPattern.UD)
         {
             if (gameObject.transform.position.y < center.y - 0.5 || gameObject.transform.position.y > center.y + 2.5)
-                gameObject.rigidbody2D.velocity = -gameObject.rigidbody2D.velocity;
+                gameObject.GetComponent<Rigidbody2D>().velocity = -gameObject.GetComponent<Rigidbody2D>().velocity;
         }
         else if (mPattern == PowerupPattern.CIRCLE)
         {

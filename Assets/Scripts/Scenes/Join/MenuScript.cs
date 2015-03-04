@@ -107,8 +107,8 @@ public class MenuScript : MonoBehaviour {
         }
 
 
-            floorSize = floorPrefab.transform.renderer.bounds.max - floorPrefab.transform.renderer.bounds.min;
-		groundSize = groundPrefab.transform.renderer.bounds.max - groundPrefab.transform.renderer.bounds.min;
+            floorSize = floorPrefab.transform.GetComponent<Renderer>().bounds.max - floorPrefab.transform.GetComponent<Renderer>().bounds.min;
+		groundSize = groundPrefab.transform.GetComponent<Renderer>().bounds.max - groundPrefab.transform.GetComponent<Renderer>().bounds.min;
 
         //for (int i = 0; i < floorArr.Length; i++)
         //{

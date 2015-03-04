@@ -18,13 +18,13 @@ public class DeadPlayer : MonoBehaviour {
         mLevel = LevelTypeManager.currentLevel;
 
         if(mLevel == LevelTypeManager.Level.lowGravity)
-            rigidbody2D.gravityScale = lowGravityScale;
+            GetComponent<Rigidbody2D>().gravityScale = lowGravityScale;
         else if(mLevel == LevelTypeManager.Level.gravityFlip)
-            rigidbody2D.gravityScale = 0;
-        else rigidbody2D.gravityScale = normalGravityScale;
+            GetComponent<Rigidbody2D>().gravityScale = 0;
+        else GetComponent<Rigidbody2D>().gravityScale = normalGravityScale;
 
         inverseGravityVel = -10;
-        gameObject.rigidbody2D.velocity = new Vector2(gameObject.rigidbody2D.velocity.x, -10);
+        gameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(gameObject.GetComponent<Rigidbody2D>().velocity.x, -10);
     }
 
 	void Start () {
@@ -71,18 +71,18 @@ public class DeadPlayer : MonoBehaviour {
 
             bool onTheGround = Physics2D.Raycast(position, down, raycastLength, ~mask.value);
             if(onTheGround)
-                gameObject.rigidbody2D.velocity = new Vector2(gameObject.rigidbody2D.velocity.x, 20);
+                gameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(gameObject.GetComponent<Rigidbody2D>().velocity.x, 20);
         }
     }
 
     private void flap() {
         Vector3 worldPos = Camera.main.ViewportToWorldPoint(new Vector3(1, 1, Camera.main.nearClipPlane));
         if(Input.GetKey(mPKey) && gameObject.transform.position.y < worldPos.y - 0.5f) {
-            gameObject.rigidbody2D.velocity = new Vector2(gameObject.rigidbody2D.velocity.x, 20);
+            gameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(gameObject.GetComponent<Rigidbody2D>().velocity.x, 20);
 
             if(gameObject.transform.position.y > worldPos.y) {
                 gameObject.transform.position = new Vector2(gameObject.transform.position.x, worldPos.y);
-                gameObject.rigidbody2D.velocity = new Vector2(gameObject.rigidbody2D.velocity.x, 0);
+                gameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(gameObject.GetComponent<Rigidbody2D>().velocity.x, 0);
             }
         }
     }
@@ -100,7 +100,7 @@ public class DeadPlayer : MonoBehaviour {
             bool canjump = Physics2D.Raycast(position, cast, raycastLength, ~mask.value);
             if(canjump) {
                 inverseGravityVel *= -1;
-                gameObject.rigidbody2D.velocity = new Vector2(gameObject.rigidbody2D.velocity.x, inverseGravityVel);
+                gameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(gameObject.GetComponent<Rigidbody2D>().velocity.x, inverseGravityVel);
             }
         }
     }

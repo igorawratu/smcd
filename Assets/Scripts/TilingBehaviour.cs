@@ -23,7 +23,7 @@ public class TilingBehaviour : MonoBehaviour
     {
         gameObject.name = tilePrefab.name + " tiled";
         tileArr = new GameObject[numberOfTiles, numberOfTilesY];
-        tileSize = tilePrefab.transform.renderer.bounds.max - tilePrefab.transform.renderer.bounds.min;
+        tileSize = tilePrefab.transform.GetComponent<Renderer>().bounds.max - tilePrefab.transform.GetComponent<Renderer>().bounds.min;
         
         for (int i = 0; i < numberOfTiles; i++)
         {

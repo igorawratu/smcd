@@ -67,17 +67,17 @@ public class SoundManager : MonoBehaviour
     {
         if (Application.loadedLevelName == "JoinScene")
         {
-            audio.clip = introSound;
-            audio.volume = introVolume;
-            audio.loop = true;
-            audio.Play();
+            GetComponent<AudioSource>().clip = introSound;
+            GetComponent<AudioSource>().volume = introVolume;
+            GetComponent<AudioSource>().loop = true;
+            GetComponent<AudioSource>().Play();
         }
         else if (Application.loadedLevelName == "TitleScreen")
         {
-            audio.clip = SoundManager.instance.titleSound;
-            audio.volume = SoundManager.instance.titleVolume;
-            audio.loop = false;
-            audio.Play();
+            GetComponent<AudioSource>().clip = SoundManager.instance.titleSound;
+            GetComponent<AudioSource>().volume = SoundManager.instance.titleVolume;
+            GetComponent<AudioSource>().loop = false;
+            GetComponent<AudioSource>().Play();
         }
         else if (Application.loadedLevelName == "EndScene")
         {
@@ -90,10 +90,10 @@ public class SoundManager : MonoBehaviour
 	}
     public void playMusic(AudioClip music,float musicVolume)
     {
-        audio.loop = true;
-        audio.clip = music;
-        audio.volume = musicVolume;
-        audio.Play();
+        GetComponent<AudioSource>().loop = true;
+        GetComponent<AudioSource>().clip = music;
+        GetComponent<AudioSource>().volume = musicVolume;
+        GetComponent<AudioSource>().Play();
     }
     public float playMenuJump(Vector3 position)
     {
@@ -108,17 +108,17 @@ public class SoundManager : MonoBehaviour
     }
     void playLevelTrack()
     {
-        audio.loop = true;
+        GetComponent<AudioSource>().loop = true;
         if (Application.loadedLevelName == "TitleScreen")
         {
-            audio.clip = gameMusic[0];
-            audio.volume = musicVolume;
+            GetComponent<AudioSource>().clip = gameMusic[0];
+            GetComponent<AudioSource>().volume = musicVolume;
         }
         else if (Application.loadedLevelName == "JoinScene")
         {
 
         }
-        audio.Play();
+        GetComponent<AudioSource>().Play();
     }
     
     public void playTemporarySound(AudioClip clip, float volume, Vector3 position)
@@ -135,7 +135,7 @@ public class SoundManager : MonoBehaviour
      //Update is called once per frame
     void Update () 
     {
-        if (!audio.isPlaying)
+        if (!GetComponent<AudioSource>().isPlaying)
         {
             playLevelTrack();
         }

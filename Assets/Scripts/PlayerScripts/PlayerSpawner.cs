@@ -64,7 +64,7 @@ public class PlayerSpawner : MonoBehaviour {
         mInactivePlayers.Remove(_kc);
         player.SetActive(true);
             
-        player.rigidbody2D.velocity = new Vector2(VariableSpeed.current, 10);
+        player.GetComponent<Rigidbody2D>().velocity = new Vector2(VariableSpeed.current, 10);
 
         offset = Random.Range(-1f, 1f);
         Vector3 spawnPos = Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, Camera.main.nearClipPlane));

@@ -52,9 +52,9 @@ public class PlayerMovement : MonoBehaviour
 	void Start () 
     {
 
-        Vector3 vel = gameObject.rigidbody2D.velocity;
+        Vector3 vel = gameObject.GetComponent<Rigidbody2D>().velocity;
         vel.x = VariableSpeed.current;
-        gameObject.rigidbody2D.velocity = vel;
+        gameObject.GetComponent<Rigidbody2D>().velocity = vel;
         jumpDelay = true;
         playerSprite = gameObject.GetComponentInChildren<SpriteRenderer>();
         playerSprite.color = playerColour;
@@ -68,22 +68,22 @@ public class PlayerMovement : MonoBehaviour
         switch (LevelTypeManager.currentLevel)
         {
             case LevelTypeManager.Level.lowGravity:
-                gameObject.rigidbody2D.gravityScale = lowGravityScale;
+                gameObject.GetComponent<Rigidbody2D>().gravityScale = lowGravityScale;
                 jumpVel = lowGravityJumpVel;
                 break;
             case LevelTypeManager.Level.flappyBird:
-                gameObject.rigidbody2D.gravityScale = flappyGravityScale;
+                gameObject.GetComponent<Rigidbody2D>().gravityScale = flappyGravityScale;
                 animationBoard.FlappyMode = true;
                 jumpTimeDelay = flappyJumpTimeDelay;
                 jumpVel = flappyJumpVel;
                 break;
             case LevelTypeManager.Level.gravityFlip:
-                gameObject.rigidbody2D.gravityScale = flipGravityScale;
+                gameObject.GetComponent<Rigidbody2D>().gravityScale = flipGravityScale;
                 animationBoard.FlappyMode = false;
                 jumpVel = gravFlipJumpVel;
                 break;
             default:
-                gameObject.rigidbody2D.gravityScale = gravityScale;
+                gameObject.GetComponent<Rigidbody2D>().gravityScale = gravityScale;
                 break;
         }
         animationBoard.Fall();
@@ -121,7 +121,7 @@ public class PlayerMovement : MonoBehaviour
 	// Update is called once per frame
 	void FixedUpdate () 
     {
-        Vector3 vel = gameObject.rigidbody2D.velocity;
+        Vector3 vel = gameObject.GetComponent<Rigidbody2D>().velocity;
         vel += rightAcceleration*Time.deltaTime;
 
         //Vector2 position = (Vector2)transform.position;
@@ -187,14 +187,14 @@ public class PlayerMovement : MonoBehaviour
             vel.x = VariableSpeed.current + tempSpeedBoost;
         }
                 
-        gameObject.rigidbody2D.velocity = vel;
+        gameObject.GetComponent<Rigidbody2D>().velocity = vel;
         
         if (transform.position.x > Camera.main.transform.position.x)
         {
             SpriteRenderer sr = gameObject.GetComponentInChildren<SpriteRenderer>();
 
             Vector3 worldPos = Camera.main.ScreenToWorldPoint(new Vector3(Camera.main.pixelWidth, 0.0f, 0.0f));
-            Vector3 size = sr.renderer.bounds.max - sr.renderer.bounds.min;
+            Vector3 size = sr.GetComponent<Renderer>().bounds.max - sr.GetComponent<Renderer>().bounds.min;
             worldPos.x -= size.x;
             worldPos.y = transform.position.y;
             worldPos.z = transform.position.z;
@@ -308,7 +308,7 @@ public class PlayerMovement : MonoBehaviour
             }
             else if (powerUps.currentPowerUp == PlayerPowerups.PowerUp.glide)
             {
-                gameObject.rigidbody2D.gravityScale = 0;
+                gameObject.GetComponent<Rigidbody2D>().gravityScale = 0;
                 Invoke("resetGravity", jumpGlideTime);
                 //PowerupSounds.inst.playGlide();
             }
@@ -329,7 +329,7 @@ public class PlayerMovement : MonoBehaviour
     void flipGravity()
     {
         flipGravityScale = -flipGravityScale;
-        gameObject.rigidbody2D.gravityScale = flipGravityScale;
+        gameObject.GetComponent<Rigidbody2D>().gravityScale = flipGravityScale;
         jumpVel = -jumpVel;
         rayDownDir = -rayDownDir;
 
@@ -347,7 +347,7 @@ public class PlayerMovement : MonoBehaviour
 
     void resetGravity()
     {
-        gameObject.rigidbody2D.gravityScale = flipGravityScale;
+        gameObject.GetComponent<Rigidbody2D>().gravityScale = flipGravityScale;
     }
 
 	public void setJumpKey(KeyCode key)

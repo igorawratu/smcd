@@ -36,8 +36,8 @@ public class FloorManager : MonoBehaviour {
         groundArr = new GameObject[numGroundTiles];
         skyArr = new GameObject[numSkyTiles];
 
-        floorSize = floorPrefab.transform.renderer.bounds.max - floorPrefab.transform.renderer.bounds.min;
-        groundSize = groundPrefab.transform.renderer.bounds.max - groundPrefab.transform.renderer.bounds.min;
+        floorSize = floorPrefab.transform.GetComponent<Renderer>().bounds.max - floorPrefab.transform.GetComponent<Renderer>().bounds.min;
+        groundSize = groundPrefab.transform.GetComponent<Renderer>().bounds.max - groundPrefab.transform.GetComponent<Renderer>().bounds.min;
         //skySize = skyPrefab.transform.renderer.bounds.max - skyPrefab.transform.renderer.bounds.min;
 	
         for (int i = 0; i < floorArr.Length; i++)
@@ -125,7 +125,7 @@ public class FloorManager : MonoBehaviour {
     {
         if (arr[0].transform.position.x < Camera.main.transform.position.x)
         {
-            if (!arr[0].transform.renderer.IsVisibleFrom(Camera.main))
+            if (!arr[0].transform.GetComponent<Renderer>().IsVisibleFrom(Camera.main))
             {
                 //get position of last floor piece
                 Transform lastFloor = arr[arr.Length - 1].transform;

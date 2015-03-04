@@ -11,17 +11,17 @@ public class TemporarySound : MonoBehaviour
 	}
     public void play(AudioClip clip, float volume)
     {
-        audio.clip = clip;
-        audio.volume = volume;
-        audio.loop = false;
-        audio.Play();
+        GetComponent<AudioSource>().clip = clip;
+        GetComponent<AudioSource>().volume = volume;
+        GetComponent<AudioSource>().loop = false;
+        GetComponent<AudioSource>().Play();
         //audio.Play(clip, volume);
         Invoke("destroy",clip.length);
     }
     public void stop()
     {
         //if()
-        audio.Stop();
+        GetComponent<AudioSource>().Stop();
         //Destroy(gameObject);
     }
     void destroy()
