@@ -20,8 +20,13 @@ public class WinnerChecker : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
-        if(Input.GetKeyDown(KeyCode.Escape)){
+	void Update () 
+	{
+		if(Input.GetKeyDown(KeyCode.Escape))
+		{
+			Application.LoadLevel("JoinScene");
+		}
+        if(Input.GetKeyDown(KeyCode.Pause)){
             if(!mIsPaused){
                 pauseText.text = "PAUSED";
                 mIsPaused = true;

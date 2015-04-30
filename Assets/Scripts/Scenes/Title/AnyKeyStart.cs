@@ -13,7 +13,11 @@ public class AnyKeyStart : MonoBehaviour {
 	// Update is called once per frame
 	void Update () 
     {
-        if (Input.anyKey && !hasPlayedSound) 
+		if(Input.GetKeyDown(KeyCode.Escape))
+		{
+			Application.Quit();
+		}
+		else if(Input.anyKey && !hasPlayedSound) 
         {
             GetComponent<AudioSource>().PlayOneShot(SoundManager.instance.titleAcceptSound, SoundManager.instance.titleAcceptVolume);
             hasPlayedSound = true;

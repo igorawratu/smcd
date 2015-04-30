@@ -9,7 +9,8 @@ public class EndScreenScript : MonoBehaviour {
     public Text resetTimer;
     public Text record;
     public Text timeLeft;
-    public GameObject textPrefab;
+	public GameObject textPrefab;
+	public GameObject panelPrefab;
 
 
 	// Use this for initialization
@@ -18,7 +19,7 @@ public class EndScreenScript : MonoBehaviour {
         string win = CurrentPlayerKeys.Instance.lastWinner;
         winner.text = "PLAYER " + win + " WINS";
         record.text = "TOP 5 PLAYERS:";
-        float offSetNum = -50;
+        float offSetNum = 0;
 
         List<KeyValuePair<string, int>> sortedScores = new List<KeyValuePair<string, int>>();
         foreach (KeyValuePair<string, int> player in CurrentPlayerKeys.Instance.playerScores){
@@ -26,7 +27,7 @@ public class EndScreenScript : MonoBehaviour {
         }
         sortedScores.Sort((x, y) => y.Value.CompareTo(x.Value));
 
-        int counter = 0;
+        int counter = -10;
 
         foreach (KeyValuePair<string, int> player in sortedScores){
             if(counter >= 5)
@@ -34,8 +35,9 @@ public class EndScreenScript : MonoBehaviour {
             else ++counter;
 
             GameObject canvas = GameObject.Find("Canvas");
+
             GameObject scoreObj = (GameObject)Instantiate(textPrefab);
-            scoreObj.transform.SetParent(canvas.transform);
+			scoreObj.transform.SetParent(panelPrefab.transform);
             Text score = scoreObj.GetComponent<Text>();
             //Debug.Log(record.rectTransform.position.x);
             //Debug.Log(record.rectTransform.position.y - 30);
@@ -55,6 +57,10 @@ public class EndScreenScript : MonoBehaviour {
             //Application.LoadLevel("RunScene");
             LevelTypeManager.loadLevel();
         }
+		if(Input.GetKeyDown(KeyCode.Escape))
+		{
+			Application.LoadLevel("JoinScene");
+		}
 	}
 
     private IEnumerator countDown()

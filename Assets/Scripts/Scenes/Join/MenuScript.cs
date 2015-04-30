@@ -42,6 +42,11 @@ public class MenuScript : MonoBehaviour {
         {
             return false;
         }
+		
+		if (keyTokens == "Pause")
+		{
+			return false;
+		}
 
         if(keyTokens.Length >= 14)
         {
@@ -64,6 +69,7 @@ public class MenuScript : MonoBehaviour {
         List<KeyCode> keyList = new List<KeyCode>();
 
         List<int> numsToDelete = new List<int>();
+
         for(int i = 0;i< keyCodes.Length ;i++)
         {
             if (canAddKey(keyCodes[i]))
@@ -131,6 +137,12 @@ public class MenuScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		
+		if(Input.GetKeyDown(KeyCode.Escape))
+		{
+			Application.LoadLevel("TitleScreen");
+		}
+
         if (CurrentPlayerKeys.Instance.colourNumbers.Count > 0)
         {
             for (int i = 0; i < keyCodes.Length; i++)
