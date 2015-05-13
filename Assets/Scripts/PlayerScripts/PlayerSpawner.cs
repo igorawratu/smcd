@@ -131,8 +131,12 @@ public class PlayerSpawner : MonoBehaviour {
                             wcscript.addPlayer(player.name);
 
                             //Assign player color
-                            int colourIndex = CurrentPlayerKeys.Instance.colourNumbers.Pop();
-                            CurrentPlayerKeys.Instance.players.Add(new KeyValuePair<KeyCode, Color>(MenuScript.keyCodes[i], CurrentPlayerKeys.Instance.possibleColors[colourIndex]));
+                            int index = Random.Range(0,CurrentPlayerKeys.Instance.colourNumbers.Count);
+                            int colourIndex = CurrentPlayerKeys.Instance.colourNumbers[index];
+                            CurrentPlayerKeys.Instance.colourNumbers.RemoveAt(index);
+
+                            CurrentPlayerKeys.Instance.players.Add(new KeyValuePair<KeyCode, Color>(MenuScript.keyCodes[i], 
+                                                                            CurrentPlayerKeys.Instance.possibleColors[colourIndex]));
 
                             player.GetComponent<PlayerMovement>().playerColour = CurrentPlayerKeys.Instance.possibleColors[colourIndex];
 

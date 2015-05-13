@@ -35,6 +35,9 @@ public class MenuScript : MonoBehaviour {
 
 	public GameObject headTextPrefab;
 
+
+    public Color samplePlayerColour = Color.green;
+
     bool canAddKey(KeyCode key)
     {
         string keyTokens = key.ToString();
@@ -84,36 +87,53 @@ public class MenuScript : MonoBehaviour {
 		StartCoroutine(flashText());
 		StartCoroutine(countDown());
 
-		//Create player colors
-		CurrentPlayerKeys.Instance.possibleColors.Add(new Color(0.33f, 0, 0));
-		CurrentPlayerKeys.Instance.possibleColors.Add(new Color(0, 0.33f, 0));
-		CurrentPlayerKeys.Instance.possibleColors.Add(new Color(0.2f, 0.2f, 0));
-		CurrentPlayerKeys.Instance.possibleColors.Add(new Color(0.3f, 0, 0.1f));
-		CurrentPlayerKeys.Instance.possibleColors.Add(new Color(0.33f, 0, 0.33f));
-		CurrentPlayerKeys.Instance.possibleColors.Add(new Color(0.6f, 0.6f, 1));
-		CurrentPlayerKeys.Instance.possibleColors.Add(new Color(1, 1, 0.6f));
-		CurrentPlayerKeys.Instance.possibleColors.Add(Color.yellow);
-		CurrentPlayerKeys.Instance.possibleColors.Add(Color.white);
-		CurrentPlayerKeys.Instance.possibleColors.Add(Color.red);
-		CurrentPlayerKeys.Instance.possibleColors.Add(new Color(1, 0.2f, 0.6f));
-		CurrentPlayerKeys.Instance.possibleColors.Add(new Color(0, 0.33f, 0.33f));
-		CurrentPlayerKeys.Instance.possibleColors.Add(new Color(1, 0.2f, 0.6f));
-		CurrentPlayerKeys.Instance.possibleColors.Add(Color.blue);		
-		CurrentPlayerKeys.Instance.possibleColors.Add(Color.cyan);
-		CurrentPlayerKeys.Instance.possibleColors.Add(new Color(1, 0.2f, 0.6f));
-		CurrentPlayerKeys.Instance.possibleColors.Add(new Color(0, 1, 0.5f));
-		CurrentPlayerKeys.Instance.possibleColors.Add(Color.grey);
-		CurrentPlayerKeys.Instance.possibleColors.Add(new Color(1, 0.5f, 0));
-		CurrentPlayerKeys.Instance.possibleColors.Add(new Color(0.5f, 1, 0));
+
+
+
+        ////Create player colors
+        //CurrentPlayerKeys.Instance.possibleColors.Add(new Color(0.33f, 0, 0));
+        //CurrentPlayerKeys.Instance.possibleColors.Add(new Color(0, 0.33f, 0));
+        //CurrentPlayerKeys.Instance.possibleColors.Add(new Color(0.2f, 0.2f, 0));
+        //CurrentPlayerKeys.Instance.possibleColors.Add(new Color(0.3f, 0, 0.1f));
+        //CurrentPlayerKeys.Instance.possibleColors.Add(new Color(0.33f, 0, 0.33f));
+        //CurrentPlayerKeys.Instance.possibleColors.Add(new Color(0.6f, 0.6f, 1));
+        //CurrentPlayerKeys.Instance.possibleColors.Add(new Color(1, 1, 0.6f));
+        //CurrentPlayerKeys.Instance.possibleColors.Add(Color.yellow);
+        //CurrentPlayerKeys.Instance.possibleColors.Add(Color.white);
+        //CurrentPlayerKeys.Instance.possibleColors.Add(Color.red);
+        //CurrentPlayerKeys.Instance.possibleColors.Add(new Color(1, 0.2f, 0.6f));
+        //CurrentPlayerKeys.Instance.possibleColors.Add(new Color(0, 0.33f, 0.33f));
+        //CurrentPlayerKeys.Instance.possibleColors.Add(new Color(1, 0.2f, 0.6f));
+        //CurrentPlayerKeys.Instance.possibleColors.Add(Color.blue);		
+        //CurrentPlayerKeys.Instance.possibleColors.Add(Color.cyan);
+        //CurrentPlayerKeys.Instance.possibleColors.Add(new Color(1, 0.2f, 0.6f));
+        //CurrentPlayerKeys.Instance.possibleColors.Add(new Color(0, 1, 0.5f));
+        //CurrentPlayerKeys.Instance.possibleColors.Add(Color.grey);
+        //CurrentPlayerKeys.Instance.possibleColors.Add(new Color(1, 0.5f, 0));
+
+        HSV hsv = HSV.RGBtoHSV(samplePlayerColour);
+        hsv.h = 0;
+        float currentHvalue = hsv.h;
+        
+        for (int i = 0; i < 20;i++ )
+        {
+            currentHvalue += 1.61803398875f * 20;
+            if (currentHvalue>360)
+            {
+                hsv.s += 0.1f;
+            }
+            
+            hsv.h = currentHvalue;
+            CurrentPlayerKeys.Instance.possibleColors.Add(HSV.HSVtoRGB(hsv));
+        }
 
         CurrentPlayerKeys.Instance.colourNumbers.Clear();
         for (int i = 0; i < CurrentPlayerKeys.Instance.possibleColors.Count; i++)
         {
-            CurrentPlayerKeys.Instance.colourNumbers.Push(i);
+            CurrentPlayerKeys.Instance.colourNumbers.Add(i);
         }
 
-
-            floorSize = floorPrefab.transform.GetComponent<Renderer>().bounds.max - floorPrefab.transform.GetComponent<Renderer>().bounds.min;
+        floorSize = floorPrefab.transform.GetComponent<Renderer>().bounds.max - floorPrefab.transform.GetComponent<Renderer>().bounds.min;
 		groundSize = groundPrefab.transform.GetComponent<Renderer>().bounds.max - groundPrefab.transform.GetComponent<Renderer>().bounds.min;
 
         //for (int i = 0; i < floorArr.Length; i++)
@@ -167,8 +187,15 @@ public class MenuScript : MonoBehaviour {
                             jpj.setKey(keyCodes[i]);
 
                             //Assign player color
-                            int colourIndex = CurrentPlayerKeys.Instance.colourNumbers.Pop();
+                            int index = Random.Range(0, CurrentPlayerKeys.Instance.colourNumbers.Count);
+                            int colourIndex = CurrentPlayerKeys.Instance.colourNumbers[index];
+                            CurrentPlayerKeys.Instance.colourNumbers.RemoveAt(index);
                             CurrentPlayerKeys.Instance.players.Add(new KeyValuePair<KeyCode, Color>(keyCodes[i], CurrentPlayerKeys.Instance.possibleColors[colourIndex]));
+
+                            
+
+
+
                                 
                             Transform spacer = player.GetComponentInChildren<Transform>();
                             spacer.GetComponentInChildren<SpriteRenderer>().color = CurrentPlayerKeys.Instance.possibleColors[colourIndex];

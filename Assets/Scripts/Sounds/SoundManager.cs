@@ -36,6 +36,8 @@ public class SoundManager : MonoBehaviour
     public AudioClip pressStartBuzz;
     public float pressStartBuzzVolume = 1.0f;
 
+    public bool canPlayMusic = true;
+
     public GameObject tempSound;
 
     public Dictionary<string, AudioClip> powerupSounds;
@@ -90,10 +92,19 @@ public class SoundManager : MonoBehaviour
 	}
     public void playMusic(AudioClip music,float musicVolume)
     {
-        GetComponent<AudioSource>().loop = true;
-        GetComponent<AudioSource>().clip = music;
-        GetComponent<AudioSource>().volume = musicVolume;
-        GetComponent<AudioSource>().Play();
+        if (canPlayMusic)
+        {
+            GetComponent<AudioSource>().loop = true;
+            GetComponent<AudioSource>().clip = music;
+            GetComponent<AudioSource>().volume = musicVolume;
+            GetComponent<AudioSource>().Play();
+        }
+        else
+        {
+            GetComponent<AudioSource>().loop = false;
+            GetComponent<AudioSource>().Stop();
+            GetComponent<AudioSource>().volume = 0;
+        }
     }
     public float playMenuJump(Vector3 position)
     {

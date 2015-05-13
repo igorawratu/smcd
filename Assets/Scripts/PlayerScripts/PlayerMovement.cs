@@ -125,11 +125,17 @@ public class PlayerMovement : MonoBehaviour
         vel += rightAcceleration*Time.deltaTime;
 
         //Vector2 position = (Vector2)transform.position;
-        Vector2 position = (Vector2)playerSprite.bounds.center;
+        Vector3 position = transform.position;
+        if (position.y < -10)
+        {
+            position.y = 0;
+            transform.position = position;
+        }
 
         onTheGround = false;
         Vector2 xOffset = Vector2.one / 2;
         xOffset.y = 0;
+
 
         for (int i = -1; i < 2;i++)
         {
