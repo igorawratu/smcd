@@ -87,9 +87,6 @@ public class MenuScript : MonoBehaviour {
 		StartCoroutine(flashText());
 		StartCoroutine(countDown());
 
-
-
-
         ////Create player colors
         //CurrentPlayerKeys.Instance.possibleColors.Add(new Color(0.33f, 0, 0));
         //CurrentPlayerKeys.Instance.possibleColors.Add(new Color(0, 0.33f, 0));
@@ -117,10 +114,11 @@ public class MenuScript : MonoBehaviour {
         
         for (int i = 0; i < 20;i++ )
         {
-            currentHvalue += 1.61803398875f * 20;
+            currentHvalue += 1.61803398875f * 30;
             if (currentHvalue>360)
             {
-                hsv.s += 0.1f;
+                currentHvalue -= 360;
+                hsv.s += 0.25f;
             }
             
             hsv.h = currentHvalue;
