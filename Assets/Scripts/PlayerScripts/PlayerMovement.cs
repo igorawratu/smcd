@@ -13,6 +13,7 @@ public class PlayerMovement : MonoBehaviour
     public float flappyJumpTimeDelay = 0.4f;
     float tempSpeedBoost = 0.0f;
     bool jumpDelay = true;
+    bool landDelay = true;
     bool canDoubleJump = false;
     bool jumpReleased = false;
     bool onTheGroundLast = false;
@@ -42,6 +43,7 @@ public class PlayerMovement : MonoBehaviour
     public float gravFlipJumpVel = 0.0f;
 
     private bool mBtnPressed = false;
+    private bool letJumpGo = true;
 
     PlayerPowerups powerUps;
     void Awake()
@@ -162,11 +164,12 @@ public class PlayerMovement : MonoBehaviour
 
             if (!onTheGroundLast)
             {
-                animationBoard.Land();
+                animationBoard.Land();                
             }
         }
         else
         {
+            animationBoard.setGrounded(false);
             if (LevelTypeManager.currentLevel==LevelTypeManager.Level.gravityFlip)
             {
                 animationBoard.Fall();
@@ -177,6 +180,7 @@ public class PlayerMovement : MonoBehaviour
                 {
                     animationBoard.Fall();
                     calledFalling = true;
+                    Invoke("landDelay",0.01f);
                 }
             }
         }
@@ -207,7 +211,10 @@ public class PlayerMovement : MonoBehaviour
         }
         onTheGroundLast = onTheGround;
 	}
-
+    void resetLandTimer()
+    {
+        landDelay = true;
+    }
     void resetJumpTImer()
     {
         jumpDelay = true;
@@ -234,12 +241,18 @@ public class PlayerMovement : MonoBehaviour
         if(Input.GetKey(playerKey))
             mBtnPressed = true;
 
-        if(Input.GetKeyUp(playerKey)){
-            jumpDelay = true;
+        if (Input.GetKeyUp(playerKey))
+        {
+            letJumpGo = true;
         }
-        else if (Input.GetKey(playerKey) &&
+
+        
+        
+        if (Input.GetKey(playerKey) &&
             onTheGround &&
-            jumpDelay)
+            //letJumpGo &&
+            jumpDelay &&
+            animationBoard.canJump())
         {
             vel.y += jumpVel * Time.deltaTime;
             animationBoard.Jump();
@@ -250,8 +263,9 @@ public class PlayerMovement : MonoBehaviour
                 //PowerupSounds.inst.playBoostJump();
                 LevelSounds.inst.playPowerup(transform.position);
             }
-
             jumpDelay = false;
+            letJumpGo = false;
+            //landDelay = false;
             if (powerUps.currentPowerUp == PlayerPowerups.PowerUp.doubleJump ||
                 powerUps.currentPowerUp == PlayerPowerups.PowerUp.glide)
                 Invoke("resetJumpTImer", jumpTimeDelay / 4);
@@ -279,6 +293,7 @@ public class PlayerMovement : MonoBehaviour
             animationBoard.Jump();
             Invoke("resetJumpTImer", jumpTimeDelay);
             jumpDelay = false;
+            //landDelay = false;
             LevelSounds.inst.playJump(transform.position);
         }
         return vel;
@@ -291,12 +306,13 @@ public class PlayerMovement : MonoBehaviour
             jumpReleased = true;
         }
         if (powerUps.currentPowerUp != PlayerPowerups.PowerUp.doubleJump &&
-            powerUps.currentPowerUp != PlayerPowerups.PowerUp.doubleJump)
+            powerUps.currentPowerUp != PlayerPowerups.PowerUp.glide)
             return vel;
 
         if (Input.GetKey(playerKey) &&
             canDoubleJump &&
             jumpDelay &&
+            landDelay &&
             jumpReleased
             )
         {
@@ -305,25 +321,22 @@ public class PlayerMovement : MonoBehaviour
             if (powerUps.currentPowerUp == PlayerPowerups.PowerUp.doubleJump)
             {
                 vel.y += jumpVel * Time.deltaTime;
-                //PowerupSounds.inst.playDoubleJump();
                 animationBoard.Jump();
             }
             else if (powerUps.currentPowerUp == PlayerPowerups.PowerUp.glide)
             {
                 gameObject.GetComponent<Rigidbody2D>().gravityScale = 0;
                 Invoke("resetGravity", jumpGlideTime);
-                //PowerupSounds.inst.playGlide();
             }
 
             LevelSounds.inst.playPowerup(transform.position);
 
             canDoubleJump = false;
             jumpDelay = false;
+            //landDelay = false;
             Invoke("resetJumpTImer", jumpTimeDelay);
             jumpReleased = false;
 
-            //int rnd = Random.Range(0, SoundManager.instance.jumpSounds.Count - 1);
-            //audio.PlayOneShot(SoundManager.instance.jumpSounds[rnd], SoundManager.instance.jumpVolume);
         }
         return vel;
     }

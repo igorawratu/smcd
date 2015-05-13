@@ -10,6 +10,7 @@ public class AnimationBoard : MonoBehaviour
     private int falling = Animator.StringToHash("falling");
     private int stumble = Animator.StringToHash("stumble");
     private int jump = Animator.StringToHash("jump");
+    private int run = Animator.StringToHash("run");
     private int flappyMode = Animator.StringToHash("FlappyMode");
     private int introMode = Animator.StringToHash("IntroMode");
 
@@ -41,7 +42,29 @@ public class AnimationBoard : MonoBehaviour
     {
         //Debug.Log("jump");
         animator.SetTrigger(jump);
-        animator.SetBool(grounded, false);
+        //animator.SetBool(grounded, false);
+    }
+
+    public void setGrounded(bool isGrounded)
+    {
+        animator.SetBool(grounded, isGrounded);
+    }
+
+
+    public bool isGrounded()
+    {
+        return animator.GetBool(grounded);
+    }
+
+    public bool canJump()
+    {
+        if (animator.GetBool(grounded) &&
+            animator.GetCurrentAnimatorStateInfo(0).shortNameHash == run)
+        {
+            return true;
+        }
+
+        return false;
     }
     public void Fall()
     {
