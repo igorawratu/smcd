@@ -48,6 +48,7 @@ public class PlayerMovement : MonoBehaviour
     {
         powerUps = gameObject.GetComponent<PlayerPowerups>();
     }
+
 	// Use this for initialization
 	void Start () 
     {
@@ -124,9 +125,8 @@ public class PlayerMovement : MonoBehaviour
         Vector3 vel = gameObject.GetComponent<Rigidbody2D>().velocity;
         vel += rightAcceleration*Time.deltaTime;
 
-        //Vector2 position = (Vector2)transform.position;
         Vector3 position = transform.position;
-        if (position.y < -10)
+        if (position.y < -10 || position.y >10)
         {
             position.y = 0;
             transform.position = position;
@@ -162,24 +162,19 @@ public class PlayerMovement : MonoBehaviour
 
             if (!onTheGroundLast)
             {
-                //Debug.Log("landed");
                 animationBoard.Land();
-                //calledFalling = false;
             }
         }
         else
         {
-            //Debug.Log(vel.y);
             if (LevelTypeManager.currentLevel==LevelTypeManager.Level.gravityFlip)
             {
                 animationBoard.Fall();
-                //Debug.Log("falling");
             }
-            else if (vel.y < 0)
+            else if (vel.y <= 0)
             {
                 if (!calledFalling)
                 {
-                    //Debug.Log("falling");
                     animationBoard.Fall();
                     calledFalling = true;
                 }
@@ -235,6 +230,7 @@ public class PlayerMovement : MonoBehaviour
 
     Vector3 jumpLogic(Vector3 vel, bool onTheGround)
     {
+        //check if the player jumped in the round
         if(Input.GetKey(playerKey))
             mBtnPressed = true;
 
