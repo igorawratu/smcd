@@ -3,20 +3,20 @@ using System.Collections;
 using System.Collections.Generic;
 
 [RequireComponent(typeof(AudioSource))]
-public class SoundManager : MonoBehaviour 
+public class SoundManager : MonoBehaviour
 {
     public AudioClip titleSound;
     public float titleVolume = 1.0f;
 
     public AudioClip titleAcceptSound;
     public float titleAcceptVolume = 1.0f;
-    
+
     public AudioClip menuMusic;
     public List<AudioClip> gameMusic;
     public float musicVolume = 1.0f;
     int lastTrackPlayed = 0;
     bool firstTrack = true;
-    
+
     public AudioClip introSound;
     public float introVolume = 1.0f;
 
@@ -46,9 +46,9 @@ public class SoundManager : MonoBehaviour
     private static SoundManager _instance = null;
     public static SoundManager instance
     {
-        get 
+        get
         {
-            return _instance; 
+            return _instance;
         }
     }
 
@@ -64,8 +64,8 @@ public class SoundManager : MonoBehaviour
         }
         DontDestroyOnLoad(gameObject);
     }
-	// Use this for initialization
-	void Start () 
+    // Use this for initialization
+    void Start()
     {
         if (Application.loadedLevelName == "JoinScene")
         {
@@ -89,22 +89,13 @@ public class SoundManager : MonoBehaviour
         {
             playLevelTrack();
         }
-	}
-    public void playMusic(AudioClip music,float musicVolume)
+    }
+    public void playMusic(AudioClip music, float musicVolume)
     {
-        if (canPlayMusic)
-        {
-            GetComponent<AudioSource>().loop = true;
-            GetComponent<AudioSource>().clip = music;
-            GetComponent<AudioSource>().volume = musicVolume;
-            GetComponent<AudioSource>().Play();
-        }
-        else
-        {
-            GetComponent<AudioSource>().loop = false;
-            GetComponent<AudioSource>().Stop();
-            GetComponent<AudioSource>().volume = 0;
-        }
+        GetComponent<AudioSource>().loop = true;
+        GetComponent<AudioSource>().clip = music;
+        GetComponent<AudioSource>().volume = musicVolume;
+        GetComponent<AudioSource>().Play();
     }
     public float playMenuJump(Vector3 position)
     {
@@ -131,7 +122,7 @@ public class SoundManager : MonoBehaviour
         }
         GetComponent<AudioSource>().Play();
     }
-    
+
     public void playTemporarySound(AudioClip clip, float volume, Vector3 position)
     {
         GameObject tempS = (GameObject)Instantiate(tempSound);
@@ -143,8 +134,8 @@ public class SoundManager : MonoBehaviour
     {
         Start();
     }
-     //Update is called once per frame
-    void Update () 
+    //Update is called once per frame
+    void Update()
     {
         if (!GetComponent<AudioSource>().isPlaying)
         {
