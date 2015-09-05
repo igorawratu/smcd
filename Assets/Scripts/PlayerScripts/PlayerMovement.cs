@@ -45,6 +45,12 @@ public class PlayerMovement : MonoBehaviour
     private bool mBtnPressed = false;
     private bool letJumpGo = true;
 
+    private int bunnies_murdered = 0;
+    private int pots_smashed = 0;
+    private int planks_broken = 0;
+    private int num_jumps = 0;
+    private int powerups_acquired = 0;
+
     PlayerPowerups powerUps;
     void Awake()
     {
@@ -54,7 +60,6 @@ public class PlayerMovement : MonoBehaviour
 	// Use this for initialization
 	void Start () 
     {
-
         Vector3 vel = gameObject.GetComponent<Rigidbody2D>().velocity;
         vel.x = VariableSpeed.current;
         gameObject.GetComponent<Rigidbody2D>().velocity = vel;
@@ -119,6 +124,42 @@ public class PlayerMovement : MonoBehaviour
             return true;
         }
         return false;
+    }
+
+    public void incPlanks() {
+        planks_broken++;
+    }
+
+    public void incBunnies() {
+        bunnies_murdered++;
+    }
+
+    public void incPots() {
+        pots_smashed++;
+    }
+
+    public int planksBroken() {
+        return planks_broken;
+    }
+
+    public int bunniesMurdered() {
+        return bunnies_murdered;
+    }
+
+    public int potsSmashed() {
+        return pots_smashed;
+    }
+
+    public int numJumps() {
+        return num_jumps;
+    }
+
+    public void incPowerups() {
+        powerups_acquired++;
+    }
+
+    public int powerupsAcquired() {
+        return powerups_acquired++;
     }
 
 	// Update is called once per frame
@@ -246,14 +287,15 @@ public class PlayerMovement : MonoBehaviour
             letJumpGo = true;
         }
 
-        
-        
         if (Input.GetKey(playerKey) &&
             onTheGround &&
             //letJumpGo &&
             jumpDelay &&
             animationBoard.canJump())
         {
+            if(LevelTypeManager.Level.flappyBird != LevelTypeManager.currentLevel)
+                num_jumps++;
+            
             vel.y += jumpVel * Time.deltaTime;
             animationBoard.Jump();
 

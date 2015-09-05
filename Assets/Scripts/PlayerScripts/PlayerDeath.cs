@@ -18,13 +18,14 @@ public class PlayerDeath : MonoBehaviour {
         Vector2 cameraLeftPos = Camera.main.ScreenToWorldPoint(new Vector2(0, 0));
         if (pos.x < cameraLeftPos.x)
         {
+            PlayerMovement pm = gameObject.GetComponent<PlayerMovement>();
+
             GameObject winnerChecker = GameObject.Find("WinnerChecker");
             WinnerChecker script = winnerChecker.GetComponent<WinnerChecker>();
-            script.removePlayer(gameObject.name);
+            script.removePlayer(gameObject.name, pm);
 
             GameObject itemGenerator = GameObject.Find("ItemGenerator");
             GenerateItems igScript = itemGenerator.GetComponent<GenerateItems>();
-            PlayerMovement pm = gameObject.GetComponent<PlayerMovement>();
 
             PlayerCollision pc = gameObject.GetComponent<PlayerCollision>();
 

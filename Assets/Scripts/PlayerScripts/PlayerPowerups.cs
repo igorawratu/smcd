@@ -93,6 +93,7 @@ public class PlayerPowerups : MonoBehaviour {
         }
 
         playerMovement.speedBoost();
+        playerMovement.incPowerups();
 
         createPowerupEffect();
 

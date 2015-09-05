@@ -47,13 +47,39 @@ public class WinnerChecker : MonoBehaviour {
         mPlayersActive.Add(_player);
     }
 
-    public void removePlayer(string _player){
+    public void removePlayer(string _player, PlayerMovement _pm){
         if(mEnd)
             return;
 
         Debug.Log("Alive players: " + mPlayersActive.Count);
 
         mPlayersActive.Remove(_player);
+
+        Dictionary<string, int> bunnies_killed = CurrentPlayerKeys.Instance.bunnies_killed;
+        Dictionary<string, float> distance_traveled = CurrentPlayerKeys.Instance.distance_traveled;
+        Dictionary<string, int> pots_smashed = CurrentPlayerKeys.Instance.pots_smashed;
+        Dictionary<string, int> powerups_acquired = CurrentPlayerKeys.Instance.powerups_acquired;
+
+        if(bunnies_killed.ContainsKey(_player)) {
+            bunnies_killed[_player] += _pm.bunniesMurdered();
+        }
+        else bunnies_killed[_player] = _pm.bunniesMurdered();
+
+        if(distance_traveled.ContainsKey(_player)) {
+            distance_traveled[_player] += _pm.transform.position.x;
+        }
+        else distance_traveled[_player] = _pm.transform.position.x;
+
+        if(pots_smashed.ContainsKey(_player)) {
+            pots_smashed[_player] += _pm.potsSmashed();
+        }
+        else pots_smashed[_player] = _pm.potsSmashed();
+
+        if(powerups_acquired.ContainsKey(_player)) {
+            powerups_acquired[_player] += _pm.powerupsAcquired();
+        }
+        else powerups_acquired[_player] = _pm.powerupsAcquired();
+
         if (mPlayersActive.Count <= 1){
             string winner;
             if (mPlayersActive.Count == 0)
@@ -61,10 +87,10 @@ public class WinnerChecker : MonoBehaviour {
             else winner = mPlayersActive[0];
 
             Dictionary<string, int> scoreBook = CurrentPlayerKeys.Instance.playerScores;
-            if (CurrentPlayerKeys.Instance.playerScores.ContainsKey(winner)){
-                CurrentPlayerKeys.Instance.playerScores[winner]++;
+            if(scoreBook.ContainsKey(winner)) {
+                scoreBook[winner]++;
             }
-            else CurrentPlayerKeys.Instance.playerScores[winner] = 1;
+            else scoreBook[winner] = 1;
 
             CurrentPlayerKeys.Instance.lastWinner = winner;
 

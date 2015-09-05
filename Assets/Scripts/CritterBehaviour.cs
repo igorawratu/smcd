@@ -77,6 +77,11 @@ public class CritterBehaviour : MonoBehaviour
     {
         //if (other.GetComponent<Rigidbody2D>().velocity.y < 0)
         //    return;
+        if(other.tag == "Player") {
+            GameObject player = GameObject.Find(other.name);
+            PlayerMovement movscript = player.GetComponent<PlayerMovement>();
+            movscript.incBunnies();
+        }
 
         GameObject splatEffect = (GameObject)Instantiate(SplatEffect, transform.position, Quaternion.identity);
         splatEffect.SetActive(true);

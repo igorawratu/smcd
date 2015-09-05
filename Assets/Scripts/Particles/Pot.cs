@@ -17,6 +17,12 @@ public class Pot : MonoBehaviour
 
     public void OnTriggerEnter2D(Collider2D other)
     {
+        if(other.tag == "Player") {
+            GameObject player = GameObject.Find(other.name);
+            PlayerMovement movscript = player.GetComponent<PlayerMovement>();
+            movscript.incPots();
+        }
+        
         PotSmashEffect.SetActive(true);
         sr.enabled = false;
         LevelSounds.inst.playBreakableObject(transform.position);
