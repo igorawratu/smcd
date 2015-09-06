@@ -59,6 +59,7 @@ public class WinnerChecker : MonoBehaviour {
         Dictionary<string, float> distance_traveled = CurrentPlayerKeys.Instance.distance_traveled;
         Dictionary<string, int> pots_smashed = CurrentPlayerKeys.Instance.pots_smashed;
         Dictionary<string, int> powerups_acquired = CurrentPlayerKeys.Instance.powerups_acquired;
+        Dictionary<string, int> num_jumps = CurrentPlayerKeys.Instance.num_jumps;
 
         if(bunnies_killed.ContainsKey(_player)) {
             bunnies_killed[_player] += _pm.bunniesMurdered();
@@ -80,11 +81,26 @@ public class WinnerChecker : MonoBehaviour {
         }
         else powerups_acquired[_player] = _pm.powerupsAcquired();
 
+        if(num_jumps.ContainsKey(_player)) {
+            num_jumps[_player] += _pm.powerupsAcquired();
+        }
+        else num_jumps[_player] = _pm.powerupsAcquired();
+
+        Debug.Log(bunnies_killed[_player]);
+        Debug.Log(distance_traveled[_player]);
+        Debug.Log(pots_smashed[_player]);
+        Debug.Log(powerups_acquired[_player]);
+
         if (mPlayersActive.Count <= 1){
             string winner;
-            if (mPlayersActive.Count == 0)
+            if(mPlayersActive.Count == 0) {
                 winner = _player;
-            else winner = mPlayersActive[0];
+            }
+            else {
+                winner = mPlayersActive[0];
+
+                //TODO: update winner stats here
+            }
 
             Dictionary<string, int> scoreBook = CurrentPlayerKeys.Instance.playerScores;
             if(scoreBook.ContainsKey(winner)) {
