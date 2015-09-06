@@ -16,26 +16,47 @@ public class DebriefSceneSCript : MonoBehaviour {
 
     public GameObject PointElementPrefab;
     public GameObject PointElPanel;
-    public Text HeaderText;
-    public Image HeaderIcon;
+    public Sprite gold;
+    public Sprite silver;
+    public Sprite bronze;
+    public Sprite distance;
+    public Sprite jumps;
+    public Sprite powerups;
+    public Sprite pots;
+    public Sprite bunnies;
+    public GameObject banner;
+
+    private List<Sprite> header_icons;
 
     private List<StatType> stat_type_order;
     private int curr_stat_type = 0;
+    private int curr_icon = 0;
 
 	// Use this for initialization
 	void Start () {
         stat_type_order = new List<StatType>(new StatType[] { StatType.winner, StatType.distance, StatType.jumps,
             StatType.powerups, StatType.pots, StatType.bunnies});
+
+        header_icons = new List<Sprite>(new Sprite[] {gold, distance, jumps, powerups, pots, bunnies });
+
+        populateCanvas();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-	
+        
 	}
 
     private void displayFloatDat(string title, Dictionary<string, float> dat)
     {
-        HeaderText.text = title;
+        GameObject title_obj = banner.transform.Find("title").gameObject;
+        Text text = title_obj.GetComponent<Text>();
+        text.text = title;
+        GameObject icon_backing_obj = title_obj.transform.Find("iconBacking").gameObject;
+        GameObject icon_obj = icon_backing_obj.transform.Find("icon").gameObject;
+        Image img = icon_obj.GetComponent<Image>();
+        img.sprite = header_icons[curr_icon++];
+
         foreach (Transform child in PointElPanel.transform)
         {
             GameObject.Destroy(child.gameObject);
@@ -49,12 +70,22 @@ public class DebriefSceneSCript : MonoBehaviour {
             GameObject points = offset.transform.Find("points").gameObject;
             Text pt_text = points.GetComponent<Text>();
             pt_text.text = player.Value.ToString();
+            GameObject player_text = player_score.transform.Find("player_text").gameObject;
+            Text plyr_text = player_text.GetComponent<Text>();
+            plyr_text.text = player.Key;
         }
     }
 
     private void displayIntDat(string title, Dictionary<string, int> dat)
     {
-        HeaderText.text = title;
+        GameObject title_obj = banner.transform.Find("title").gameObject;
+        Text text = title_obj.GetComponent<Text>();
+        text.text = title;
+        GameObject icon_backing_obj = title_obj.transform.Find("iconBacking").gameObject;
+        GameObject icon_obj = icon_backing_obj.transform.Find("icon").gameObject;
+        Image img = icon_obj.GetComponent<Image>();
+        img.sprite = header_icons[curr_icon++];
+
         foreach (Transform child in PointElPanel.transform)
         {
             GameObject.Destroy(child.gameObject);
@@ -68,7 +99,14 @@ public class DebriefSceneSCript : MonoBehaviour {
             GameObject points = offset.transform.Find("points").gameObject;
             Text pt_text = points.GetComponent<Text>();
             pt_text.text = player.Value.ToString();
+            GameObject player_text = player_score.transform.Find("player_text").gameObject;
+            Text plyr_text = player_text.GetComponent<Text>();
+            plyr_text.text = player.Key;
         }
+    }
+
+    private void displayWinners() {
+
     }
 
     private void populateCanvas(){
@@ -82,27 +120,28 @@ public class DebriefSceneSCript : MonoBehaviour {
             switch (stat_type)
             {
                 case StatType.winner:
-                    displayIntDat("Total Number of Wins", CurrentPlayerKeys.Instance.playerScores);
+                    displayIntDat("Wins", CurrentPlayerKeys.Instance.playerScores);
                     break;
                 case StatType.distance:
-                    displayFloatDat("Total Distance Traveled", CurrentPlayerKeys.Instance.distance_traveled);
+                    displayFloatDat("Distance", CurrentPlayerKeys.Instance.distance_traveled);
                     break;
                 case StatType.bunnies:
-                    displayIntDat("Bunnies Murdered", CurrentPlayerKeys.Instance.bunnies_killed);
+                    displayIntDat("Bunnies", CurrentPlayerKeys.Instance.bunnies_killed);
                     break;
                 case StatType.jumps:
-                    displayIntDat("Total Jumps", CurrentPlayerKeys.Instance.num_jumps);
+                    displayIntDat("Jumps", CurrentPlayerKeys.Instance.num_jumps);
                     break;
                 case StatType.pots:
-                    displayIntDat("Pots Smashed", CurrentPlayerKeys.Instance.pots_smashed);
+                    displayIntDat("Pots", CurrentPlayerKeys.Instance.pots_smashed);
                     break;
                 case StatType.powerups:
-                    displayIntDat("Total Powerups", CurrentPlayerKeys.Instance.powerups_acquired);
+                    displayIntDat("Powerups", CurrentPlayerKeys.Instance.powerups_acquired);
                     break;
                 default:
                     Debug.Log("WEEEEE I SHOULD NOT BE HERE");
                     break;
             }
+            Invoke("populateCanvas", 3);
         }
     }
 }
