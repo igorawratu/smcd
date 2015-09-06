@@ -14,9 +14,9 @@ public class CurrentPlayerKeys : Singleton<CurrentPlayerKeys> {
     public List<KeyValuePair<KeyCode, Color>> players = new List<KeyValuePair<KeyCode, Color>>();
 
     public Dictionary<string, int> bunnies_killed = new Dictionary<string, int>();
-    public Dictionary<string, int> distance_traveled = new Dictionary<string, int>();
+    public Dictionary<string, float> distance_traveled = new Dictionary<string, float>();
     public Dictionary<string, int> pots_smashed = new Dictionary<string, int>();
-    public Dictionary<string, float> powerups_acquired = new Dictionary<string, int>();
+    public Dictionary<string, int> powerups_acquired = new Dictionary<string, int>();
 
     public void removePlayer(KeyValuePair<KeyCode, Color> _playerInf) {
         List<KeyValuePair<KeyCode, Color>> newPlayers = new List<KeyValuePair<KeyCode, Color>>();
