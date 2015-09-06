@@ -55,7 +55,8 @@ public class EndScreenScript : MonoBehaviour {
         if (Input.anyKey)
         {
             //Application.LoadLevel("RunScene");
-            LevelTypeManager.loadLevel();
+            //LevelTypeManager.loadLevel();
+            Application.LoadLevel("JoinScene");
         }
 		if(Input.GetKeyDown(KeyCode.Escape))
 		{

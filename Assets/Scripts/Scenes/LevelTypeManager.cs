@@ -9,8 +9,10 @@ public class LevelTypeManager : MonoBehaviour {
         standard,
         flappyBird,
         lowGravity,
-        gravityFlip
+        gravityFlip,
+        end
     }
+
     private static Level _currentLevel = Level.standard;
     public static Level currentLevel
     {
@@ -31,6 +33,7 @@ public class LevelTypeManager : MonoBehaviour {
         }
     }
     private List<Level> levelList;
+    private List<string> levelChangedList = new List<string>(new string[] { "JoinScene", "EndScene", "FlappyBirdScene", "GravityFlipScene", "LowGravityScene", "StandardScene" });
 
     void Awake()
     {
@@ -44,23 +47,31 @@ public class LevelTypeManager : MonoBehaviour {
         }
         DontDestroyOnLoad(gameObject);
         levelList = new List<Level>();
+        fillLevelList();
     }
     void fillLevelList()
     {
         foreach(Level l in Level.GetValues(typeof(Level)))
         {
-            levelList.Add(l);
+            if (l != Level.end)
+            {
+                levelList.Add(l);
+            }
         }
     }
     void setNextLevel()
     {
-        if(levelList.Count<=0)
+        if (levelList.Count <= 0)
         {
             fillLevelList();
+            _currentLevel = Level.end;
         }
-        int index = Random.Range(0, levelList.Count);
-        _currentLevel = levelList[index];
-        levelList.RemoveAt(index);
+        else
+        {
+            int index = Random.Range(0, levelList.Count);
+            _currentLevel = levelList[index];
+            levelList.RemoveAt(index);
+        }
     }
 	// Use this for initialization
 	void Start () 
@@ -69,11 +80,11 @@ public class LevelTypeManager : MonoBehaviour {
 	}
     void sceneChanged()
     {
-        if (Application.loadedLevelName == "JoinScene")
-        {
+        //if (levelChangedList.Contains(Application.loadedLevelName))
+        //{
            setNextLevel();
-        }
-        else if (Application.loadedLevelName == "TitleScreen")
+        //}
+        /*else if (Application.loadedLevelName == "TitleScreen")
         {
 
         }
@@ -94,7 +105,7 @@ public class LevelTypeManager : MonoBehaviour {
         else
         {
 
-        }
+        }*/
     }
 	// Update is called once per frame
 	void Update () 
@@ -102,12 +113,13 @@ public class LevelTypeManager : MonoBehaviour {
         if (Application.loadedLevel != lastScene)
         {
             lastScene = Application.loadedLevel;
-            SoundManager.instance.sceneChanged();
-            sceneChanged();
+            
         }
 	}
     public static void loadLevel()
     {
+        SoundManager.instance.sceneChanged();
+        instance.sceneChanged();
         switch (_currentLevel)
         {
             case Level.flappyBird:
@@ -121,6 +133,11 @@ public class LevelTypeManager : MonoBehaviour {
                 break;
             case Level.standard:
                 Application.LoadLevel("StandardScene");
+                break;
+            case Level.end:
+                Application.LoadLevel("EndScene");
+                break;
+            default:
                 break;
         }
     }
