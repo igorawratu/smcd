@@ -135,14 +135,8 @@ public class LevelTypeManager : MonoBehaviour {
                 Application.LoadLevel("StandardScene");
                 break;
             case Level.end:
-                CurrentPlayerKeys.Instance.playerScores.Clear();
-                CurrentPlayerKeys.Instance.bunnies_killed.Clear();
-                CurrentPlayerKeys.Instance.pots_smashed.Clear();
-                CurrentPlayerKeys.Instance.powerups_acquired.Clear();
-                CurrentPlayerKeys.Instance.distance_traveled.Clear();
-                CurrentPlayerKeys.Instance.num_jumps.Clear();
                 CurrentPlayerKeys.Instance.players.Clear();
-                Application.LoadLevel("EndScene");
+                Application.LoadLevel("debriefScene");
                 break;
             default:
                 break;
