@@ -82,14 +82,9 @@ public class WinnerChecker : MonoBehaviour {
         else powerups_acquired[_player] = _pm.powerupsAcquired();
 
         if(num_jumps.ContainsKey(_player)) {
-            num_jumps[_player] += _pm.powerupsAcquired();
+            num_jumps[_player] += _pm.numJumps();
         }
-        else num_jumps[_player] = _pm.powerupsAcquired();
-
-        Debug.Log(bunnies_killed[_player]);
-        Debug.Log(distance_traveled[_player]);
-        Debug.Log(pots_smashed[_player]);
-        Debug.Log(powerups_acquired[_player]);
+        else num_jumps[_player] = _pm.numJumps();
 
         if (mPlayersActive.Count <= 1){
             string winner;
@@ -98,8 +93,38 @@ public class WinnerChecker : MonoBehaviour {
             }
             else {
                 winner = mPlayersActive[0];
+                GameObject winner_obj = GameObject.Find(winner);
+                PlayerMovement pm = winner_obj.GetComponent<PlayerMovement>();
 
-                //TODO: update winner stats here
+                if (bunnies_killed.ContainsKey(winner))
+                {
+                    bunnies_killed[winner] += pm.bunniesMurdered();
+                }
+                else bunnies_killed[winner] = pm.bunniesMurdered();
+
+                if (distance_traveled.ContainsKey(winner))
+                {
+                    distance_traveled[winner] += pm.transform.position.x;
+                }
+                else distance_traveled[winner] = pm.transform.position.x;
+
+                if (pots_smashed.ContainsKey(winner))
+                {
+                    pots_smashed[winner] += pm.potsSmashed();
+                }
+                else pots_smashed[winner] = pm.potsSmashed();
+
+                if (powerups_acquired.ContainsKey(winner))
+                {
+                    powerups_acquired[winner] += pm.powerupsAcquired();
+                }
+                else powerups_acquired[winner] = pm.powerupsAcquired();
+
+                if (num_jumps.ContainsKey(winner))
+                {
+                    num_jumps[winner] += pm.numJumps();
+                }
+                else num_jumps[winner] = pm.numJumps();
             }
 
             Dictionary<string, int> scoreBook = CurrentPlayerKeys.Instance.playerScores;
@@ -116,6 +141,12 @@ public class WinnerChecker : MonoBehaviour {
             StartCoroutine(countDown());
             mEnd = true;
         }
+
+        Debug.Log(bunnies_killed[_player]);
+        Debug.Log(distance_traveled[_player]);
+        Debug.Log(pots_smashed[_player]);
+        Debug.Log(powerups_acquired[_player]);
+        Debug.Log(num_jumps[_player]);
     }
 
     public int getNumPlayersActive(){
@@ -130,7 +161,7 @@ public class WinnerChecker : MonoBehaviour {
         gameOver.color = player.GetComponent<PlayerMovement>().playerColour;
         yield return new WaitForSeconds(2);
 
-        Application.LoadLevel("EndScene");
+        LevelTypeManager.loadLevel();
     }
 
     private List<string> mPlayersActive;

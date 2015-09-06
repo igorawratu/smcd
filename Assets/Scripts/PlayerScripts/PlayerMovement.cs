@@ -293,8 +293,10 @@ public class PlayerMovement : MonoBehaviour
             jumpDelay &&
             animationBoard.canJump())
         {
-            if(LevelTypeManager.Level.flappyBird != LevelTypeManager.currentLevel)
+            if (LevelTypeManager.Level.flappyBird != LevelTypeManager.currentLevel)
+            {
                 num_jumps++;
+            }
             
             vel.y += jumpVel * Time.deltaTime;
             animationBoard.Jump();
@@ -413,8 +415,6 @@ public class PlayerMovement : MonoBehaviour
 	}
 
     void OnDestroy() {
-        if(!mBtnPressed) {
-            CurrentPlayerKeys.Instance.removePlayer(new KeyValuePair<KeyCode, Color>(playerKey, playerColour));
-        }
+        
     }
 }
