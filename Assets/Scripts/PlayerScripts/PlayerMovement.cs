@@ -415,8 +415,6 @@ public class PlayerMovement : MonoBehaviour
 	}
 
     void OnDestroy() {
-        if(!mBtnPressed) {
-            CurrentPlayerKeys.Instance.removePlayer(new KeyValuePair<KeyCode, Color>(playerKey, playerColour));
-        }
+        
     }
 }
